@@ -53,7 +53,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
             </div>
             <div>
               <h2 className="text-sm font-bold text-white font-mono uppercase tracking-wider">
-                Relatório Técnico Operacional DISARM Red Team
+                Relatório Técnico Operacional DISARM Red Team - Hacking for Influence
               </h2>
               <p className="text-xs text-slate-400">Exportação em Markdown ou impressão em PDF</p>
             </div>

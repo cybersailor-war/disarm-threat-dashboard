@@ -11,7 +11,7 @@ export function generateMarkdownReport(campaign: DisarmCampaign): string {
     minute: '2-digit',
   });
 
-  let md = `# RELATÓRIO OPERACIONAL DE INTELIGÊNCIA DE AMEAÇAS (DISARM RED TEAM)
+  let md = `# RELATÓRIO OPERACIONAL DE INTELIGÊNCIA DE AMEAÇAS (DISARM RED TEAM - HACKING FOR INFLUENCE)
 **Framework de Referência:** DISARM Red Team Framework (DISARM Foundation)  
 **Operação / Campanha:** ${campaign.name}  
 **Identificador:** \`${campaign.id}\`  
