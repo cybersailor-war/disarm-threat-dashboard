@@ -2,7 +2,7 @@ import { DisarmCampaign } from '../types/disarm';
 import { DISARM_TECHNIQUES_DATABASE } from './disarmMaster';
 
 export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
-  id: 'CAMP-FIMI-2026-089',
+  id: 'CAMP-HFI-2026-089',
   name: 'Operação Doppelgänger / Matryoshka (Clonagem de Mídia e CIB)',
   version: '2.0',
   domain: 'disarm-redteam',
@@ -10,7 +10,7 @@ export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
   campaignStatus: 'Active Ongoing',
   overallSeverity: 'critical',
   description:
-    'Campanha transnacional de manipulação de informação e interferência (FIMI) direcionada a enfraquecer o apoio ocidental, desacreditar instituições democráticas e promover desinformação através da clonagem meticulosa de veículos de imprensa internacionais respeitados, uso de redes de bots no X/Telegram e desvio de filtros de bibliotecas de anúncios.',
+    'Campanha transnacional de manipulação de informação e operações de influência direcionada a enfraquecer o apoio ocidental, desacreditar instituições democráticas e promover desinformação através da clonagem meticulosa de veículos de imprensa internacionais respeitados, uso de redes de bots no X/Telegram e desvio de filtros de bibliotecas de anúncios.',
   dateCreated: '2026-09-12T08:30:00Z',
   lastUpdated: '2026-10-14T09:15:00Z',
   targetRegions: ['União Europeia', 'França', 'Alemanha', 'Ucrânia', 'América Latina'],
@@ -32,7 +32,7 @@ export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
         targetedEntities: ['Eleitorado Francês e Alemão', 'Think tanks de segurança'],
         confidence: 'confirmed',
         dateObserved: '2026-09-14',
-        analyst: 'Analista Sênior FIMI / Red Team DISARM',
+        analyst: 'Analista Sênior de Operações de Influência / Red Team DISARM',
       },
     },
     {
@@ -280,7 +280,7 @@ export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
         targetedEntities: ['Usuários de redes sociais em geral'],
         confidence: 'probable',
         dateObserved: '2026-10-14',
-        analyst: 'Analista de Infraestrutura e Persistência FIMI',
+        analyst: 'Analista de Infraestrutura Cibernética & Persistência',
       },
     },
   ],
@@ -288,7 +288,7 @@ export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
 };
 
 export const MOCK_CAMPAIGN_GHOSTWRITER: DisarmCampaign = {
-  id: 'CAMP-FIMI-2026-042',
+  id: 'CAMP-HFI-2026-042',
   name: 'Operação Ghostwriter / UNC1151 (Invasão de CMS & Falso Vazamento)',
   version: '2.0',
   domain: 'disarm-redteam',

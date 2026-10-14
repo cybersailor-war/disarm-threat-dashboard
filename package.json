@@ -1,6 +1,6 @@
 {
   "name": "disarm-threat-dashboard",
-  "description": "DISARM Red Team Threat Analysis Dashboard - Hacking for Influence & FIMI Operations",
+  "description": "DISARM Red Team Threat Analysis Dashboard - Hacking for Influence Operations",
   "private": true,
   "version": "1.0.0",
   "type": "module",

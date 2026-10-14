@@ -165,7 +165,7 @@ export function parseUploadedDisarmFile(rawJson: unknown): {
       threatActor: custom.threatActor || 'Ator Não Atribuído',
       campaignStatus: custom.campaignStatus || 'Active Ongoing',
       overallSeverity: custom.overallSeverity || 'critical',
-      description: custom.description || 'Campanha de análise FIMI carregada.',
+      description: custom.description || 'Campanha de análise operacional carregada.',
       dateCreated: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
       targetRegions: custom.targetRegions || ['Global'],

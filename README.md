@@ -1,6 +1,6 @@
 # DISARM Red Team Threat Analysis Dashboard - Hacking for Influence
 
-Plataforma analítica moderna focada em operações de **Hacking for Influence** e análise operacional de ameaças informacionais (FIMI - *Foreign Information Manipulation and Interference*), desenhada e estruturada segundo as especificações do **DISARM Red Team Framework** (DISARM Foundation).
+Plataforma analítica moderna focada em operações de **Hacking for Influence** e análise operacional de ameaças informacionais, desenhada e estruturada segundo as especificações do **DISARM Red Team Framework** (DISARM Foundation).
 
 ---
 
