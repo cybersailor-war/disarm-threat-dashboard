@@ -9,7 +9,6 @@ import {
   Globe,
   Database,
   Calendar,
-  UserCheck,
   Languages,
   FileText,
   Target,
@@ -298,21 +297,15 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                       </div>
                     )}
 
-                  {/* Date and Analyst */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/[0.04] text-[10px] font-mono text-slate-500">
-                    {technique.procedureEvidence.analyst && (
-                      <span className="flex items-center gap-1">
-                        <UserCheck className="w-3 h-3" />
-                        Analista: {technique.procedureEvidence.analyst}
-                      </span>
-                    )}
-                    {technique.procedureEvidence.dateObserved && (
+                  {/* Date Observed */}
+                  {technique.procedureEvidence.dateObserved && (
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/[0.04] text-[10px] font-mono text-slate-500">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
                         Observado em: {technique.procedureEvidence.dateObserved}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="p-4 rounded-xl bg-[#090A0F] border border-white/[0.06] text-center text-slate-500 text-xs italic">
