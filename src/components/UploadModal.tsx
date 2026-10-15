@@ -13,7 +13,7 @@ import {
 import { DisarmCampaign } from '../types/disarm';
 import { parseUploadedDisarmFile } from '../utils/disarmParser';
 import { ValidationResult } from '../schema/disarmSchema';
-import { SAMPLE_NAVIGATOR_LAYER_JSON, MOCK_CAMPAIGN_DOPPELGANGER } from '../data/mockDisarmData';
+import { SAMPLE_NAVIGATOR_LAYER_JSON } from '../data/mockDisarmData';
 import { downloadFile } from '../utils/exportUtils';
 
 interface UploadModalProps {

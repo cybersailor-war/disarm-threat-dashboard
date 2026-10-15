@@ -134,7 +134,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="space-y-1">
                   {allCampaigns.map((camp) => {
                     const isActive = camp.id === currentCampaign.id;
-                    const isPreset = ['CAMP-HFI-2026-089', 'CAMP-HFI-2026-042'].includes(camp.id);
+                    const isPreset = ['CAMP-REAL-HFI-2016-DNC'].includes(camp.id);
 
                     return (
                       <div
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
                     className="w-full flex items-center justify-center gap-1.5 p-2 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 text-xs font-mono font-semibold transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>+ Criar Nova Operação em Branco</span>
+                    <span>Criar Nova Operação em Branco</span>
                   </button>
                 </div>
               </div>

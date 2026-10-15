@@ -19,23 +19,25 @@ import { HackingForInfluenceAnalyzerModal } from './components/HackingForInfluen
 import { AttributionModal } from './components/AttributionModal';
 import { DisarmCampaign, DisarmTechnique } from './types/disarm';
 import { OfficialDisarmTechnique } from './data/officialDisarmData';
-import { MOCK_CAMPAIGN_DOPPELGANGER, MOCK_CAMPAIGN_GHOSTWRITER } from './data/mockDisarmData';
+import { REAL_CAMPAIGN_DNC_HACK_LEAK } from './data/mockDisarmData';
 import { buildTacticsList } from './utils/disarmParser';
 
 type ActiveTab = 'overview' | 'matrix' | 'navigator' | 'table';
 
-const LOCAL_STORAGE_KEY = 'disarm_campaigns_store_v1';
-const ACTIVE_CAMPAIGN_KEY = 'disarm_active_campaign_id_v1';
+const LOCAL_STORAGE_KEY = 'disarm_campaigns_store_v2';
+const ACTIVE_CAMPAIGN_KEY = 'disarm_active_campaign_id_v2';
 
 const getInitialCampaigns = (): DisarmCampaign[] => {
+  // Limpar resíduos antigos de mocks do localStorage se existirem
+  try {
+    localStorage.removeItem('disarm_campaigns_store_v1');
+    localStorage.removeItem('disarm_active_campaign_id_v1');
+  } catch {}
+
   const defaultList: DisarmCampaign[] = [
     {
-      ...MOCK_CAMPAIGN_DOPPELGANGER,
-      tactics: buildTacticsList(MOCK_CAMPAIGN_DOPPELGANGER.techniques),
-    },
-    {
-      ...MOCK_CAMPAIGN_GHOSTWRITER,
-      tactics: buildTacticsList(MOCK_CAMPAIGN_GHOSTWRITER.techniques),
+      ...REAL_CAMPAIGN_DNC_HACK_LEAK,
+      tactics: buildTacticsList(REAL_CAMPAIGN_DNC_HACK_LEAK.techniques),
     },
   ];
 
@@ -44,10 +46,16 @@ const getInitialCampaigns = (): DisarmCampaign[] => {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed.map((c: DisarmCampaign) => ({
-          ...c,
-          tactics: c.tactics && c.tactics.length > 0 ? c.tactics : buildTacticsList(c.techniques || []),
-        }));
+        // Garantir que mocks antigos não permaneçam
+        const valid = parsed.filter(
+          (c: DisarmCampaign) => c.id !== 'CAMP-HFI-2026-089' && c.id !== 'CAMP-HFI-2026-042'
+        );
+        if (valid.length > 0) {
+          return valid.map((c: DisarmCampaign) => ({
+            ...c,
+            tactics: c.tactics && c.tactics.length > 0 ? c.tactics : buildTacticsList(c.techniques || []),
+          }));
+        }
       }
     }
   } catch (err) {

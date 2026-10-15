@@ -1,403 +1,400 @@
 import { DisarmCampaign } from '../types/disarm';
 import { DISARM_TECHNIQUES_DATABASE } from './disarmMaster';
 
-export const MOCK_CAMPAIGN_DOPPELGANGER: DisarmCampaign = {
-  id: 'CAMP-HFI-2026-089',
-  name: 'Operação Doppelgänger / Matryoshka (Clonagem de Mídia e CIB)',
+/**
+ * Operação Real e Histórica Documentada de Hacking for Influence:
+ * Operação Grizzly Steppe / DNC & Podesta Hack-and-Leak (2016)
+ * Atribuída pelo Departamento de Justiça dos EUA (DOJ Indictment 1:18-cr-00215-ABJ),
+ * Comitê de Inteligência do Senado dos EUA (SSCI Vol. 2) e CISA/FBI.
+ */
+export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
+  id: 'CAMP-REAL-HFI-2016-DNC',
+  name: 'Operação Grizzly Steppe: DNC & Podesta Hack-and-Leak (Guccifer 2.0 & DCLeaks)',
   version: '2.0',
   domain: 'disarm-redteam',
-  threatActor: 'Social Design Agency (SDA) / Structura (Alinhado à Federação Russa)',
-  campaignStatus: 'Active Ongoing',
+  threatActor: 'APT28 (Fancy Bear / Unidade 26165 GRU) & Unidade 74455 GRU (Federação Russa)',
+  campaignStatus: 'Historical',
   overallSeverity: 'critical',
   description:
-    'Campanha transnacional de manipulação de informação e operações de influência direcionada a enfraquecer o apoio ocidental, desacreditar instituições democráticas e promover desinformação através da clonagem meticulosa de veículos de imprensa internacionais respeitados, uso de redes de bots no X/Telegram e desvio de filtros de bibliotecas de anúncios.',
-  dateCreated: '2026-09-12T08:30:00Z',
-  lastUpdated: '2026-10-14T09:15:00Z',
-  targetRegions: ['União Europeia', 'França', 'Alemanha', 'Ucrânia', 'América Latina'],
-  targetSectors: ['Mídia & Imprensa', 'Defesa & Forças Armadas', 'Processo Eleitoral', 'Opinião Pública'],
+    'Caso real e canônico de Hacking for Influence (Hack-and-Leak conduzido pelo serviço militar de inteligência russo GRU) durante o ciclo eleitoral presidencial dos Estados Unidos em 2016. A operação integrou intrusão cibernética ofensiva via spear-phishing e implantação de malwares Sofacy/X-Agent nos servidores do DNC/DCCC, roubo de credenciais da conta pessoal de John Podesta, exfiltração de mais de 50.000 e-mails confidenciais, forja da persona hacktivista "Guccifer 2.0" e do portal dcleaks.com, e vazamentos sincronizados com momentos-chave de campanha via WikiLeaks e grande imprensa.',
+  dateCreated: '2016-03-15T09:00:00Z',
+  lastUpdated: '2016-11-08T23:59:00Z',
+  targetRegions: ['Estados Unidos', 'Washington D.C.'],
+  targetSectors: ['Processo Eleitoral Presidencial', 'Partidos Políticos (DNC/DCCC)', 'Mídia & Imprensa Investigativa', 'Opinião Pública'],
   rawSourceType: 'disarm-navigator',
   techniques: [
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0074'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-001',
-        techniqueId: 'T0074',
-        title: 'Diretriz de Desestabilização Europeia e Fadiga Eleitoral',
-        operationalNote:
-          'Documentos internos e memorandos de planejamento interceptados demonstram metas numéricas explícitas de atingir 35 milhões de visualizações em audiências de língua alemã e francesa com temas de aumento no custo de vida atribuído a sanções.',
-        observedArtifacts: ['Memorando_SDA_Q3_Metas.pdf', 'KPI_Tracking_Sheet_2026.xlsx'],
-        evidenceUrls: ['https://euvsdisinfo.eu/report/doppelganger-sda-internal-docs/'],
-        targetedEntities: ['Eleitorado Francês e Alemão', 'Think tanks de segurança'],
-        confidence: 'confirmed',
-        dateObserved: '2026-09-14',
-        analyst: 'Analista Sênior de Operações de Influência / Red Team DISARM',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0003'],
+      ...DISARM_TECHNIQUES_DATABASE['T0002'],
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-002',
-        techniqueId: 'T0003',
-        title: 'Exploração de Tensões Migratórias e Inflacionárias Preexistentes',
+        id: 'PROC-HFI-001',
+        techniqueId: 'T0002',
+        title: 'Diretriz Estratégica Governamental de Desestabilização Eleitoral',
         operationalNote:
-          'A campanha aproveitou o anúncio de reajuste nas tarifas de energia elétrica em Berlim para veicular mensagens hiperbólicas alegando racionamento iminente de combustível no inverno europeu.',
-        observedArtifacts: ['Hashtag #KaelteWinter2026', 'Gráficos manipulados de preços de gás'],
-        evidenceUrls: ['https://archive.is/berlin-gas-fearmongering-sample'],
-        targetedEntities: ['Consumidores residenciais da Europa Central', 'Sindicatos'],
-        confidence: 'confirmed',
-        dateObserved: '2026-09-18',
-        analyst: 'Equipe de Análise Sociopolítica',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0072.004'],
-      severity: 'medium',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-003',
-        techniqueId: 'T0072.004',
-        title: 'Segmentação Psicográfica de Comunidades Rurais e Trabalhadores Agrícolas',
-        operationalNote:
-          'Análise de campanhas de anúncios patrocinados indicou hiper-segmentação de usuários com interesse em subsídios agrícolas na Alemanha e França, correlacionando medidas ecológicas com colapso do agronegócio.',
-        observedArtifacts: ['Auditoria de Pixel Meta ID: 88472910398', 'Conjunto de audiência "Agrar_Bayern_01"'],
-        evidenceUrls: ['https://transparency.fb.com/ad-library/archive/88472910398'],
-        targetedEntities: ['Associações de produtores rurais', 'Cooperativas agrícolas'],
-        confidence: 'probable',
-        dateObserved: '2026-09-22',
-        analyst: 'Unidade OSINT Digital',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0098.001'],
-      severity: 'critical',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-004',
-        techniqueId: 'T0098.001',
-        title: 'Criação de Portais Clonados Inautênticos (Le Monde e Der Spiegel)',
-        operationalNote:
-          'Foram identificados 48 domínios typosquatted hospedando réplicas perfeitas das homepages do Le Monde (ex: lemonde.ltd) e Der Spiegel (der-spiegel.info). Os portais copiam o CSS, fontes e logotipos oficiais, alterando exclusivamente o artigo principal com matéria fabricada.',
+          'Oficiais de alta patente da inteligência militar russa (GRU - Unidades Militares 26165 e 74455) receberam diretrizes governamentais explícitas para planejar e executar operações cibernéticas ofensivas combinadas com medidas ativas de influência psicológica para aprofundar polarizações sócio-políticas e enfraquecer a confiança pública no sistema democrático ocidental.',
         observedArtifacts: [
-          'lemonde.ltd (IP: 185.220.101.45)',
-          'der-spiegel.info (IP: 185.220.101.49)',
-          'Certificados Let\'s Encrypt com SANs de jornais franceses',
+          'DOJ Indictment 1:18-cr-00215-ABJ (Grand Jury Mueller Report)',
+          'Relatório Bipartidário do Comitê de Inteligência do Senado dos EUA (SSCI Vol. 2)'
         ],
         evidenceUrls: [
-          'https://lemonde.ltd/article/fausse-tribune-exclusif',
-          'https://virustotal.com/gui/domain/lemonde.ltd',
+          'https://www.justice.gov/opa/pr/grand-jury-indicts-12-russian-intelligence-officers-hacking-offenses-related-to-2016-presidential',
+          'https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'
         ],
-        targetedEntities: ['Le Monde editorial', 'Der Spiegel', 'Leitores em geral'],
+        targetedEntities: ['Eleitorado norte-americano', 'Sistema político e institucional dos EUA'],
         confidence: 'confirmed',
-        dateObserved: '2026-09-25',
-        analyst: 'Unidade de Engenharia Reversa e DNS',
-      },
+        dateObserved: '2016-03-15',
+        analyst: 'Relatório Conjunto de Inteligência CTI & Red Team DISARM'
+      }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0088'],
+      ...DISARM_TECHNIQUES_DATABASE['T0081.008'],
       severity: 'high',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-005',
-        techniqueId: 'T0088',
-        title: 'Áudio Sintético Clonado de Diplomata Europeu (Deepfake Audio)',
+        id: 'PROC-HFI-002',
+        techniqueId: 'T0081.008',
+        title: 'Mapeamento da Voracidade do Ciclo de Notícias de 24h e Correspondentes Políticos',
         operationalNote:
-          'Gravação de áudio de 45 segundos simulando a voz de um embaixador europeu afirmando suposto acordo secreto de corte de fundos humanitários. A análise espectrográfica revelou ausência de ruído de sala natural e artefatos típicos de modelos de clonagem de voz por difusão.',
-        observedArtifacts: ['vazamento_audio_embaixada_berlim.mp3', 'Espectrograma_Analise_C2PA.png'],
-        evidenceUrls: ['https://t.me/insider_leaks_channel/4089'],
-        targetedEntities: ['Corpo Diplomático', 'Ministério das Relações Exteriores'],
+          'Os operadores mapearam as fragilidades estruturais da imprensa de Washington, identificando que redações digitais e colunistas de bastidores priorizam a velocidade e o furo jornalístico sobre a checagem rigorosa da proveniência ilícita de materiais vazados.',
+        observedArtifacts: [
+          'Mapeamento de jornalistas investigativos (The Smoking Gun, Motherboard, Gawker)',
+          'Dossiê de Vulnerabilidade do Ciclo Noticioso Político'
+        ],
+        evidenceUrls: ['https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'],
+        targetedEntities: ['Jornalistas e repórteres do ecossistema político de Washington'],
         confidence: 'confirmed',
-        dateObserved: '2026-10-01',
-        analyst: 'Perito Forense de Mídias Sintéticas',
-      },
+        dateObserved: '2016-03-22',
+        analyst: 'Especialista em Ecossistemas Midiáticos'
+      }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0130.002'],
+      ...DISARM_TECHNIQUES_DATABASE['T0083'],
+      severity: 'high',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-003',
+        techniqueId: 'T0083',
+        title: 'Exploração de Tensões e Fraturas Internas no Partido Democrata',
+        operationalNote:
+          'A exploração narrativa foi calibrada para explorar o ressentimento entre a ala progressista (apoiadores de Bernie Sanders) e o establishment partidário (Hillary Clinton), selecionando trechos de e-mails de dirigentes partidários do DNC que sugeriam favoritismo e desdém contra a candidatura insurgente.',
+        observedArtifacts: [
+          'Compilação de e-mails internos do DNC classificados por potencial de fricção interna',
+          'Campanhas de hashtags dirigidas #DNCGate e #BernieWasRobbed'
+        ],
+        evidenceUrls: ['https://www.dni.gov/files/documents/ICA_2017_01.pdf'],
+        targetedEntities: ['Apoiadores democratas independentes', 'Delegados da Convenção Partidária'],
+        confidence: 'confirmed',
+        dateObserved: '2016-04-10',
+        analyst: 'Analista de Estratégia Narrativa e Dinâmicas Eleitorais'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0149.003'],
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-006',
-        techniqueId: 'T0130.002',
-        title: 'Hospedagem Bulletproof e Infraestrutura de Redirecionamento',
+        id: 'PROC-HFI-004',
+        techniqueId: 'T0149.003',
+        title: 'Spear-Phishing com Domínio Falso Google Lookalike contra John Podesta',
         operationalNote:
-          'Os domínios foram registrados utilizando serviços de proxy WhoisPrivacy Corp com pagamentos efetuados via USDT (Tether) na rede Tron. Os servidores DNS apontam para blocos ASN 49981 sediados em provedores bulletproof.',
+          'Em 19 de março de 2016, operadores da Unidade 26165 enviaram e-mail de falso alerta de segurança a John Podesta com link encurtado bit.ly/1WvD74X mascarando o domínio malicioso myaccount.google.com-securitysettingpage[.]info. A vítima inseriu suas credenciais, concedendo aos operadores russos acesso total à sua caixa postal com mais de 50.000 mensagens privadas.',
         observedArtifacts: [
-          'whois_lookup_dump_20261003.json',
-          'ASN 49981 IP Block: 194.36.177.0/24',
+          'Domínio Phishing: myaccount.google.com-securitysettingpage.info',
+          'Encurtador Bit.ly (conta russa "hirsh_arm")',
+          'E-mail com remetente forjado: no-reply@accounts.googlesupport.com'
         ],
-        evidenceUrls: ['https://securitytrails.com/domain/lemonde.ltd/dns'],
-        targetedEntities: ['Registradores de Domínio', 'Comitês de Cibersegurança Nacional'],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['John Podesta (Presidente de Campanha)', 'Equipe de Finanças e Relações Governamentais'],
         confidence: 'confirmed',
-        dateObserved: '2026-10-03',
-        analyst: 'Especialista em Threat Hunting de Infraestrutura',
-      },
+        dateObserved: '2016-03-19',
+        analyst: 'Unidade de Inteligência de Ameaças Cibernéticas (CTI)'
+      }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0146.007'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-007',
-        techniqueId: 'T0146.007',
-        title: 'Enxame de 3.400 Contas Automatizadas (Bots) com StyleGAN',
-        operationalNote:
-          'Identificada fazenda de contas no X (antigo Twitter) com fotos de perfil geradas por IA (olhos centralizados milimetricamente, artefatos nas orelhas). Perfis realizam retuítes coordenados de links dos sites clonados num intervalo de 3 a 5 segundos.',
-        observedArtifacts: ['Dataset_3400_X_Handles_CIB.csv', 'Cluster_Graph_Gephi.gexf'],
-        evidenceUrls: ['https://x.com/search?q=lemonde.ltd'],
-        targetedEntities: ['Timeline de jornalistas franceses', 'Usuários de hashtags políticas'],
-        confidence: 'confirmed',
-        dateObserved: '2026-10-05',
-        analyst: 'Analista de Redes Sociais Coordenadas',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0146.003'],
-      severity: 'medium',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-008',
-        techniqueId: 'T0146.003',
-        title: 'Aquisição de Selos Azuis de Verificação (Verified Account Asset)',
-        operationalNote:
-          'Pelo menos 120 contas de liderança do enxame adquiriram assinaturas pagas do X Premium com cartões virtuais pré-pagos, garantindo amplificação algorítmica forçada e topo das seções de comentários em posts de chefes de Estado.',
-        observedArtifacts: ['Lista_120_Verified_Bots.json'],
-        evidenceUrls: ['https://x.com/verified_disinfo_node1'],
-        targetedEntities: ['Algoritmo For You do X', 'Público geral'],
-        confidence: 'probable',
-        dateObserved: '2026-10-07',
-        analyst: 'Especialista em Políticas de Plataforma',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0076'],
+      ...DISARM_TECHNIQUES_DATABASE['T0123'],
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-009',
-        techniqueId: 'T0076',
-        title: 'Distorção de Indicadores Econômicos e Ad Cloaking',
+        id: 'PROC-HFI-005',
+        techniqueId: 'T0123',
+        title: 'Invasão Cibernética Ofensiva da Rede do DNC/DCCC com Malwares Sofacy e X-Agent',
         operationalNote:
-          'Campanhas de anúncios no Facebook mostram uma receita inofensiva de culinária para os crawlers de revisão e IPs sediados nos EUA/Irlanda. Para IPs residenciais franceses ou alemães, redirecionam imediatamente via HTTP 302 para os domínios clonados com o falso artigo.',
+          'Operadores da Unidade 26165 do GRU penetraram na rede corporativa do Comitê de Campanha Congressional Democrata (DCCC) e do DNC em abril de 2016. Foram implantados keyloggers e o backdoor X-Agent (Sofacy), além do utilitário X-Tunnel para extrair tráfego e controlar remotamente estações de trabalho e servidores Exchange.',
         observedArtifacts: [
-          'Script_Cloaker_Fingerprint.js',
-          'Campanha Ad ID 49102839210',
-          'Headers HTTP 302 de redirecionamento condicional',
+          'Implante X-Agent (MD5: 7c5d984cfb72183e8b4e3e3b33df1b80)',
+          'Servidor de Comando e Controle (C2) IP 176.31.112.70',
+          'Dump de análise de memória CrowdStrike Falcon'
         ],
-        evidenceUrls: ['https://adstransparency.google.com/sample-campaign-cloaking'],
-        targetedEntities: ['Equipes de moderação de anúncios Meta/Google', 'Eleitores'],
+        evidenceUrls: [
+          'https://www.crowdstrike.com/blog/bears-in-the-midst-intrusion-democratic-national-committee/',
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a'
+        ],
+        targetedEntities: ['Servidores Exchange do DNC', 'Estações de trabalho do DCCC'],
         confidence: 'confirmed',
-        dateObserved: '2026-10-09',
-        analyst: 'Perito em AdTech & Engenharia Web',
-      },
+        dateObserved: '2016-04-18',
+        analyst: 'Perito Forense de Resposta a Incidentes (DFIR)'
+      }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0116.001'],
+      ...DISARM_TECHNIQUES_DATABASE['T0089'],
+      severity: 'critical',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-006',
+        techniqueId: 'T0089',
+        title: 'Exfiltração e Compactação de dezenas de Gigabytes de Dados Confidenciais',
+        operationalNote:
+          'Operadores da Unidade 74455 do GRU compactaram gigabytes de e-mails, listas de doadores e memorandos estratégicos dos servidores invadidos em arquivos RAR protegidos por senha (ex: 70850.rar) e os exfiltraram via túneis SSL seguros para servidores arrendados na Europa.',
+        observedArtifacts: [
+          'Volume criptografado de exfiltração: 70850.rar (5.2 GB de correspondências .eml)',
+          'Tráfego anômalo na porta 443 direcionado ao IP 185.86.151.11'
+        ],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['Comitê Nacional Democrata (DNC)', 'Comitê Financeiro Partidário'],
+        confidence: 'confirmed',
+        dateObserved: '2016-04-22',
+        analyst: 'Analista de Forense em Redes & Tráfego Exfiltrado'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0149.001'],
       severity: 'high',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-010',
-        techniqueId: 'T0116.001',
-        title: 'Onda Coordenada de Respostas em Páginas Oficiais de Ministérios',
+        id: 'PROC-HFI-007',
+        techniqueId: 'T0149.001',
+        title: 'Aquisição do Domínio dcleaks.com com Bitcoins Lavados pela Unidade 74455',
         operationalNote:
-          'Em menos de 10 minutos após um comunicado oficial do Ministério da Defesa, mais de 800 comentários pré-roteirizados foram injetados contendo capturas de tela do artigo falso clonado do Le Monde.',
-        observedArtifacts: ['Log_Comentarios_Sincronizados_Twitter.json'],
-        evidenceUrls: ['https://x.com/Defense_gouv/status/18440019293'],
-        targetedEntities: ['Ministère des Armées (França)', 'Seguidores de contas governamentais'],
+          'Em 19 de abril de 2016, a Unidade 74455 do GRU registrou o domínio dcleaks[.]com usando o serviço de proxy PrivacyProtect na Malásia. O pagamento da hospedagem e registro foi feito em frações de Bitcoin mineradas e operadas pelos próprios militares russos para impedir a atribuição bancária.',
+        observedArtifacts: [
+          'Histórico WHOIS de dcleaks.com (PrivacyProtect.org)',
+          'Transação Bitcoin na blockchain: carteira 1E18vy2L... vinculada ao GRU'
+        ],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['Infraestrutura pública de vazamentos independentes'],
         confidence: 'confirmed',
-        dateObserved: '2026-10-10',
-        analyst: 'Monitoramento de Incidentes de Resposta Imediata',
-      },
+        dateObserved: '2016-04-19',
+        analyst: 'Perito Forense de Rastreamento em Blockchain & OSINT'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0097.104'],
+      severity: 'critical',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-008',
+        techniqueId: 'T0097.104',
+        title: 'Criação da Persona Hacktivista Forjada "Guccifer 2.0" para Falsificar Atribuição',
+        operationalNote:
+          'Após o anúncio público da CrowdStrike identificando a autoria russa na invasão em junho de 2016, o GRU criou no dia seguinte a persona forjada "Guccifer 2.0", alegando ser um hacktivista independente da Romênia. Uma falha de segurança operacional (OPSEC) revelou acessos sem VPN com IP associado diretamente ao complexo do GRU em Moscou, além de metadados em língua russa ("Феликс Эдмундович") nos documentos em Word vazados.',
+        observedArtifacts: [
+          'Blog WordPress: guccifer2.wordpress.com',
+          'Documento "DNC-confidential-memo.docx" com autor russo nos metadados',
+          'Log de conexão sem VPN da sede do GRU na rua Komsomolsky em Moscou'
+        ],
+        evidenceUrls: [
+          'https://www.justice.gov/file/1080281/download',
+          'https://www.mandiant.com/resources/apt28-at-the-center-of-the-storm'
+        ],
+        targetedEntities: ['Comunidade internacional de CTI', 'Imprensa e opinião pública global'],
+        confidence: 'confirmed',
+        dateObserved: '2016-06-15',
+        analyst: 'Especialista em Atribuição de Ameaças Estatais (APTs)'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0144.001'],
+      severity: 'high',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-009',
+        techniqueId: 'T0144.001',
+        title: 'Presença Cruzada da Persona Guccifer 2.0 e DCLeaks em Múltiplas Plataformas',
+        operationalNote:
+          'A persona forjada operava de maneira coordenada em perfis no Twitter (@Guccifer_2 e @DCleaks), no blog WordPress oficial e em canais de mensageria direta, mantendo consistência de tom, identidade visual e links cruzados para simular autenticidade perante repórteres.',
+        observedArtifacts: [
+          'Conta do Twitter @Guccifer_2 (ID 743118942004240384)',
+          'Feed RSS e diretórios públicos de arquivos no portal dcleaks.com'
+        ],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['Usuários de redes sociais', 'Jornalistas investigativos'],
+        confidence: 'confirmed',
+        dateObserved: '2016-06-20',
+        analyst: 'Analista de Identidade Digital e Personas Operacionais'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0155.007'],
+      severity: 'high',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-010',
+        techniqueId: 'T0155.007',
+        title: 'Transferência Criptografada de Dados Exfiltrados para a Organização WikiLeaks',
+        operationalNote:
+          'Em meados de julho de 2016, operadores da Unidade 74455 estabeleceram canais criptografados via Twitter DMs e túneis VPN utilizando chaves PGP com a organização WikiLeaks. Foi transferido um lote de 1 Gigabyte contendo milhares de e-mails internos do DNC com instruções de cronograma de publicação.',
+        observedArtifacts: [
+          'Conversas em DMs criptografadas entre @Guccifer_2 e @wikileaks',
+          'Arquivo protegido por chave PGP transferido via VPN com saída na Alemanha'
+        ],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['Redação editorial da WikiLeaks', 'Mídia internacional'],
+        confidence: 'confirmed',
+        dateObserved: '2016-07-14',
+        analyst: 'Perito Forense de Criptografia & Canais Ocultos'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0117'],
+      severity: 'critical',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-011',
+        techniqueId: 'T0117',
+        title: 'Alavancagem e Sedução da Grande Imprensa com Furos Exclusivos de Dados Hackeados',
+        operationalNote:
+          'Os operadores russos enviaram e-mails e mensagens diretas oferecendo acessos antecipados e senhas exclusivas de diretórios do dcleaks[.]com a jornalistas de veículos prestigiados como The Smoking Gun, Motherboard/Vice, Gawker e The Wall Street Journal, transformando a imprensa investigativa em vetor involuntário de difusão da operação.',
+        observedArtifacts: [
+          'Mensagens DMs de @Guccifer_2 oferecendo pastas de documentos de campanhas',
+          'Matérias de capa publicadas na grande imprensa com documentos do dcleaks.com'
+        ],
+        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
+        targetedEntities: ['Redações de jornais de circulação nacional e portais de notícias'],
+        confidence: 'confirmed',
+        dateObserved: '2016-07-18',
+        analyst: 'Analista de Ecossistema Midiático'
+      }
     },
     {
       ...DISARM_TECHNIQUES_DATABASE['T0015'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-011',
-        techniqueId: 'T0015',
-        title: 'Sequestro de Hashtags de Cúpula de Líderes Europeus (#EUCO)',
-        operationalNote:
-          'Injeção massiva de memes provocativos e links de sites clones nas hashtags oficiais #EUCO e #MunichSecurityConference, poluindo a busca em tempo real do evento.',
-        observedArtifacts: ['Hashtag_Volume_Spike_Analysis.png'],
-        evidenceUrls: ['https://trends24.in/france/euco/'],
-        targetedEntities: ['Jornalistas cobrindo a cúpula', 'Diplomatas'],
-        confidence: 'confirmed',
-        dateObserved: '2026-10-11',
-        analyst: 'Analista de Operações de Informação',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0118'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-012',
-        techniqueId: 'T0118',
-        title: 'Transbordamento Viral para o TikTok com Locuções de IA',
-        operationalNote:
-          'Cortes de 15 segundos da matéria forjada convertidos em vídeos no TikTok com narração automatizada e trilha dramática, alcançando 1,8 milhão de reproduções antes de qualquer desmentido formal.',
-        observedArtifacts: ['TikTok_Video_ID_74910294819.mp4', 'Extrato de Métricas de Engajamento'],
-        evidenceUrls: ['https://www.tiktok.com/@politique_directe/video/74910294819'],
-        targetedEntities: ['Público jovem (18-29 anos)', 'TikTok Discover'],
-        confidence: 'confirmed',
-        dateObserved: '2026-10-12',
-        analyst: 'Observatório de Mídias Emergentes',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0089.003'],
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-013',
-        techniqueId: 'T0089.003',
-        title: 'Adulteração de Minuta Oficial de Defesa e Forja de Assinatura',
+        id: 'PROC-HFI-012',
+        techniqueId: 'T0015',
+        title: 'Liberação Sincronizada com a Convenção Democrata e Debates Presidenciais',
         operationalNote:
-          'Documento oficial do Ministério das Relações Exteriores obtido previamente teve duas páginas substituídas por textos alegando autorização secreta de destacamentos militares.',
-        observedArtifacts: ['Documento_Adulterado_v3_analisado.pdf', 'Hash_Mismatch_Report.txt'],
-        evidenceUrls: ['https://euvsdisinfo.eu/report/altered-documents-france/'],
-        targetedEntities: ['Ministério das Relações Exteriores', 'Imprensa Investigativa'],
+          'Os vazamentos foram calibrados com precisão cirúrgica: 19.252 e-mails do DNC foram liberados pela WikiLeaks em 22 de julho de 2016, 72 horas antes da abertura da Convenção Democrata na Filadélfia, forçando a renúncia da presidente do comitê. Em 7 de outubro de 2016, 33 minutos após a revelação da fita de áudio do candidato republicano, a WikiLeaks iniciou a publicação diária contínua dos e-mails de John Podesta, recapturando e dominando o ciclo de notícias de 24 horas até a votação.',
+        observedArtifacts: [
+          'Cronologia comparativa dos lotes de vazamento vs eventos de campanha de 2016',
+          'Picos de buscas no Google Trends e menções no Twitter'
+        ],
+        evidenceUrls: ['https://www.cisa.gov/sites/default/files/publications/tactics-of-disinformation_508.pdf'],
+        targetedEntities: ['Convenção Nacional Democrata', 'Audiências de debates presidenciais'],
         confidence: 'confirmed',
-        dateObserved: '2026-10-13',
-        analyst: 'Perito em Análise Forense Documental',
-      },
+        dateObserved: '2016-07-22',
+        analyst: 'Especialista em Cronologia de Operações de Influência'
+      }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0059'],
+      ...DISARM_TECHNIQUES_DATABASE['T0093.002'],
+      severity: 'high',
+      isActive: true,
+      procedureEvidence: {
+        id: 'PROC-HFI-013',
+        techniqueId: 'T0093.002',
+        title: 'Amplificação por Redes Automatizadas (Botnets) da Internet Research Agency (IRA)',
+        operationalNote:
+          'Em paralelo à intrusão cibernética do GRU, a Internet Research Agency (IRA / Project Lakhta de São Petersburgo) mobilizou fazendas de milhares de bots automatizados e contas inautênticas no Twitter e Facebook para retweetar os vazamentos e forçar hashtags como #DNCLeak, #PodestaEmails e #Guccifer2 nos trending topics mundiais.',
+        observedArtifacts: [
+          'Dataset do Twitter de operações atribuídas à Federação Russa (Twitter Transparency)',
+          'Mais de 3.800 contas inautênticas coordenadas identificadas pelo comitê do Senado'
+        ],
+        evidenceUrls: ['https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'],
+        targetedEntities: ['Algoritmos de trending topics das redes sociais', 'Eleitores em swing states'],
+        confidence: 'confirmed',
+        dateObserved: '2016-07-24',
+        analyst: 'Perito em Comportamento Inautêntico Coordenado (CIB)'
+      }
+    },
+    {
+      ...DISARM_TECHNIQUES_DATABASE['T0134.002'],
       severity: 'medium',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-014',
-        techniqueId: 'T0059',
-        title: 'Manutenção de Contas e Redes Dormentes (Play the Long Game)',
+        id: 'PROC-HFI-014',
+        techniqueId: 'T0134.002',
+        title: 'Monitoramento Contínuo de Métricas de Engajamento e Repercussão Eleitoral',
         operationalNote:
-          'Mais de 400 canais e contas continuam em ritmo de postagens genéricas sobre entretenimento e culinária, preservando histórico e maturidade digital para operações futuras.',
-        observedArtifacts: ['Lista_Sleepers_Canais_Telegram.csv'],
-        evidenceUrls: ['https://t.me/lifestyle_daily_fr'],
-        targetedEntities: ['Usuários de redes sociais em geral'],
-        confidence: 'probable',
-        dateObserved: '2026-10-14',
-        analyst: 'Analista de Infraestrutura Cibernética & Persistência',
-      },
-    },
+          'Avaliação periódica do alcance orgânico, volume de retuítes das postagens de Guccifer 2.0, número de downloads dos arquivos brutos no DCLeaks e frequência de citações nas sabatinas de domingo da grande imprensa americana, subsidiando o ritmo dos próximos lotes.',
+        observedArtifacts: [
+          'Planilhas de mensuração de KPI de cobertura de imprensa e impacto de audiência',
+          'Relatório de Desempenho de Campanha de Informação'
+        ],
+        evidenceUrls: ['https://www.dni.gov/files/documents/ICA_2017_01.pdf'],
+        targetedEntities: ['Metrificação de impacto em eleitores e mídia'],
+        confidence: 'confirmed',
+        dateObserved: '2016-10-15',
+        analyst: 'Analista de Avaliação de Eficácia & Impacto Estratégico'
+      }
+    }
   ],
-  tactics: [],
-};
-
-export const MOCK_CAMPAIGN_GHOSTWRITER: DisarmCampaign = {
-  id: 'CAMP-HFI-2026-042',
-  name: 'Operação Ghostwriter / UNC1151 (Invasão de CMS & Falso Vazamento)',
-  version: '2.0',
-  domain: 'disarm-redteam',
-  threatActor: 'UNC1151 / Alinhado a Belarus & Federação Russa',
-  campaignStatus: 'Historical',
-  overallSeverity: 'high',
-  description:
-    'Operação focada em comprometer portais de notícias regionais e sistemas de gerenciamento de conteúdo (CMS), inserindo matérias forjadas antimilitaristas e anti-OTAN diretamente em sites legítimos hackeados.',
-  dateCreated: '2026-06-01T10:00:00Z',
-  lastUpdated: '2026-08-15T16:20:00Z',
-  targetRegions: ['Polônia', 'Lituânia', 'Letônia'],
-  targetSectors: ['Defesa', 'Governo Local', 'Imprensa Regional'],
-  rawSourceType: 'disarm-navigator',
-  techniques: [
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0074'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-GW-01',
-        techniqueId: 'T0074',
-        title: 'Fomentar Hostilidade Pública Contra Tropas Aliadas',
-        operationalNote:
-          'Meta deliberada de criar incidentes diplomáticos bilaterais entre Polônia e Lituânia simulando acusações de conduta criminosa de soldados da OTAN.',
-        observedArtifacts: ['Relatorio_Plano_Operacional_Ghostwriter.pdf'],
-        evidenceUrls: ['https://www.mandiant.com/resources/unc1151-ghostwriter-update'],
-        targetedEntities: ['População da fronteira Polônia-Lituânia'],
-        confidence: 'confirmed',
-        dateObserved: '2026-06-10',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0089.003'],
-      severity: 'critical',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-GW-02',
-        techniqueId: 'T0089.003',
-        title: 'Falsificação de Carta de Comandante Militar',
-        operationalNote:
-          'Carta com cabeçalho oficial e assinatura forjada do general Tomasz Piotrowski afirmando que exercícios da OTAN colocavam em risco civis.',
-        observedArtifacts: ['Carta_Forjada_OTAN_2026.png', 'Certificado PGP Inválido'],
-        evidenceUrls: ['https://www.gov.pl/web/sluzby-specjalne/komunikat-operacja-ghostwriter'],
-        targetedEntities: ['Comando Operacional das Forças Armadas da Polônia'],
-        confidence: 'confirmed',
-        dateObserved: '2026-06-15',
-      },
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0116.001'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-GW-03',
-        techniqueId: 'T0116.001',
-        title: 'Publicação Direta em CMS Invadido de Jornal Local',
-        operationalNote:
-          'Invasão das credenciais de editor do jornal regional Olsztyn24 via vulnerabilidade de plugin desatualizado para publicar a carta forjada como notícia legítima.',
-        observedArtifacts: ['Log_Acesso_WordPress_Olsztyn24.log', 'IP Atacante: 91.240.118.15'],
-        evidenceUrls: ['https://olsztyn24.com/komunikat-wyjasnienie'],
-        targetedEntities: ['Redação do Olsztyn24', 'Leitores regionais'],
-        confidence: 'confirmed',
-        dateObserved: '2026-06-18',
-      },
-    },
-  ],
-  tactics: [],
+  tactics: []
 };
 
 export const SAMPLE_NAVIGATOR_LAYER_JSON = {
-  name: 'DISARM Sample Layer - Doppelgänger',
+  name: 'DISARM Layer - DNC & Podesta Hack-and-Leak (Grizzly Steppe / APT28)',
   version: '2.0',
   domain: 'disarm-redteam',
-  description: 'Exemplo de camada exportada no formato padrão DISARM Navigator',
+  description:
+    'Camada oficial no formato padrão DISARM Navigator mapeando o caso real de Hacking for Influence (APT28 / GRU)',
   techniques: [
     {
-      techniqueID: 'T0074',
-      score: 85,
-      color: '#ef4444',
-      comment: 'Diretriz de Desestabilização',
-      enabled: true,
-    },
-    {
-      techniqueID: 'T0003',
+      techniqueID: 'T0002',
       score: 90,
       color: '#ef4444',
-      comment: 'Exploração de Tensões Preexistentes',
-      enabled: true,
+      comment: 'Facilitate State Propaganda - Diretriz Estratégica do GRU',
+      enabled: true
     },
     {
-      techniqueID: 'T0098.001',
+      techniqueID: 'T0123',
       score: 95,
       color: '#dc2626',
-      comment: 'Criação de Portais Clonados Inautênticos',
-      enabled: true,
+      comment: 'Offensive Cyberspace Operations - Invasão Sofacy/X-Agent',
+      enabled: true
     },
     {
-      techniqueID: 'T0088',
-      score: 80,
-      color: '#f97316',
-      comment: 'Áudio Sintético Clonado',
-      enabled: true,
+      techniqueID: 'T0149.003',
+      score: 95,
+      color: '#dc2626',
+      comment: 'Lookalike Domain - Phishing John Podesta',
+      enabled: true
     },
     {
-      techniqueID: 'T0146.007',
-      score: 85,
+      techniqueID: 'T0089',
+      score: 95,
+      color: '#dc2626',
+      comment: 'Obtain Private Documents - Exfiltração de e-mails do DNC',
+      enabled: true
+    },
+    {
+      techniqueID: 'T0097.104',
+      score: 95,
+      color: '#dc2626',
+      comment: 'Hacktivist Persona - Guccifer 2.0',
+      enabled: true
+    },
+    {
+      techniqueID: 'T0117',
+      score: 90,
       color: '#ef4444',
-      comment: 'Contas Automatizadas (Bots)',
-      enabled: true,
+      comment: 'Attract Traditional Media - Sedução de jornalistas com furos',
+      enabled: true
     },
-  ],
+    {
+      techniqueID: 'T0015',
+      score: 95,
+      color: '#dc2626',
+      comment: 'Event & Trend Hijacking - Liberação sincronizada',
+      enabled: true
+    },
+    {
+      techniqueID: 'T0093.002',
+      score: 85,
+      color: '#f97316',
+      comment: 'Acquire Botnets - Amplificação por bots da IRA',
+      enabled: true
+    }
+  ]
 };
