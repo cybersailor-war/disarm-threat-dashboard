@@ -78,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-base font-extrabold tracking-wider text-white font-mono">
-                  DISARM<span className="text-sky-400">.OPS</span>
+                  DISARM<span className="text-sky-400">.AI</span>
                 </span>
                 <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-md bg-red-500/15 text-red-400 border border-red-500/30 font-bold tracking-widest shadow-[0_0_10px_rgba(239,68,68,0.2)]">
                   RED TEAM

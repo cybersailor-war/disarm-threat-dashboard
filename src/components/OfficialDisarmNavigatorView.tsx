@@ -112,97 +112,117 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
   return (
     <div className="space-y-4">
       {/* Navigator Top Control Banner */}
-      <div className="tactical-panel p-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
+      <div className="tactical-panel p-4 sm:p-5 space-y-4">
+        {/* Row 1: Header Title & Summary Badge */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-gradient-to-br from-sky-500/20 via-sky-600/10 to-transparent border border-sky-500/30 text-sky-400 flex-shrink-0 shadow-sm">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <span>DISARM Foundation Matrix Navigator (Oficial)</span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h2 className="text-base font-bold text-white tracking-wide font-mono">
+                  DISARM Foundation Matrix Navigator (Oficial)
+                </h2>
+                <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold shadow-sm">
                   16 Táticas • 391 Técnicas (103 Principais + 288 Subs)
                 </span>
-              </h2>
+              </div>
               <p className="text-xs text-slate-400 mt-0.5">
-                Visualização 1:1 integrada idêntica ao DISARM Navigator oficial. Não é necessário sair da plataforma.
+                Visualização 1:1 integrada idêntica ao DISARM Navigator oficial. Navegue pelo catálogo completo ou filtre técnicas do caso ativo.
               </p>
             </div>
           </div>
+
+          {/* External Link */}
+          <a
+            href="https://disarmfoundation.github.io/disarm-navigator/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-medium text-sky-400 hover:text-sky-300 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 transition-all self-start sm:self-center flex-shrink-0 cursor-pointer"
+            title="Abrir a ferramenta oficial externa do DISARM Navigator"
+          >
+            <span>Navigator Web</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
         </div>
 
-        {/* Action Controls & Filters */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
-          {/* Search Input */}
-          <div className="relative flex-1 sm:w-64">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+        {/* Row 2: Search Input & Action Controls Toolbar */}
+        <div className="pt-3 border-t border-white/[0.06] flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+          {/* Search Input - Generous and prominent */}
+          <div className="relative flex-1 max-w-lg min-w-[280px]">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar ID ou técnica (ex: T0099, bot, clone)..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg bg-[#0d131f] border border-white/[0.08] text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all font-mono"
+              placeholder="Buscar ID ou técnica DISARM (ex: T0098, clon, bot, persona)..."
+              className="w-full pl-10 pr-9 py-2 text-xs rounded-xl bg-[#070b13] border border-white/[0.1] hover:border-sky-500/40 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 font-mono transition-all shadow-inner"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white p-0.5 cursor-pointer"
+                title="Limpar busca"
               >
                 ✕
               </button>
             )}
           </div>
 
-          {/* Filter options */}
-          <div className="flex items-center bg-[#0d131f] border border-white/[0.08] rounded-lg p-0.5 text-xs">
-            <button
-              onClick={() => setFilterMode('all')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                filterMode === 'all' ? 'bg-sky-500 text-slate-950 font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Todas
-            </button>
-            <button
-              onClick={() => setFilterMode('active-only')}
-              className={`px-2.5 py-1 rounded-md transition-all ${
-                filterMode === 'active-only' ? 'bg-sky-500 text-slate-950 font-semibold' : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              No Caso Ativo ({activeCampaignTechIds.size})
-            </button>
-          </div>
+          {/* Filter options & Subtechnique toggles */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            {/* Filter pills: Todas vs No Caso Ativo */}
+            <div className="flex items-center bg-[#070b13] border border-white/[0.1] rounded-xl p-1 text-xs">
+              <button
+                onClick={() => setFilterMode('all')}
+                className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer ${
+                  filterMode === 'all'
+                    ? 'bg-sky-500 text-slate-950 shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Todas (391)
+              </button>
+              <button
+                onClick={() => setFilterMode('active-only')}
+                className={`px-3 py-1 rounded-lg text-xs font-mono font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  filterMode === 'active-only'
+                    ? 'bg-sky-500 text-slate-950 shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>No Caso Ativo</span>
+                <span className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+                  filterMode === 'active-only'
+                    ? 'bg-black/20 text-slate-950'
+                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                }`}>
+                  {activeCampaignTechIds.size}
+                </span>
+              </button>
+            </div>
 
-          {/* Expand / Collapse Subtechniques */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => toggleAllSubtechniques(true)}
-              className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] text-xs flex items-center gap-1"
-              title="Expandir todas as subtécnicas"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Expandir Subs</span>
-            </button>
-            <button
-              onClick={() => toggleAllSubtechniques(false)}
-              className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] text-xs flex items-center gap-1"
-              title="Recolher todas as subtécnicas"
-            >
-              <Minimize2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Recolher</span>
-            </button>
+            {/* Expand / Collapse Subtechniques */}
+            <div className="flex items-center gap-1.5 bg-[#070b13] border border-white/[0.1] rounded-xl p-1">
+              <button
+                onClick={() => toggleAllSubtechniques(true)}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/[0.08] text-slate-300 text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Expandir todas as subtécnicas"
+              >
+                <Maximize2 className="w-3.5 h-3.5 text-sky-400" />
+                <span className="text-[11px]">Expandir Subs</span>
+              </button>
+              <button
+                onClick={() => toggleAllSubtechniques(false)}
+                className="px-2.5 py-1 rounded-lg hover:bg-white/[0.08] text-slate-300 text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
+                title="Recolher todas as subtécnicas"
+              >
+                <Minimize2 className="w-3.5 h-3.5 text-slate-400" />
+                <span className="text-[11px]">Recolher</span>
+              </button>
+            </div>
           </div>
-
-          <a
-            href="https://disarmfoundation.github.io/disarm-navigator/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-sky-400 transition-all font-mono"
-          >
-            <span>Navigator Web</span>
-            <ExternalLink className="w-3 h-3" />
-          </a>
         </div>
       </div>
 
