@@ -4,16 +4,14 @@ import {
   Zap,
   Activity,
   Layers,
-  Flame,
-  FileSearch,
   Crosshair,
   ArrowRight,
   Globe,
   Building2,
   Calendar,
-  AlertCircle,
   Database,
   CheckCircle2,
+  Search,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -32,12 +30,14 @@ interface OverviewDashboardProps {
   campaign: DisarmCampaign;
   onSelectTechnique: (technique: DisarmTechnique) => void;
   onFilterByTactic?: (tacticId: string | 'ALL') => void;
+  onOpenAttributionModal?: () => void;
 }
 
 export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   campaign,
   onSelectTechnique,
   onFilterByTactic,
+  onOpenAttributionModal,
 }) => {
   const metrics = computeCampaignMetrics(campaign);
 
@@ -86,10 +86,20 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
             {/* Target Entities / Geographies */}
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-400 font-mono">
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1.5 flex-wrap">
                 <Crosshair className="w-4 h-4 text-red-400" />
                 <span className="text-slate-300">Ator de Ameaça:</span>
                 <span className="text-white font-medium">{campaign.threatActor}</span>
+                {onOpenAttributionModal && (
+                  <button
+                    onClick={onOpenAttributionModal}
+                    className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 transition-colors cursor-pointer"
+                    title="Correlacionar TTPs observados com perfis de APTs conhecidos (Base CTI)"
+                  >
+                    <Search className="w-3 h-3" />
+                    Correlacionar CTI (APT)
+                  </button>
+                )}
               </div>
 
               {campaign.targetRegions.length > 0 && (
@@ -112,12 +122,12 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
       </div>
 
-      {/* 4 Factual Operational Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Táticas DISARM Ativas */}
+      {/* 3 Factual Operational Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Card 1: Táticas Mapeadas */}
         <div className="tactical-panel p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-mono uppercase tracking-wider">Táticas DISARM</span>
+            <span className="text-xs font-mono uppercase tracking-wider font-semibold">Táticas Mapeadas</span>
             <div className="p-2 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
               <Layers className="w-4 h-4" />
             </div>
@@ -137,10 +147,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </span>
         </div>
 
-        {/* Card 2: Técnicas Identificadas */}
+        {/* Card 2: Técnicas Mapeadas */}
         <div className="tactical-panel p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-mono uppercase tracking-wider">Técnicas Mapeadas</span>
+            <span className="text-xs font-mono uppercase tracking-wider font-semibold">Técnicas Mapeadas</span>
             <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
               <Zap className="w-4 h-4" />
             </div>
@@ -156,27 +166,10 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </div>
         </div>
 
-        {/* Card 3: Procedimentos Operacionais Documentados */}
+        {/* Card 3: Artefatos e IOCs */}
         <div className="tactical-panel p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-mono uppercase tracking-wider">Procedimentos em Evidência</span>
-            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <FileSearch className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold font-mono text-white">{metrics.proceduresCount}</span>
-            <span className="text-xs text-slate-400 font-mono">notas operacionais</span>
-          </div>
-          <span className="text-[11px] text-emerald-400 mt-3 block font-mono">
-            {metrics.confidenceCounts.confirmed} confirmados analiticamente
-          </span>
-        </div>
-
-        {/* Card 4: Artefatos / IOCs Identificados */}
-        <div className="tactical-panel p-5 relative overflow-hidden group">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-mono uppercase tracking-wider">Artefatos e IOCs</span>
+            <span className="text-xs font-mono uppercase tracking-wider font-semibold">Artefatos e IOCs</span>
             <div className="p-2 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
               <Database className="w-4 h-4" />
             </div>
@@ -209,8 +202,8 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
           </div>
         </div>
 
-        {/* Horizontal Tactic Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
+        {/* Horizontal Tactic Grid: 4x4 balanced layout (16 official tactics) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3">
           {DISARM_TACTICS_MASTER.map((tactic) => {
             const activeTacticInCampaign = campaign.tactics.find((t) => t.id === tactic.id);
             const count = activeTacticInCampaign?.techniques.length || 0;
@@ -255,107 +248,62 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
       </div>
 
-      {/* Visual Distribution Chart & Critical Vectors */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart: Techniques per Tactic */}
-        <div className="tactical-panel p-5 lg:col-span-2 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-                <Target className="w-4 h-4 text-sky-400" />
-                Concentração de Técnicas por Tática DISARM
-              </h3>
-              <p className="text-[11px] text-slate-400">Número de técnicas adversárias ativas mapeadas em cada tática</p>
-            </div>
+      {/* Visual Distribution Chart */}
+      <div className="tactical-panel p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+              <Target className="w-4 h-4 text-sky-400" />
+              Concentração de Técnicas por Tática DISARM
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Número de técnicas adversárias ativas mapeadas em cada tática
+            </p>
           </div>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={tacticChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <XAxis
-                  dataKey="name"
-                  stroke="#64748B"
-                  fontSize={11}
-                  tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
-                />
-                <YAxis
-                  stroke="#64748B"
-                  fontSize={11}
-                  tickLine={false}
-                  axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
-                  allowDecimals={false}
-                />
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const data = payload[0].payload;
-                      return (
-                        <div className="bg-[#111827] border border-white/[0.1] rounded-lg p-2.5 shadow-xl text-xs font-mono">
-                          <span className="text-sky-400 font-bold block">{data.name} - {data.fullName}</span>
-                          <span className="text-slate-300">{data.count} técnica(s) identificada(s)</span>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar dataKey="count" radius={[4, 4, 0, 0]}>
-                  {tacticChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color || '#38BDF8'} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="text-xs font-mono text-slate-400 bg-black/40 px-3 py-1 rounded-md border border-white/[0.04]">
+            Distribuição Quantitativa de TTPs
           </div>
         </div>
 
-        {/* Priority Vectors with Detailed Procedures */}
-        <div className="tactical-panel p-5 flex flex-col justify-between">
-          <div className="mb-3">
-            <h3 className="text-xs font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-              <Flame className="w-4 h-4 text-red-400" />
-              Vetores Críticos de Ataque Mapeados
-            </h3>
-            <p className="text-[11px] text-slate-400">Técnicas identificadas com procedimentos operacionais e artefatos</p>
-          </div>
-
-          <div className="space-y-2.5 overflow-y-auto max-h-64 pr-1">
-            {campaign.techniques
-              .filter((t) => t.severity === 'critical' || t.severity === 'high')
-              .slice(0, 5)
-              .map((tech) => (
-                <div
-                  key={tech.id}
-                  onClick={() => onSelectTechnique(tech)}
-                  className="p-2.5 rounded-lg bg-[#090A0F] border border-white/[0.06] hover:border-red-500/40 cursor-pointer transition-all flex items-center justify-between gap-3 group"
-                >
-                  <div className="space-y-0.5 truncate">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono font-bold text-red-400">{tech.id}</span>
-                      <span className="text-xs font-semibold text-slate-200 group-hover:text-white truncate">
-                        {tech.name}
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-slate-400 block truncate font-mono">
-                      {tech.tacticName} ({tech.tacticId})
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 flex-shrink-0">
-                    <span className="text-[10px] font-mono uppercase font-bold text-red-400 bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/20">
-                      {tech.severity}
-                    </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
-                  </div>
-                </div>
-              ))}
-          </div>
-
-          <div className="mt-3 pt-3 border-t border-white/[0.08] text-[11px] text-slate-400 flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
-            <span>Dados extraídos estritamente das camadas operacionais do DISARM.</span>
-          </div>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={tacticChartData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
+              <XAxis
+                dataKey="name"
+                stroke="#64748B"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
+              />
+              <YAxis
+                stroke="#64748B"
+                fontSize={11}
+                tickLine={false}
+                axisLine={{ stroke: 'rgba(255, 255, 255, 0.08)' }}
+                allowDecimals={false}
+              />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const data = payload[0].payload;
+                    return (
+                      <div className="bg-[#111827] border border-white/[0.1] rounded-lg p-2.5 shadow-xl text-xs font-mono">
+                        <span className="text-sky-400 font-bold block">{data.name} - {data.fullName}</span>
+                        <span className="text-slate-300">{data.count} técnica(s) identificada(s)</span>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                {tacticChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color || '#38BDF8'} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

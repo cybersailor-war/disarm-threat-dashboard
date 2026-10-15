@@ -12,6 +12,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { DisarmTechnique, ThreatSeverity } from '../types/disarm';
+import { filterRealEvidenceUrls } from '../utils/exportUtils';
 
 interface TTPDetailDrawerProps {
   technique: DisarmTechnique | null;
@@ -206,28 +207,27 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                     )}
 
                   {/* Evidence URLs */}
-                  {technique.procedureEvidence.evidenceUrls &&
-                    technique.procedureEvidence.evidenceUrls.length > 0 && (
-                      <div className="space-y-1.5">
-                        <span className="text-[11px] font-mono text-slate-400 block uppercase font-semibold">
-                          Fontes / Repositórios de Evidência:
-                        </span>
-                        <div className="space-y-1">
-                          {technique.procedureEvidence.evidenceUrls.map((url, i) => (
-                            <a
-                              key={i}
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-1.5 text-xs font-mono text-sky-400 hover:text-sky-300 hover:underline truncate"
-                            >
-                              <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                              <span className="truncate">{url}</span>
-                            </a>
-                          ))}
-                        </div>
+                  {filterRealEvidenceUrls(technique.procedureEvidence.evidenceUrls).length > 0 && (
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-mono text-slate-400 block uppercase font-semibold">
+                        Fontes / Repositórios de Evidência:
+                      </span>
+                      <div className="space-y-1">
+                        {filterRealEvidenceUrls(technique.procedureEvidence.evidenceUrls).map((url, i) => (
+                          <a
+                            key={i}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-xs font-mono text-sky-400 hover:text-sky-300 hover:underline truncate"
+                          >
+                            <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{url}</span>
+                          </a>
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
 
                   {/* Targeted Entities */}
                   {technique.procedureEvidence.targetedEntities &&

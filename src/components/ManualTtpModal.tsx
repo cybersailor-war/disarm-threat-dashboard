@@ -79,7 +79,7 @@ export const ManualTtpModal: React.FC<ManualTtpModalProps> = ({
       setSeverity('high');
       setConfidence('probable');
       setArtifacts([]);
-      setEvidenceUrls([initialOfficialTech.url]);
+      setEvidenceUrls([]);
       setTargetedEntities([]);
     } else {
       setSelectedTechId('T0074');

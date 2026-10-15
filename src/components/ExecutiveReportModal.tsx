@@ -12,7 +12,13 @@ import {
 } from 'lucide-react';
 import { DisarmCampaign } from '../types/disarm';
 import { computeCampaignMetrics } from '../utils/disarmParser';
-import { exportCampaignAsMarkdown, generateMarkdownReport } from '../utils/exportUtils';
+import {
+  exportCampaignAsMarkdown,
+  exportCampaignAsPdf,
+  filterRealEvidenceUrls,
+  generateMarkdownReport
+} from '../utils/exportUtils';
+import { DISARM_TACTICS_MASTER } from '../data/disarmMaster';
 
 interface ExecutiveReportModalProps {
   isOpen: boolean;
@@ -77,11 +83,20 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
             </button>
 
             <button
-              onClick={handlePrint}
+              onClick={() => exportCampaignAsPdf(campaign)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs font-mono transition-colors shadow-glow-cyan"
+              title="Baixar Relatório de Inteligência em PDF formatado"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Baixar Relatório PDF</span>
+            </button>
+
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-xs font-mono text-slate-200 transition-colors"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Imprimir / Salvar PDF</span>
+              <span>Imprimir</span>
             </button>
 
             <button
@@ -174,7 +189,7 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
           {/* Official Tactics Mobilized Table */}
           <div className="space-y-3 print-break-inside-avoid">
             <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400 print:text-sky-800">
-              2. Táticas DISARM Mobilizadas na Operação (TA01 a TA13)
+              2. Táticas Oficiais DISARM Mobilizadas na Operação
             </h3>
             <div className="border border-white/[0.08] print:border-slate-300 rounded-lg overflow-hidden text-xs font-mono">
               <table className="w-full text-left">
@@ -183,18 +198,22 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
                     <th className="p-2.5">ID</th>
                     <th className="p-2.5">Tática Oficial DISARM</th>
                     <th className="p-2.5">Técnicas Ativas</th>
-                    <th className="p-2.5">Objetivo Tático</th>
+                    <th className="p-2.5">Explicação Oficial DISARM</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/[0.04] print:divide-slate-200">
-                  {campaign.tactics.map((tactic) => (
-                    <tr key={tactic.id}>
-                      <td className="p-2.5 font-bold text-sky-400 print:text-black">{tactic.id}</td>
-                      <td className="p-2.5 font-bold text-white print:text-black">{tactic.name}</td>
-                      <td className="p-2.5 font-bold">{tactic.techniques.length}</td>
-                      <td className="p-2.5 text-slate-400 print:text-slate-700">{tactic.description}</td>
-                    </tr>
-                  ))}
+                  {campaign.tactics.map((tactic) => {
+                    const masterDef = DISARM_TACTICS_MASTER.find((m) => m.id === tactic.id);
+                    const desc = masterDef?.description || tactic.description;
+                    return (
+                      <tr key={tactic.id}>
+                        <td className="p-2.5 font-bold text-sky-400 print:text-black">{tactic.id}</td>
+                        <td className="p-2.5 font-bold text-white print:text-black">{tactic.name}</td>
+                        <td className="p-2.5 font-bold">{tactic.techniques.length}</td>
+                        <td className="p-2.5 text-slate-300 print:text-slate-700 leading-relaxed">{desc}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -222,7 +241,9 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 print:text-slate-700">{tech.description}</p>
+                  <p className="text-xs text-slate-300 print:text-slate-700 leading-relaxed">
+                    <strong className="text-sky-300 print:text-sky-800">Definição DISARM:</strong> {tech.description}
+                  </p>
 
                   <div className="text-xs text-red-400 print:text-red-700">
                     <strong>Objetivo do Adversário:</strong> {tech.adversaryObjective}
@@ -242,9 +263,9 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
                           <strong>Artefatos / IOCs:</strong> {tech.procedureEvidence.observedArtifacts.join(' | ')}
                         </div>
                       )}
-                      {tech.procedureEvidence.evidenceUrls.length > 0 && (
+                      {filterRealEvidenceUrls(tech.procedureEvidence.evidenceUrls).length > 0 && (
                         <div className="pt-1 font-mono text-[11px] text-sky-400 print:text-sky-700">
-                          <strong>Fontes:</strong> {tech.procedureEvidence.evidenceUrls.join(', ')}
+                          <strong>Fontes de Evidência:</strong> {filterRealEvidenceUrls(tech.procedureEvidence.evidenceUrls).join(', ')}
                         </div>
                       )}
                     </div>

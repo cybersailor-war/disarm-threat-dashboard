@@ -4,6 +4,7 @@ import {
   Grid,
   Table as TableIcon,
   BookOpen,
+  Plus,
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { OverviewDashboard } from './components/OverviewDashboard';
@@ -15,21 +16,64 @@ import { UploadModal } from './components/UploadModal';
 import { ExecutiveReportModal } from './components/ExecutiveReportModal';
 import { ManualTtpModal } from './components/ManualTtpModal';
 import { HackingForInfluenceAnalyzerModal } from './components/HackingForInfluenceAnalyzerModal';
+import { AttributionModal } from './components/AttributionModal';
 import { DisarmCampaign, DisarmTechnique } from './types/disarm';
 import { OfficialDisarmTechnique } from './data/officialDisarmData';
-import { MOCK_CAMPAIGN_DOPPELGANGER } from './data/mockDisarmData';
+import { MOCK_CAMPAIGN_DOPPELGANGER, MOCK_CAMPAIGN_GHOSTWRITER } from './data/mockDisarmData';
 import { buildTacticsList } from './utils/disarmParser';
 
 type ActiveTab = 'overview' | 'matrix' | 'navigator' | 'table';
 
-export const App: React.FC = () => {
-  const [currentCampaign, setCurrentCampaign] = useState<DisarmCampaign>(() => {
-    return {
+const LOCAL_STORAGE_KEY = 'disarm_campaigns_store_v1';
+const ACTIVE_CAMPAIGN_KEY = 'disarm_active_campaign_id_v1';
+
+const getInitialCampaigns = (): DisarmCampaign[] => {
+  const defaultList: DisarmCampaign[] = [
+    {
       ...MOCK_CAMPAIGN_DOPPELGANGER,
       tactics: buildTacticsList(MOCK_CAMPAIGN_DOPPELGANGER.techniques),
-    };
+    },
+    {
+      ...MOCK_CAMPAIGN_GHOSTWRITER,
+      tactics: buildTacticsList(MOCK_CAMPAIGN_GHOSTWRITER.techniques),
+    },
+  ];
+
+  try {
+    const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed.map((c: DisarmCampaign) => ({
+          ...c,
+          tactics: c.tactics && c.tactics.length > 0 ? c.tactics : buildTacticsList(c.techniques || []),
+        }));
+      }
+    }
+  } catch (err) {
+    console.warn('Erro ao restaurar operações salvas do localStorage:', err);
+  }
+
+  return defaultList;
+};
+
+export const App: React.FC = () => {
+  const [allCampaigns, setAllCampaigns] = useState<DisarmCampaign[]>(getInitialCampaigns);
+  const [currentCampaign, setCurrentCampaign] = useState<DisarmCampaign>(() => {
+    const list = getInitialCampaigns();
+    try {
+      const activeId = localStorage.getItem(ACTIVE_CAMPAIGN_KEY);
+      if (activeId) {
+        const found = list.find((c) => c.id === activeId);
+        if (found) return found;
+      }
+    } catch {
+      // fallback
+    }
+    return list[0];
   });
 
+  const [isSavedRecently, setIsSavedRecently] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
   const [selectedTacticFilter, setSelectedTacticFilter] = useState<string | 'ALL'>('ALL');
   const [selectedTechnique, setSelectedTechnique] = useState<DisarmTechnique | null>(null);
@@ -39,17 +83,128 @@ export const App: React.FC = () => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [analyzerModalOpen, setAnalyzerModalOpen] = useState(false);
   const [manualTtpModalOpen, setManualTtpModalOpen] = useState(false);
+  const [attributionModalOpen, setAttributionModalOpen] = useState(false);
   const [editingTtp, setEditingTtp] = useState<DisarmTechnique | null>(null);
   const [initialOfficialTech, setInitialOfficialTech] = useState<OfficialDisarmTechnique | null>(null);
 
-  const handleCampaignChange = (campaign: DisarmCampaign) => {
-    const enrichedCampaign = {
-      ...campaign,
-      tactics: campaign.tactics.length > 0 ? campaign.tactics : buildTacticsList(campaign.techniques),
+  const saveToStorage = (list: DisarmCampaign[], activeId?: string) => {
+    try {
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
+      if (activeId) {
+        localStorage.setItem(ACTIVE_CAMPAIGN_KEY, activeId);
+      }
+    } catch (err) {
+      console.warn('Erro ao salvar no localStorage:', err);
+    }
+  };
+
+  // Switch campaign with automatic persistence of currently active campaign
+  const handleCampaignChange = (targetCampaign: DisarmCampaign) => {
+    // 1. Ensure current campaign's current edits are kept in the list
+    const updatedList = allCampaigns.map((c) =>
+      c.id === currentCampaign.id ? currentCampaign : c
+    );
+
+    const exists = updatedList.some((c) => c.id === targetCampaign.id);
+    const finalList = exists ? updatedList : [targetCampaign, ...updatedList];
+
+    const target = finalList.find((c) => c.id === targetCampaign.id) || targetCampaign;
+    const enrichedTarget: DisarmCampaign = {
+      ...target,
+      tactics: target.tactics && target.tactics.length > 0 ? target.tactics : buildTacticsList(target.techniques),
     };
-    setCurrentCampaign(enrichedCampaign);
+
+    setAllCampaigns(finalList);
+    setCurrentCampaign(enrichedTarget);
+    saveToStorage(finalList, enrichedTarget.id);
+
     setSelectedTacticFilter('ALL');
     setSelectedTechnique(null);
+  };
+
+  // Explicit Save Campaign handler
+  const handleSaveCurrentCampaign = (overrideCampaign?: DisarmCampaign) => {
+    const base = overrideCampaign || currentCampaign;
+    const updated: DisarmCampaign = {
+      ...base,
+      lastUpdated: new Date().toISOString(),
+      tactics: base.tactics && base.tactics.length > 0 ? base.tactics : buildTacticsList(base.techniques),
+    };
+
+    const updatedList = allCampaigns.map((c) => (c.id === updated.id ? updated : c));
+    const exists = allCampaigns.some((c) => c.id === updated.id);
+    const finalList = exists ? updatedList : [updated, ...allCampaigns];
+
+    setCurrentCampaign(updated);
+    setAllCampaigns(finalList);
+    saveToStorage(finalList, updated.id);
+
+    setIsSavedRecently(true);
+    setTimeout(() => setIsSavedRecently(false), 2200);
+  };
+
+  // Apply threat actor attribution from CTI correlation
+  const handleApplyAttribution = (actor: string, regions?: string[], sectors?: string[]) => {
+    const updatedCampaign: DisarmCampaign = {
+      ...currentCampaign,
+      threatActor: actor,
+      targetRegions: regions && regions.length > 0 ? regions : currentCampaign.targetRegions,
+      targetSectors: sectors && sectors.length > 0 ? sectors : currentCampaign.targetSectors,
+      lastUpdated: new Date().toISOString(),
+    };
+    handleSaveCurrentCampaign(updatedCampaign);
+    setAttributionModalOpen(false);
+  };
+
+  // Create brand new blank campaign
+  const handleCreateNewCampaign = () => {
+    const newId = `CAMP-HFI-${Date.now().toString().slice(-4)}`;
+    const newCampaign: DisarmCampaign = {
+      id: newId,
+      name: `Nova Investigação ${new Date().toLocaleDateString('pt-BR')}`,
+      version: '2.0',
+      domain: 'disarm-redteam',
+      threatActor: 'Ator de Ameaça em Investigação',
+      campaignStatus: 'Active Ongoing',
+      overallSeverity: 'high',
+      description: 'Caso de investigação criado para mapeamento operacional de TTPs e procedimentos de influência.',
+      dateCreated: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
+      targetRegions: ['Brasil', 'América Latina'],
+      targetSectors: ['Opinião Pública', 'Processo Eleitoral'],
+      techniques: [],
+      tactics: [],
+      rawSourceType: 'custom-threat-report',
+    };
+
+    // Save current campaign first
+    const listWithCurrent = allCampaigns.map((c) =>
+      c.id === currentCampaign.id ? currentCampaign : c
+    );
+    const finalList = [newCampaign, ...listWithCurrent];
+
+    setAllCampaigns(finalList);
+    setCurrentCampaign(newCampaign);
+    saveToStorage(finalList, newCampaign.id);
+
+    setSelectedTacticFilter('ALL');
+    setSelectedTechnique(null);
+    setActiveTab('matrix');
+  };
+
+  // Delete campaign
+  const handleDeleteCampaign = (campaignId: string) => {
+    if (allCampaigns.length <= 1) return;
+    const updatedList = allCampaigns.filter((c) => c.id !== campaignId);
+    setAllCampaigns(updatedList);
+
+    if (currentCampaign.id === campaignId) {
+      const nextActive = updatedList[0];
+      setCurrentCampaign(nextActive);
+      saveToStorage(updatedList, nextActive.id);
+    } else {
+      saveToStorage(updatedList, currentCampaign.id);
+    }
   };
 
   const handleFilterByTacticFromOverview = (tacticId: string | 'ALL') => {
@@ -71,12 +226,20 @@ export const App: React.FC = () => {
 
     const updatedTactics = buildTacticsList(updatedTechniques);
 
-    setCurrentCampaign({
+    const updatedCampaign: DisarmCampaign = {
       ...currentCampaign,
       techniques: updatedTechniques,
       tactics: updatedTactics,
       lastUpdated: new Date().toISOString(),
-    });
+    };
+
+    const updatedList = allCampaigns.map((c) =>
+      c.id === updatedCampaign.id ? updatedCampaign : c
+    );
+
+    setCurrentCampaign(updatedCampaign);
+    setAllCampaigns(updatedList);
+    saveToStorage(updatedList, updatedCampaign.id);
 
     if (selectedTechnique?.id === savedTtp.id) {
       setSelectedTechnique(savedTtp);
@@ -88,12 +251,20 @@ export const App: React.FC = () => {
     const updatedTechniques = currentCampaign.techniques.filter((t) => t.id !== techniqueId);
     const updatedTactics = buildTacticsList(updatedTechniques);
 
-    setCurrentCampaign({
+    const updatedCampaign: DisarmCampaign = {
       ...currentCampaign,
       techniques: updatedTechniques,
       tactics: updatedTactics,
       lastUpdated: new Date().toISOString(),
-    });
+    };
+
+    const updatedList = allCampaigns.map((c) =>
+      c.id === updatedCampaign.id ? updatedCampaign : c
+    );
+
+    setCurrentCampaign(updatedCampaign);
+    setAllCampaigns(updatedList);
+    saveToStorage(updatedList, updatedCampaign.id);
 
     if (selectedTechnique?.id === techniqueId) {
       setSelectedTechnique(null);
@@ -123,7 +294,21 @@ export const App: React.FC = () => {
 
   // Apply new investigation from Analyzer
   const handleApplyAnalyzedInvestigation = (newCampaign: DisarmCampaign) => {
-    handleCampaignChange(newCampaign);
+    const enrichedCampaign = {
+      ...newCampaign,
+      tactics: newCampaign.tactics.length > 0 ? newCampaign.tactics : buildTacticsList(newCampaign.techniques),
+    };
+
+    // Save current first
+    const listWithCurrent = allCampaigns.map((c) =>
+      c.id === currentCampaign.id ? currentCampaign : c
+    );
+    const updatedList = [enrichedCampaign, ...listWithCurrent.filter((c) => c.id !== enrichedCampaign.id)];
+
+    setAllCampaigns(updatedList);
+    setCurrentCampaign(enrichedCampaign);
+    saveToStorage(updatedList, enrichedCampaign.id);
+
     setActiveTab('matrix');
   };
 
@@ -132,11 +317,15 @@ export const App: React.FC = () => {
       {/* Header */}
       <Header
         currentCampaign={currentCampaign}
+        allCampaigns={allCampaigns}
         onSelectCampaign={handleCampaignChange}
+        onSaveCampaign={handleSaveCurrentCampaign}
+        isSavedRecently={isSavedRecently}
+        onCreateNewCampaign={handleCreateNewCampaign}
+        onDeleteCampaign={handleDeleteCampaign}
         onOpenUpload={() => setUploadModalOpen(true)}
         onOpenReport={() => setReportModalOpen(true)}
         onOpenAnalyzer={() => setAnalyzerModalOpen(true)}
-        onOpenManualTtp={handleOpenNewManualTtp}
       />
 
       {/* Main Container */}
@@ -153,7 +342,7 @@ export const App: React.FC = () => {
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>Visão Geral & Métricas</span>
+              <span>Visão Geral &amp; Métricas</span>
             </button>
 
             <button
@@ -193,15 +382,15 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-            <span className="hidden sm:inline">Modo:</span>
-            <span className="px-2 py-1 rounded bg-[#111827] border border-white/[0.08] text-white">
-              {activeTab === 'overview' && 'Dashboard Analítico'}
-              {activeTab === 'matrix' && 'Navegador Tático da Operação'}
-              {activeTab === 'navigator' && 'Catálogo Completo DISARM Foundation (16 TAs)'}
-              {activeTab === 'table' && 'Inventário Operacional de Procedimentos'}
-            </span>
-          </div>
+          {/* Contextual Action: Novo TTP na Operação */}
+          <button
+            onClick={handleOpenNewManualTtp}
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 hover:border-sky-500/50 transition-all cursor-pointer whitespace-nowrap shadow-sm"
+            title="Adicionar um novo TTP customizado à operação em análise"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Novo TTP na Operação</span>
+          </button>
         </div>
 
         {/* Tab Views */}
@@ -210,6 +399,7 @@ export const App: React.FC = () => {
             campaign={currentCampaign}
             onSelectTechnique={(tech) => setSelectedTechnique(tech)}
             onFilterByTactic={handleFilterByTacticFromOverview}
+            onOpenAttributionModal={() => setAttributionModalOpen(true)}
           />
         )}
 
@@ -291,6 +481,13 @@ export const App: React.FC = () => {
         onClose={() => setAnalyzerModalOpen(false)}
         onApplyInvestigation={handleApplyAnalyzedInvestigation}
         currentCampaign={currentCampaign}
+      />
+
+      <AttributionModal
+        isOpen={attributionModalOpen}
+        onClose={() => setAttributionModalOpen(false)}
+        campaign={currentCampaign}
+        onApplyAttribution={handleApplyAttribution}
       />
     </div>
   );

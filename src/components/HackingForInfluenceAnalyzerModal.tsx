@@ -13,7 +13,11 @@ import {
   Trash2,
   ListFilter,
   Check,
-  Eye
+  Eye,
+  Crosshair,
+  Globe,
+  Building2,
+  UserCheck,
 } from 'lucide-react';
 import {
   OFFICIAL_DISARM_TECHNIQUES,
@@ -22,6 +26,11 @@ import {
 } from '../data/officialDisarmData';
 import { DisarmCampaign, DisarmTechnique, ThreatSeverity, ProcedureEvidence } from '../types/disarm';
 import { buildTacticsList } from '../utils/disarmParser';
+import {
+  correlateTtpWithApts,
+  AptCorrelationResult,
+  AptProfile,
+} from '../data/aptDatabase';
 
 interface HackingForInfluenceAnalyzerModalProps {
   isOpen: boolean;
@@ -55,8 +64,9 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
   const [caseTitle, setCaseTitle] = useState(
     currentCampaign ? currentCampaign.name : 'Incidente de Vazamento & Manipulação de Narrativa (Hacking for Influence)'
   );
+  // Threat actor, target regions and sectors will be populated after TTP analysis in Step 2
   const [threatActor, setThreatActor] = useState(
-    currentCampaign ? currentCampaign.threatActor : 'Ator Estatal / Coletivo Hacktivista Patrocinado'
+    currentCampaign ? currentCampaign.threatActor : 'Ator de Ameaça sob Investigação'
   );
   const [targetRegions, setTargetRegions] = useState('Brasil, América Latina');
   const [targetSectors, setTargetSectors] = useState('Governamental, Processo Eleitoral, Mídia');
@@ -67,14 +77,15 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
   const [proposedTtps, setProposedTtps] = useState<ProposedTtp[]>([]);
   const [editingTtpId, setEditingTtpId] = useState<string | null>(null);
 
+  // CTI APT Correlation State
+  const [aptCorrelations, setAptCorrelations] = useState<AptCorrelationResult[]>([]);
+  const [selectedAptId, setSelectedAptId] = useState<string | null>(null);
+
   if (!isOpen) return null;
 
   // Preset quick examples for operator convenience
   const loadExampleHackingForInfluence = () => {
     setCaseTitle('Operação Vazamento Hack-and-Leak & Clones de Imprensa');
-    setThreatActor('APT28 / Social Design Agency (Alinhado à Federação Russa)');
-    setTargetRegions('Europa Central, França, Alemanha');
-    setTargetSectors('Defesa Nacional, Mídia & Imprensa, Opinião Pública');
     setIncidentText(
       `Detectada invasão prévia de caixas de e-mail e servidores de arquivos de oficiais militares através de campanhas de spear-phishing. Documentos autênticos roubados foram adulterados digitalmente para inserir cláusulas falsas indicando envio de tropas ao exterior.
 Em seguida, foram registrados 15 domínios typosquatted clonando o layout do jornal Le Monde (ex: lemonde.ltd) e Der Spiegel.
@@ -90,6 +101,13 @@ der-spiegel.info
 dossie_vazamento_militar_alterado.pdf
 SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
     );
+  };
+
+  const handleApplyApt = (apt: AptProfile) => {
+    setSelectedAptId(apt.id);
+    setThreatActor(`${apt.name} (${apt.sponsor})`);
+    setTargetRegions(apt.typicalTargetRegions.join(', '));
+    setTargetSectors(apt.typicalTargetSectors.join(', '));
   };
 
   // Automated heuristic pattern analysis engine
@@ -165,19 +183,19 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 
     // 2. Clone sites & Impersonation
     checkAndAdd(
-      'T0099',
+      'T0098.001',
       ['clon', 'typosquat', 'portal falso', 'impersonat', 'le monde', 'der spiegel', 'cópia de site'],
-      'Criação de portais clonados ou domínios typosquatted imitando veículos de imprensa',
-      'Impersonação e Clonagem de Veículos de Mídia Confiáveis',
+      'Criação de portais clonados ou domínios typosquatted imitando veículos respeitados de imprensa',
+      'Criação de Portais Clonados Inautênticos (Le Monde, Der Spiegel)',
       'critical',
       'confirmed'
     );
 
     // 3. Personas & Bots
     checkAndAdd(
-      'T0090.003',
-      ['bot', 'automatizad', 'fazenda de contas', 'enxame', 'sincronizad', 'perfis falsos'],
-      'Identificação de contas automatizadas (bots) atuando em redes sociais',
+      'T0093.002',
+      ['bot', 'automatizad', 'fazenda de contas', 'enxame', 'sincronizad', 'perfis falsos', 'botnet'],
+      'Identificação de contas automatizadas coordenadas ou botnet atuando em redes sociais',
       'Disparo Coordenado via Rede de Contas Automatizadas (Bots)',
       'high',
       'confirmed'
@@ -242,7 +260,7 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 
     // If nothing matched, suggest baseline core techniques
     if (proposals.length === 0) {
-      const defaultIds = ['T0074', 'T0002', 'T0089', 'T0099', 'T0090.003'];
+      const defaultIds = ['T0074', 'T0002', 'T0089', 'T0098.001', 'T0093.002'];
       defaultIds.forEach((id) => {
         const off = OFFICIAL_DISARM_TECHNIQUES.find((t) => t.id === id);
         if (off) {
@@ -259,6 +277,24 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
           });
         }
       });
+    }
+
+    // Run CTI APT correlation on identified techniques
+    const techniqueIds = proposals.map((p) => p.technique.id);
+    const correlations = correlateTtpWithApts(techniqueIds);
+    setAptCorrelations(correlations);
+
+    if (correlations.length > 0 && correlations[0].matchScore >= 35) {
+      const topApt = correlations[0].apt;
+      setSelectedAptId(topApt.id);
+      setThreatActor(`${topApt.name} (${topApt.sponsor})`);
+      setTargetRegions(topApt.typicalTargetRegions.join(', '));
+      setTargetSectors(topApt.typicalTargetSectors.join(', '));
+    } else {
+      setSelectedAptId(null);
+      setThreatActor('Ator de Ameaça sob Investigação');
+      setTargetRegions('América Latina, Brasil');
+      setTargetSectors('Governamental, Mídia, Processo Eleitoral');
     }
 
     setProposedTtps(proposals);
@@ -287,7 +323,7 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
         title: p.extractedProcedureTitle,
         operationalNote: p.extractedNote,
         observedArtifacts: p.extractedArtifacts,
-        evidenceUrls: [p.technique.url],
+        evidenceUrls: [],
         targetedEntities: targetSectors.split(',').map((s) => s.trim()),
         confidence: p.confidence,
         dateObserved: new Date().toISOString().split('T')[0],
@@ -368,74 +404,19 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
         {/* Content Body: Step 1 (Input) vs Step 2 (Review) */}
         {step === 'input' ? (
           <div className="p-6 space-y-5 overflow-y-auto flex-1">
-            {/* Quick Demo Button */}
-            <div className="p-3 rounded-xl bg-sky-950/20 border border-sky-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-xs text-sky-300">
-                <Sparkles className="w-4 h-4 text-sky-400 flex-shrink-0" />
-                <span>Deseja testar com um caso real documentado de Hacking for Influence?</span>
-              </div>
-              <button
-                type="button"
-                onClick={loadExampleHackingForInfluence}
-                className="px-3 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 text-xs font-mono font-semibold transition-all whitespace-nowrap cursor-pointer"
-              >
-                Carregar Exemplo Pré-Configurado
-              </button>
-            </div>
-
-            {/* Case Title & Threat Actor */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Título da Operação / Caso *
-                </label>
-                <input
-                  type="text"
-                  value={caseTitle}
-                  onChange={(e) => setCaseTitle(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Ator de Ameaça Suspeito
-                </label>
-                <input
-                  type="text"
-                  value={threatActor}
-                  onChange={(e) => setThreatActor(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
-                />
-              </div>
-            </div>
-
-            {/* Sectors and Regions */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Regiões Alvo
-                </label>
-                <input
-                  type="text"
-                  value={targetRegions}
-                  onChange={(e) => setTargetRegions(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-                  Setores / Instituições Alvo
-                </label>
-                <input
-                  type="text"
-                  value={targetSectors}
-                  onChange={(e) => setTargetSectors(e.target.value)}
-                  className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
-                />
-              </div>
+            {/* Case Title */}
+            <div>
+              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
+                Título da Operação / Caso *
+              </label>
+              <input
+                type="text"
+                value={caseTitle}
+                onChange={(e) => setCaseTitle(e.target.value)}
+                placeholder="Ex: Operação Hack-and-Leak & Clones de Imprensa"
+                className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-medium"
+                required
+              />
             </div>
 
             {/* Incident Text Context */}
@@ -447,11 +428,11 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
               <textarea
                 value={incidentText}
                 onChange={(e) => setIncidentText(e.target.value)}
-                rows={6}
+                rows={7}
                 placeholder="Exemplo de entrada:
 Detectamos a invasão de caixas postais de autoridades públicas com exfiltração de minutas internas. Trechos de documentos foram adulterados para imputar crimes a candidatos.
-Simultaneamente, registraram 20 domínios falsos que clonam o portal de notícias do jornal O Globo e G1.
-Centenas de perfis no Twitter/X com avatares gerados por IA e selos de verificação comprados realizaram disparos sincronizados promovendo a hashtag #FraudeConfirmada com links para os portais clones..."
+Simultaneamente, registraram 20 domínios falsos que clonam o portal de notícias do jornal Le Monde e Der Spiegel.
+Centenas de perfis no Twitter/X com avatares gerados por IA e selos de verificação comprados realizaram disparos sincronizados promovendo a hashtag #VerdadeOculta..."
                 className="w-full px-3 py-2.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-sans leading-relaxed"
                 required
               />
@@ -467,14 +448,141 @@ Centenas de perfis no Twitter/X com avatares gerados por IA e selos de verifica�
                 value={rawIocs}
                 onChange={(e) => setRawIocs(e.target.value)}
                 rows={4}
-                placeholder={`globo-noticias.ltd\n185.220.101.45\n#FraudeConfirmada\nminuta_adulterada_v2.pdf\nSHA256: 3b0c44298fc1c14...`}
+                placeholder={`lemonde.ltd\n185.220.101.45\n#VerdadeOculta\ndossie_militar_alterado.pdf\nSHA256: 3b0c44298fc1c14...`}
                 className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono"
               />
             </div>
           </div>
         ) : (
-          /* Step 2: Review and Customization of Proposed TTPs */
+          /* Step 2: Review and Customization of Proposed TTPs & CTI Attribution */
           <div className="p-6 space-y-4 overflow-y-auto flex-1">
+            {/* CTI APT Attribution Suggestion Panel */}
+            {aptCorrelations.length > 0 && (
+              <div className="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Crosshair className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span className="text-xs font-mono uppercase tracking-wider font-bold text-purple-300">
+                      Correlação de Inteligência de Ameaças (Base CTI)
+                    </span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-purple-500/20 text-purple-300 border border-purple-500/30 font-bold">
+                    {aptCorrelations[0].matchScore}% de Coincidência de TTPs
+                  </span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[#0a0e17] p-3 rounded-lg border border-purple-500/20">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-bold text-white">
+                        {aptCorrelations[0].apt.name}
+                      </span>
+                      <span className="text-xs text-purple-400 font-mono">
+                        ({aptCorrelations[0].apt.countryOfOrigin})
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300">
+                        {aptCorrelations[0].attributionConfidence} Confiança
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 font-mono">
+                      {aptCorrelations[0].rationale}
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Patrocinador: <strong className="text-slate-300">{aptCorrelations[0].apt.sponsor}</strong> • Motivação: <strong className="text-slate-300">{aptCorrelations[0].apt.primaryMotivation}</strong>
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleApplyApt(aptCorrelations[0].apt)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all whitespace-nowrap cursor-pointer flex-shrink-0 ${
+                      selectedAptId === aptCorrelations[0].apt.id
+                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                        : 'bg-purple-600 hover:bg-purple-500 text-white shadow-sm'
+                    }`}
+                  >
+                    <UserCheck className="w-3.5 h-3.5" />
+                    <span>{selectedAptId === aptCorrelations[0].apt.id ? 'Ator Aplicado' : 'Atribuir este Ator'}</span>
+                  </button>
+                </div>
+
+                {/* Other candidate APTs if available */}
+                {aptCorrelations.length > 1 && (
+                  <div className="pt-1">
+                    <span className="text-[10px] font-mono uppercase text-slate-400 block mb-1.5">
+                      Outros atores com sobreposição no banco CTI:
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {aptCorrelations.slice(1, 4).map((res) => (
+                        <button
+                          key={res.apt.id}
+                          type="button"
+                          onClick={() => handleApplyApt(res.apt)}
+                          className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-mono transition-all border cursor-pointer ${
+                            selectedAptId === res.apt.id
+                              ? 'bg-purple-500/30 text-purple-200 border-purple-400'
+                              : 'bg-white/[0.03] text-slate-300 border-white/[0.08] hover:border-purple-500/40'
+                          }`}
+                        >
+                          <span>{res.apt.name}</span>
+                          <span className="text-purple-400 font-bold">({res.matchScore}%)</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Campaign Metadata Fields (Filled automatically by CTI or custom) */}
+            <div className="p-4 rounded-xl bg-[#0c121e] border border-white/[0.08] space-y-3">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-400 block font-semibold">
+                Metadados Atribuídos à Investigação
+              </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-[11px] font-mono text-slate-400 mb-1 flex items-center gap-1">
+                    <Crosshair className="w-3 h-3 text-red-400" />
+                    Ator de Ameaça Atribuído
+                  </label>
+                  <input
+                    type="text"
+                    value={threatActor}
+                    onChange={(e) => setThreatActor(e.target.value)}
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono text-slate-400 mb-1 flex items-center gap-1">
+                    <Globe className="w-3 h-3 text-sky-400" />
+                    Regiões-Alvo
+                  </label>
+                  <input
+                    type="text"
+                    value={targetRegions}
+                    onChange={(e) => setTargetRegions(e.target.value)}
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-mono text-slate-400 mb-1 flex items-center gap-1">
+                    <Building2 className="w-3 h-3 text-amber-400" />
+                    Setores / Instituições Alvo
+                  </label>
+                  <input
+                    type="text"
+                    value={targetSectors}
+                    onChange={(e) => setTargetSectors(e.target.value)}
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* TTPs summary count */}
             <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-between">
               <div className="flex items-center gap-2 text-emerald-400 text-xs">
                 <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
