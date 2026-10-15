@@ -136,16 +136,20 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
             {/* Canonical DISARM Definition */}
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-2">
-                  <FileSearch className="w-4 h-4 text-sky-400 flex-shrink-0" />
-                  <span>Definição Oficial DISARM Framework</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <div className="p-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                    <FileSearch className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-mono font-bold text-sky-400 tracking-wide uppercase">
+                    Definição Oficial DISARM Framework
+                  </span>
+                </div>
                 <button
                   type="button"
                   onClick={() => setShowTranslation(!showTranslation)}
                   className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
                     showTranslation
-                      ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 font-bold'
+                      ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 font-bold shadow-sm'
                       : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border-white/[0.08] hover:text-white'
                   }`}
                   title="Alternar tradução para Português"
@@ -155,7 +159,7 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                 </button>
               </div>
 
-              <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans">
+              <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans shadow-inner">
                 <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
                   {showTranslation
                     ? getDisarmPortugueseTranslation(technique.id, technique.description)
@@ -180,30 +184,34 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
             {/* Mapped Operational Procedure (Evidence) */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold text-emerald-400 flex items-center gap-2">
-                  <FileSearch className="w-4 h-4 flex-shrink-0" />
-                  <span>Procedimento Mapeado na Operação</span>
-                </span>
+                <div className="flex items-center gap-2">
+                  <div className="p-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                    <FileSearch className="w-3.5 h-3.5" />
+                  </div>
+                  <span className="text-xs sm:text-sm font-mono font-bold text-emerald-400 tracking-wide uppercase">
+                    Procedimento Mapeado na Operação
+                  </span>
+                </div>
                 {technique.procedureEvidence && (
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
                     Confiança: {technique.procedureEvidence.confidence}
                   </span>
                 )}
               </div>
 
               {hasEvidence && technique.procedureEvidence ? (
-                <div className="p-4 rounded-xl bg-[#090A0F] border border-white/[0.08] space-y-4">
+                <div className="p-4 rounded-xl bg-[#090A0F] border border-white/[0.08] space-y-4 shadow-inner">
                   {/* Subtitle 1: Procedimento Operacional Observado */}
-                  <div className="space-y-2">
-                    <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
+                      <FileText className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
                       <span>Procedimento Operacional Observado:</span>
                     </span>
-                    <div className="pl-6 space-y-1.5">
+                    <div className="space-y-1.5">
                       <h4 className="text-xs font-bold text-white font-mono">
                         {technique.procedureEvidence.title}
                       </h4>
-                      <p className="text-xs text-slate-300 leading-relaxed bg-white/[0.02] p-3 rounded-lg border border-white/[0.04]">
+                      <p className="text-xs text-slate-300 leading-relaxed bg-[#070b13] p-3 rounded-lg border border-white/[0.05]">
                         {technique.procedureEvidence.operationalNote}
                       </p>
                     </div>
@@ -212,21 +220,21 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                   {/* Subtitle 2: Artefatos & IOCs */}
                   {technique.procedureEvidence.observedArtifacts &&
                     technique.procedureEvidence.observedArtifacts.length > 0 && (
-                      <div className="space-y-2 pt-2 border-t border-white/[0.04]">
-                        <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-2">
-                          <Database className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                      <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
+                        <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
+                          <Database className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
                           <span>Artefatos Digitais & Indicadores de Comprometimento (IOCs):</span>
                         </span>
-                        <div className="pl-6 space-y-1">
+                        <div className="space-y-1">
                           {technique.procedureEvidence.observedArtifacts.map((artifact, i) => (
                             <div
                               key={i}
-                              className="flex items-center justify-between p-2 rounded bg-black/50 border border-white/[0.04] font-mono text-xs text-slate-200"
+                              className="flex items-center justify-between p-2 rounded-lg bg-[#070b13] border border-white/[0.05] hover:border-sky-500/30 font-mono text-xs text-slate-200 transition-colors"
                             >
                               <span className="truncate pr-2">{artifact}</span>
                               <button
                                 onClick={() => handleCopy(artifact)}
-                                className="text-slate-400 hover:text-white p-1 rounded transition-colors flex-shrink-0"
+                                className="text-slate-400 hover:text-white p-1 rounded transition-colors flex-shrink-0 cursor-pointer"
                                 title="Copiar artefato"
                               >
                                 {copiedArtifact === artifact ? (
@@ -243,21 +251,21 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
 
                   {/* Evidence URLs */}
                   {filterRealEvidenceUrls(technique.procedureEvidence.evidenceUrls).length > 0 && (
-                    <div className="space-y-2 pt-2 border-t border-white/[0.04]">
-                      <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-2">
-                        <ExternalLink className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
+                      <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
+                        <ExternalLink className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
                         <span>Fontes & Repositórios de Evidência:</span>
                       </span>
-                      <div className="pl-6 space-y-1">
+                      <div className="space-y-1">
                         {filterRealEvidenceUrls(technique.procedureEvidence.evidenceUrls).map((url, i) => (
                           <a
                             key={i}
                             href={url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-1.5 text-xs font-mono text-sky-400 hover:text-sky-300 hover:underline truncate"
+                            className="flex items-center gap-1.5 text-xs font-mono text-sky-400 hover:text-sky-300 hover:underline truncate py-0.5"
                           >
-                            <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                            <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
                             <span className="truncate">{url}</span>
                           </a>
                         ))}
@@ -268,18 +276,19 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                   {/* Subtitle 3: Targeted Entities */}
                   {technique.procedureEvidence.targetedEntities &&
                     technique.procedureEvidence.targetedEntities.length > 0 && (
-                      <div className="space-y-2 pt-2 border-t border-white/[0.04]">
-                        <span className="text-xs font-mono font-semibold text-slate-300 flex items-center gap-2">
-                          <Target className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                      <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
+                        <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
+                          <Target className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
                           <span>Alvos & Entidades Visadas:</span>
                         </span>
-                        <div className="pl-6 flex flex-wrap gap-1.5">
+                        <div className="flex flex-wrap gap-2 pt-0.5">
                           {technique.procedureEvidence.targetedEntities.map((tgt, i) => (
                             <span
                               key={i}
-                              className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.06] text-xs text-slate-300 font-mono"
+                              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#070b13] border border-amber-500/25 text-amber-200/90 font-mono text-[11px] font-medium shadow-sm"
                             >
-                              {tgt}
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+                              <span>{tgt}</span>
                             </span>
                           ))}
                         </div>
