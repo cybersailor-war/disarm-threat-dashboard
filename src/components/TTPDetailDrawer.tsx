@@ -156,11 +156,6 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
               </div>
 
               <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans">
-                {showTranslation && (
-                  <div className="flex items-center gap-1.5 mb-2 text-[10px] font-mono text-sky-400 uppercase tracking-wider font-bold">
-                    <span>Tradução Técnica Oficial (PT-BR)</span>
-                  </div>
-                )}
                 <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
                   {showTranslation
                     ? getDisarmPortugueseTranslation(technique.id, technique.description)
