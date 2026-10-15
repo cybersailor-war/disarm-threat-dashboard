@@ -382,14 +382,14 @@ export const App: React.FC = () => {
             </button>
           </div>
 
-          {/* Contextual Action: Novo TTP na Operação */}
+          {/* Contextual Action: Adicionar Nova TTP */}
           <button
             onClick={handleOpenNewManualTtp}
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold text-sky-400 bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 hover:border-sky-500/50 transition-all cursor-pointer whitespace-nowrap shadow-sm"
-            title="Adicionar um novo TTP customizado à operação em análise"
+            title="Adicionar uma nova TTP customizada à operação em análise"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Novo TTP na Operação</span>
+            <span>Adicionar Nova TTP</span>
           </button>
         </div>
 
