@@ -255,8 +255,8 @@ export const ExecutiveReportModal: React.FC<ExecutiveReportModalProps> = ({
                       <span className="font-mono font-bold text-emerald-400 print:text-emerald-700 block text-[11px] uppercase">
                         🔍 Evidência Mapeada: {tech.procedureEvidence.title} (Confiança: {tech.procedureEvidence.confidence})
                       </span>
-                      <p className="text-slate-300 print:text-slate-800 italic">
-                        "{tech.procedureEvidence.operationalNote}"
+                      <p className="text-slate-300 print:text-slate-800 leading-relaxed">
+                        {tech.procedureEvidence.operationalNote}
                       </p>
                       {tech.procedureEvidence.observedArtifacts.length > 0 && (
                         <div className="pt-1 font-mono text-[11px] text-slate-400 print:text-slate-600">
