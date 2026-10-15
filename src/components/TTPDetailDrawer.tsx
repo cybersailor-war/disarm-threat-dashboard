@@ -225,22 +225,25 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                           <Database className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
                           <span>Artefatos Digitais & Indicadores de Comprometimento (IOCs):</span>
                         </span>
-                        <div className="space-y-1">
+                        <div className="space-y-1 pl-1">
                           {technique.procedureEvidence.observedArtifacts.map((artifact, i) => (
                             <div
                               key={i}
-                              className="flex items-center justify-between p-2 rounded-lg bg-[#070b13] border border-white/[0.05] hover:border-sky-500/30 font-mono text-xs text-slate-200 transition-colors"
+                              className="flex items-center justify-between gap-2 py-0.5 group text-xs font-mono text-slate-300 hover:text-white"
                             >
-                              <span className="truncate pr-2">{artifact}</span>
+                              <div className="flex items-center gap-2 min-w-0 flex-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-400/80 flex-shrink-0" />
+                                <span className="truncate select-all">{artifact}</span>
+                              </div>
                               <button
                                 onClick={() => handleCopy(artifact)}
-                                className="text-slate-400 hover:text-white p-1 rounded transition-colors flex-shrink-0 cursor-pointer"
+                                className="text-slate-500 hover:text-sky-300 p-0.5 rounded transition-colors flex-shrink-0 cursor-pointer opacity-70 group-hover:opacity-100"
                                 title="Copiar artefato"
                               >
                                 {copiedArtifact === artifact ? (
                                   <Check className="w-3.5 h-3.5 text-emerald-400" />
                                 ) : (
-                                  <Copy className="w-3.5 h-3.5" />
+                                  <Copy className="w-3 h-3" />
                                 )}
                               </button>
                             </div>
