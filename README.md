@@ -121,4 +121,3 @@ npm run dev
 E acessar a página no navegador:
 👉 **http://localhost:5173/**
 
-*Só isso!*
