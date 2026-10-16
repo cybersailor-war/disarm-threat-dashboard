@@ -65,10 +65,6 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
                 SEVERIDADE: {campaign.overallSeverity.toUpperCase()}
               </span>
 
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono text-sky-400 bg-sky-500/10 border border-sky-500/20">
-                {campaign.campaignStatus}
-              </span>
-
               <span className="text-xs font-mono text-slate-400 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5" />
                 Atualizado: {new Date(campaign.lastUpdated).toLocaleDateString('pt-BR')}
@@ -86,25 +82,15 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
             {/* Target Entities / Geographies */}
             <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-400 font-mono">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <Crosshair className="w-4 h-4 text-red-400" />
+              <div className="flex items-center gap-1.5">
+                <Crosshair className="w-4 h-4 text-red-400 flex-shrink-0" />
                 <span className="text-slate-300">Ator de Ameaça:</span>
                 <span className="text-white font-medium">{campaign.threatActor}</span>
-                {onOpenAttributionModal && (
-                  <button
-                    onClick={onOpenAttributionModal}
-                    className="ml-1 inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono bg-purple-500/15 hover:bg-purple-500/25 text-purple-300 border border-purple-500/30 transition-colors cursor-pointer"
-                    title="Correlacionar TTPs observados com perfis de APTs conhecidos (Base CTI)"
-                  >
-                    <Search className="w-3 h-3" />
-                    Correlacionar CTI (APT)
-                  </button>
-                )}
               </div>
 
               {campaign.targetRegions.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-sky-400" />
+                  <Globe className="w-4 h-4 text-sky-400 flex-shrink-0" />
                   <span className="text-slate-300">Regiões-Alvo:</span>
                   <span className="text-slate-200">{campaign.targetRegions.join(', ')}</span>
                 </div>
@@ -112,13 +98,27 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
 
               {campaign.targetSectors.length > 0 && (
                 <div className="flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4 text-amber-400" />
+                  <Building2 className="w-4 h-4 text-amber-400 flex-shrink-0" />
                   <span className="text-slate-300">Setores:</span>
                   <span className="text-slate-200">{campaign.targetSectors.join(', ')}</span>
                 </div>
               )}
             </div>
           </div>
+
+          {/* Action: Correlacionar CTI (APT) posicionado em área dedicada do banner */}
+          {onOpenAttributionModal && (
+            <div className="flex-shrink-0 self-start lg:self-center">
+              <button
+                onClick={onOpenAttributionModal}
+                className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:border-purple-500/50 transition-all cursor-pointer shadow-sm group"
+                title="Correlacionar TTPs observados com perfis de APTs conhecidos (Base CTI)"
+              >
+                <Search className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+                <span>Correlacionar CTI (APT)</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
