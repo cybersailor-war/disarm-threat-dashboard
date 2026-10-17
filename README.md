@@ -110,9 +110,6 @@ A interface foi estruturada em 4 abas operacionais táticas, complementadas por 
 
 ```
 disarm-threat-dashboard/
-├── DISARM_AI_Relatorio_Tecnico.odt      # Relatório Técnico-Acadêmico formal da aplicação
-├── scripts/
-│   └── generate_report_odt.cjs         # Compilador ODT nativo UTF-8 para geração documental
 ├── src/
 │   ├── types/
 │   │   └── disarm.ts                   # Interfaces TypeScript (Campaign, Technique, Mitigation)
