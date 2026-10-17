@@ -5,7 +5,6 @@ import {
   Table as TableIcon,
   BookOpen,
   Plus,
-  ExternalLink,
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { OverviewDashboard } from './components/OverviewDashboard';
@@ -424,49 +423,24 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-white/[0.08] bg-[#070A11] py-6 text-xs text-slate-400">
-        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-          {/* Left: Brand, Copyright & Mission */}
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap">
-              <span className="font-mono font-bold text-white tracking-wider">
-                DISARM<span className="text-sky-400">.AI</span>
-              </span>
-              <span className="text-slate-600">•</span>
-              <span className="text-slate-300 font-medium">
-                Disinformation Analysis &amp; Risk Management
-              </span>
-              <span className="text-slate-600">•</span>
-              <span className="text-sky-400/90 font-medium font-mono text-[11px] px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20">
-                Hacking for Influence
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 font-sans">
-              © {new Date().getFullYear()} DISARM.AI Threat Dashboard • Mapeamento tático de TTPs baseado no DISARM Red Team Framework da DISARM Foundation.
-            </p>
+      <footer className="mt-auto border-t border-white/[0.08] bg-[#070A11] py-5 text-xs text-slate-400">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col items-center justify-center gap-1.5 text-center">
+          <div className="flex items-center justify-center gap-2 flex-wrap">
+            <span className="font-mono font-bold text-white tracking-wider">
+              DISARM<span className="text-sky-400">.AI</span>
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-300 font-medium">
+              Disinformation Analysis &amp; Risk Management
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="text-sky-400/90 font-medium font-mono text-[11px] px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20">
+              Hacking for Influence
+            </span>
           </div>
-
-          {/* Right: Security & Framework Status */}
-          <div className="flex items-center gap-3 font-mono text-[11px] flex-wrap justify-center md:justify-end">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-              </span>
-              <span className="font-semibold">Client-Side Seguro</span>
-            </div>
-
-            <a
-              href="https://disarmfoundation.github.io/disarm-navigator/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.18] text-slate-400 hover:text-sky-400 transition-colors cursor-pointer"
-              title="Abrir DISARM Navigator Oficial"
-            >
-              <span>DISARM Navigator v4.8.2</span>
-              <ExternalLink className="w-3 h-3 text-slate-500" />
-            </a>
-          </div>
+          <p className="text-[11px] text-slate-500 font-sans">
+            © {new Date().getFullYear()} DISARM.AI Threat Dashboard • Mapeamento tático de TTPs baseado no DISARM Red Team Framework da DISARM Foundation.
+          </p>
         </div>
       </footer>
 
