@@ -12,6 +12,7 @@ import {
   Languages,
   FileText,
   Target,
+  CheckCircle2,
 } from 'lucide-react';
 import { DisarmTechnique, ThreatSeverity } from '../types/disarm';
 import { filterRealEvidenceUrls } from '../utils/exportUtils';
@@ -146,25 +147,42 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowTranslation(!showTranslation)}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
                     showTranslation
                       ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 font-bold shadow-sm'
                       : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border-white/[0.08] hover:text-white'
                   }`}
-                  title="Alternar tradução para Português"
+                  title="Alternar tradução literal para Português"
                 >
                   <Languages className="w-3.5 h-3.5 text-sky-400" />
-                  <span>{showTranslation ? 'Ver Original (EN)' : 'Traduzir para Português'}</span>
+                  <span>{showTranslation ? 'Ver Original (EN)' : 'Tradução Literal (PT-BR)'}</span>
                 </button>
               </div>
 
-              <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans shadow-inner">
-                <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
-                  {showTranslation
-                    ? getDisarmPortugueseTranslation(technique.id, technique.description)
-                    : formatCleanText(technique.description)}
-                </p>
-              </div>
+              {(() => {
+                const translationResult = getDisarmPortugueseTranslation(technique.id, technique.description);
+                return (
+                  <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans shadow-inner space-y-2">
+                    {showTranslation && (
+                      <div className="flex items-center gap-2 pb-2 mb-2 border-b border-white/[0.06]">
+                        {translationResult.isLiteralCataloged ? (
+                          <span className="text-[11px] font-mono text-emerald-400 font-semibold flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+                            Tradução Literal Estrita (1:1 com DISARM Foundation v1.4)
+                          </span>
+                        ) : (
+                          <span className="text-[11px] font-mono text-amber-400/90 font-medium">
+                            Tradução literal não catalogada • Exibindo texto canônico oficial em inglês
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
+                      {showTranslation ? translationResult.text : formatCleanText(technique.description)}
+                    </p>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Custom Adversary Objective if different from description */}

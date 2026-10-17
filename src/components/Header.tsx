@@ -28,7 +28,7 @@ interface HeaderProps {
   onSelectCampaign: (campaign: DisarmCampaign) => void;
   onSaveCampaign: () => void;
   isSavedRecently: boolean;
-  onCreateNewCampaign: () => void;
+  onCreateNewCampaign?: () => void;
   onDeleteCampaign: (campaignId: string) => void;
   onOpenUpload: () => void;
   onOpenReport: () => void;
@@ -104,24 +104,24 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Center: Operation Selector WITH Contextual Save Button directly inside */}
-        <div className="flex items-center gap-2 w-full md:w-auto flex-1 max-w-md xl:max-w-xl min-w-0">
+        <div className="flex items-center gap-2.5 w-full md:w-auto flex-1 max-w-md xl:max-w-xl min-w-0">
           {/* Operation Selector Dropdown */}
           <div className="relative flex-1 min-w-0">
             <button
               onClick={() => setCampaignDropdownOpen(!campaignDropdownOpen)}
-              className="w-full flex items-center justify-between gap-2.5 px-3.5 py-1.5 rounded-xl bg-[#0e1422] hover:bg-[#121a2c] border border-white/[0.08] hover:border-sky-500/40 text-left transition-all text-xs group cursor-pointer min-w-0"
+              className="w-full flex items-center justify-between gap-3 px-4 h-10 rounded-xl bg-[#0e1422] hover:bg-[#131b2e] border border-white/[0.1] hover:border-sky-500/50 text-left transition-all text-xs group cursor-pointer min-w-0 shadow-sm"
             >
-              <div className="flex items-center gap-2 min-w-0 truncate">
-                <span className="relative flex h-2 w-2 flex-shrink-0">
+              <div className="flex items-center gap-2.5 min-w-0 truncate">
+                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
                 </span>
-                <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider flex-shrink-0">Operação:</span>
-                <span className="font-semibold text-slate-100 truncate group-hover:text-sky-300 transition-colors">
+                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex-shrink-0 font-medium">Caso Ativo:</span>
+                <span className="font-semibold text-slate-100 truncate group-hover:text-sky-300 transition-colors text-xs sm:text-sm">
                   {currentCampaign.name}
                 </span>
               </div>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-400 group-hover:text-white transition-colors flex-shrink-0" />
+              <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors flex-shrink-0 ml-1" />
             </button>
 
             {campaignDropdownOpen && (
@@ -139,7 +139,7 @@ export const Header: React.FC<HeaderProps> = ({
                     return (
                       <div
                         key={camp.id}
-                        className={`flex items-center justify-between gap-2 p-1.5 rounded-lg border transition-all ${
+                        className={`flex items-center justify-between gap-2 p-2 rounded-lg border transition-all ${
                           isActive
                             ? 'bg-sky-500/10 border-sky-500/30'
                             : 'border-transparent hover:border-white/[0.08] hover:bg-white/[0.04]'
@@ -193,87 +193,73 @@ export const Header: React.FC<HeaderProps> = ({
                     );
                   })}
                 </div>
-
-                {/* Create new campaign button */}
-                <div className="pt-2 mt-2 border-t border-white/[0.08]">
-                  <button
-                    onClick={() => {
-                      onCreateNewCampaign();
-                      setCampaignDropdownOpen(false);
-                    }}
-                    className="w-full flex items-center justify-center gap-1.5 p-2 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-sky-400 text-xs font-mono font-semibold transition-colors cursor-pointer"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Criar Nova Operação em Branco</span>
-                  </button>
-                </div>
               </div>
             )}
           </div>
 
-          {/* Botão Salvar Operação (Dentro do Contexto da Operação Selecionada) */}
+          {/* Botão Salvar Operação */}
           <button
             onClick={onSaveCampaign}
-            className={`flex items-center gap-1.5 px-3 h-8.5 text-xs font-semibold rounded-xl transition-all whitespace-nowrap cursor-pointer flex-shrink-0 border ${
+            className={`flex items-center gap-2 px-4 h-10 text-xs font-semibold rounded-xl transition-all whitespace-nowrap cursor-pointer flex-shrink-0 border shadow-sm ${
               isSavedRecently
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
-                : 'bg-[#0e1422] hover:bg-[#141d30] text-slate-200 hover:text-white border-white/[0.08] hover:border-sky-500/40'
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)]'
+                : 'bg-[#0e1422] hover:bg-[#141d30] text-slate-200 hover:text-white border-white/[0.1] hover:border-sky-500/40'
             }`}
             title={`Salvar alterações na operação "${currentCampaign.name}"`}
           >
             {isSavedRecently ? (
-              <Check className="w-3.5 h-3.5 text-emerald-400" />
+              <Check className="w-4 h-4 text-emerald-400" />
             ) : (
-              <Save className="w-3.5 h-3.5 text-sky-400" />
+              <Save className="w-4 h-4 text-sky-400" />
             )}
             <span>{isSavedRecently ? 'Salvo!' : 'Salvar Operação'}</span>
           </button>
         </div>
 
-        {/* Right: Actions Toolbar (Exportar Direto + Analisar + Upload) */}
-        <div className="flex items-center gap-2 w-full md:w-auto justify-end flex-nowrap flex-shrink-0">
-          {/* Analisar Caso (HFI) */}
+        {/* Right: Actions Toolbar (Analisar Caso + Upload JSON + Exportar PDF) */}
+        <div className="flex items-center gap-2.5 w-full md:w-auto justify-end flex-nowrap flex-shrink-0">
+          {/* Analisar Caso (HFI - Principal meio de alimentação da plataforma) */}
           <button
             onClick={onOpenAnalyzer}
-            className="flex items-center gap-2 px-3.5 h-8.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-500/50 rounded-lg shadow-[0_0_12px_rgba(16,185,129,0.15)] transition-all whitespace-nowrap cursor-pointer flex-shrink-0"
-            title="Análise assistida por inteligência heurística para incidentes de Hacking for Influence"
+            className="flex items-center gap-2.5 px-5 h-10 text-xs font-semibold text-emerald-300 hover:text-emerald-100 bg-gradient-to-r from-emerald-500/20 to-teal-500/15 hover:from-emerald-500/30 hover:to-teal-500/25 border border-emerald-500/40 hover:border-emerald-400 rounded-xl shadow-[0_0_16px_rgba(16,185,129,0.2)] hover:shadow-[0_0_22px_rgba(16,185,129,0.35)] transition-all whitespace-nowrap cursor-pointer flex-shrink-0 group"
+            title="Análise assistida por inteligência heurística para incidentes de Hacking for Influence (Principal fluxo de entrada)"
           >
-            <Brain className="w-3.5 h-3.5" />
+            <Brain className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition-transform" />
             <span>Analisar Caso</span>
           </button>
 
           {/* Upload JSON */}
           <button
             onClick={onOpenUpload}
-            className="flex items-center gap-1.5 px-3 h-8.5 text-xs font-medium text-slate-200 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] hover:border-white/[0.18] rounded-lg transition-all whitespace-nowrap cursor-pointer flex-shrink-0"
+            className="flex items-center gap-2 px-4 h-10 text-xs font-semibold text-slate-200 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.1] hover:border-white/[0.2] rounded-xl transition-all whitespace-nowrap cursor-pointer flex-shrink-0"
             title="Upload de arquivo JSON ou camada DISARM Navigator"
           >
-            <Upload className="w-3.5 h-3.5 text-sky-400" />
-            <span className="hidden sm:inline">Upload JSON</span>
+            <Upload className="w-4 h-4 text-sky-400" />
+            <span>Upload JSON</span>
           </button>
 
           {/* Subtle Vertical Divider */}
-          <div className="h-5 w-px bg-white/[0.1] mx-0.5 hidden sm:block flex-shrink-0" />
+          <div className="h-6 w-px bg-white/[0.12] mx-1 hidden sm:block flex-shrink-0" />
 
           {/* Direct 1-Click PDF Export Button */}
-          <div className="flex items-center rounded-lg bg-sky-500 hover:bg-sky-400 shadow-glow-cyan transition-all flex-shrink-0">
+          <div className="flex items-center rounded-xl bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-400 hover:to-sky-300 shadow-glow-cyan transition-all flex-shrink-0 h-10">
             <button
               onClick={handleDirectPdfExport}
-              className="flex items-center gap-1.5 px-3.5 h-8.5 text-xs font-bold text-slate-950 transition-all cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-2 px-4 h-10 text-xs font-semibold text-slate-950 transition-all cursor-pointer whitespace-nowrap"
               title="Exportar e baixar imediatamente o Relatório de Inteligência em PDF formatado"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-4 h-4 text-slate-950" />
               <span>Exportar PDF</span>
             </button>
 
             {/* Additional Export Options Toggle */}
-            <div className="relative">
+            <div className="relative h-10">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setExportDropdownOpen(!exportDropdownOpen);
                 }}
-                className="h-8.5 px-1.5 text-slate-950 hover:bg-black/10 rounded-r-lg border-l border-black/15 flex items-center justify-center transition-colors cursor-pointer"
+                className="h-10 px-2.5 text-slate-950 hover:bg-black/10 rounded-r-xl border-l border-black/15 flex items-center justify-center transition-colors cursor-pointer"
                 title="Mais opções de exportação"
               >
                 <ChevronDown className="w-3.5 h-3.5" />

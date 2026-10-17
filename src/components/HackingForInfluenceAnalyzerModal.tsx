@@ -204,10 +204,10 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
     );
 
     checkAndAdd(
-      'T0019.002',
-      ['sequestro de hashtag', 'poluindo', 'poluição de busca', 'responderam', 'injetad'],
+      'T0049.002',
+      ['sequestro de hashtag', 'poluindo', 'poluição de busca', 'responderam', 'injetad', 'inundar hashtag'],
       'Inundação de seções de comentários e sequestro de hashtags governamentais',
-      'Sequestro de Hashtags e Inundação de Respostas em Contas Oficiais',
+      'Inundação e Sequestro de Hashtags Existentes',
       'high',
       'probable'
     );

@@ -237,10 +237,6 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               Número de técnicas adversárias ativas mapeadas em cada tática
             </p>
           </div>
-
-          <div className="text-xs font-mono text-slate-400 bg-black/40 px-3 py-1 rounded-md border border-white/[0.04]">
-            Distribuição Quantitativa de TTPs
-          </div>
         </div>
 
         <div className="h-64 w-full">

@@ -371,7 +371,7 @@ export const App: React.FC = () => {
               }`}
             >
               <BookOpen className="w-4 h-4 text-emerald-400" />
-              <span>Framework Oficial (Navigator 16 TAs)</span>
+              <span>DISARM Red Framework</span>
             </button>
           </div>
 

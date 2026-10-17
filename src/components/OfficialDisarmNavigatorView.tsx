@@ -121,7 +121,7 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
             <div>
               <div className="flex items-center gap-2.5 flex-wrap">
                 <h2 className="text-base font-bold text-white tracking-wide font-mono">
-                  DISARM Foundation Matrix Navigator (Oficial)
+                  DISARM Navigator v4.8.2
                 </h2>
                 <span className="px-2.5 py-0.5 rounded-md text-[11px] font-mono uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold shadow-sm">
                   16 Táticas • 391 Técnicas (103 Principais + 288 Subs)
