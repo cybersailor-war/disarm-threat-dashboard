@@ -11,7 +11,6 @@ import {
   Calendar,
   Database,
   CheckCircle2,
-  Search,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -30,14 +29,12 @@ interface OverviewDashboardProps {
   campaign: DisarmCampaign;
   onSelectTechnique: (technique: DisarmTechnique) => void;
   onFilterByTactic?: (tacticId: string | 'ALL') => void;
-  onOpenAttributionModal?: () => void;
 }
 
 export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
   campaign,
   onSelectTechnique,
   onFilterByTactic,
-  onOpenAttributionModal,
 }) => {
   const metrics = computeCampaignMetrics(campaign);
 
@@ -105,20 +102,6 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
               )}
             </div>
           </div>
-
-          {/* Action: Correlacionar CTI (APT) posicionado em área dedicada do banner */}
-          {onOpenAttributionModal && (
-            <div className="flex-shrink-0 self-start lg:self-center">
-              <button
-                onClick={onOpenAttributionModal}
-                className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-mono font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 hover:border-purple-500/50 transition-all cursor-pointer shadow-sm group"
-                title="Correlacionar TTPs observados com perfis de APTs conhecidos (Base CTI)"
-              >
-                <Search className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
-                <span>Correlacionar CTI (APT)</span>
-              </button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -184,22 +167,16 @@ export const OverviewDashboard: React.FC<OverviewDashboardProps> = ({
         </div>
       </div>
 
-      {/* Official DISARM Tactics Sequence Tracker (TA01 -> TA13) */}
+      {/* Official DISARM Tactics Sequence Tracker */}
       <div className="tactical-panel p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-          <div>
-            <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
-              <Activity className="w-4 h-4 text-sky-400" />
-              Táticas Oficiais DISARM Red Team (16 Táticas Oficiais)
-            </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Sequência oficial de táticas do DISARM Foundation. Clique em qualquer tática para inspecionar as técnicas no navegador.
-            </p>
-          </div>
-
-          <div className="text-xs font-mono text-slate-400 bg-black/40 px-3 py-1 rounded-md border border-white/[0.04]">
-            Estrutura Padrão DISARM Foundation
-          </div>
+        <div className="mb-4">
+          <h3 className="text-sm font-bold text-white font-mono uppercase tracking-wider flex items-center gap-2">
+            <Activity className="w-4 h-4 text-sky-400" />
+            Táticas DISARM Red Team Framework
+          </h3>
+          <p className="text-xs text-slate-400 mt-0.5">
+            Sequência oficial de táticas do DISARM Foundation. Clique em qualquer tática para inspecionar as técnicas no navegador.
+          </p>
         </div>
 
         {/* Horizontal Tactic Grid: 4x4 balanced layout (16 official tactics) */}

@@ -136,7 +136,7 @@ ${campaign.description}
 
   md += `## 4. Recomendações Táticas do Red Team
 1. **Contramedidas Imediatas:** Desmantelamento de infraestrutura de clonagem (takedown de domínios typosquatted via registradores e provedores DNS).
-2. **Atribuição & CTI:** Correlação contínua com indicadores de atores estatais e coletivos alinhados.
+2. **Monitoramento Operacional:** Acompanhamento contínuo dos indicadores de infraestrutura e procedimentos identificados.
 3. **Resiliência de Informação:** Divulgação de alertas públicos aos veículos de imprensa e canais oficiais visados para desacreditar antecipadamente narrativas forjadas.
 
 ---
@@ -314,7 +314,7 @@ export function exportCampaignAsPdf(campaign: DisarmCampaign) {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10.5);
   doc.setTextColor(15, 23, 42);
-  doc.text('2. MÉTRICAS QUANTITATIVAS DA OPERAÇÃO (CTI)', marginX, y);
+  doc.text('2. MÉTRICAS QUANTITATIVAS DA OPERAÇÃO', marginX, y);
   y += 5;
 
   // Metric pills

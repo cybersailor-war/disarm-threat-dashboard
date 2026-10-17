@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Plus,
   CheckCircle2,
-  Info,
   Maximize2,
   Minimize2,
   Layers,
@@ -416,29 +415,12 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
             {/* Modal Body */}
             <div className="p-6 space-y-5 overflow-y-auto flex-1">
               {/* Status Alert if in campaign */}
-              {activeCampaignTechIds.has(selectedTech.id) ? (
+              {activeCampaignTechIds.has(selectedTech.id) && (
                 <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-2 text-emerald-400 text-xs">
                   <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                   <span>
-                    Esta técnica <strong>já está registrada</strong> no caso investigado ativo.
+                    Esta técnica <strong>já está registrada</strong> no caso ativo.
                   </span>
-                </div>
-              ) : (
-                <div className="p-3 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-between gap-2 text-sky-300 text-xs">
-                  <div className="flex items-center gap-2">
-                    <Info className="w-4 h-4 flex-shrink-0 text-sky-400" />
-                    <span>Esta técnica faz parte da matriz oficial DISARM Red Team.</span>
-                  </div>
-                  <button
-                    onClick={() => {
-                      onAddTechniqueToCampaign(selectedTech);
-                      setSelectedTech(null);
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs shadow-glow-cyan transition-all cursor-pointer flex-shrink-0"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Adicionar ao Caso Ativo</span>
-                  </button>
                 </div>
               )}
 
@@ -478,7 +460,7 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
             {/* Modal Footer */}
             <div className="p-4 border-t border-white/[0.08] bg-[#090d16] flex items-center justify-between">
               <span className="text-[11px] font-mono text-slate-500">
-                DISARM Framework v1.4 / Red Team Taxonomia
+                DISARM Framework v1.4
               </span>
               <div className="flex items-center gap-2">
                 <button
@@ -493,10 +475,10 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
                       onAddTechniqueToCampaign(selectedTech);
                       setSelectedTech(null);
                     }}
-                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold transition-all shadow-glow-cyan"
+                    className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold transition-all shadow-glow-cyan cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>Adicionar à Investigação</span>
+                    <span>Adicionar ao Caso Ativo</span>
                   </button>
                 )}
               </div>

@@ -16,7 +16,6 @@ import { UploadModal } from './components/UploadModal';
 import { ExecutiveReportModal } from './components/ExecutiveReportModal';
 import { ManualTtpModal } from './components/ManualTtpModal';
 import { HackingForInfluenceAnalyzerModal } from './components/HackingForInfluenceAnalyzerModal';
-import { AttributionModal } from './components/AttributionModal';
 import { DisarmCampaign, DisarmTechnique } from './types/disarm';
 import { OfficialDisarmTechnique } from './data/officialDisarmData';
 import { REAL_CAMPAIGN_DNC_HACK_LEAK } from './data/mockDisarmData';
@@ -91,7 +90,6 @@ export const App: React.FC = () => {
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [analyzerModalOpen, setAnalyzerModalOpen] = useState(false);
   const [manualTtpModalOpen, setManualTtpModalOpen] = useState(false);
-  const [attributionModalOpen, setAttributionModalOpen] = useState(false);
   const [editingTtp, setEditingTtp] = useState<DisarmTechnique | null>(null);
   const [initialOfficialTech, setInitialOfficialTech] = useState<OfficialDisarmTechnique | null>(null);
 
@@ -149,19 +147,6 @@ export const App: React.FC = () => {
 
     setIsSavedRecently(true);
     setTimeout(() => setIsSavedRecently(false), 2200);
-  };
-
-  // Apply threat actor attribution from CTI correlation
-  const handleApplyAttribution = (actor: string, regions?: string[], sectors?: string[]) => {
-    const updatedCampaign: DisarmCampaign = {
-      ...currentCampaign,
-      threatActor: actor,
-      targetRegions: regions && regions.length > 0 ? regions : currentCampaign.targetRegions,
-      targetSectors: sectors && sectors.length > 0 ? sectors : currentCampaign.targetSectors,
-      lastUpdated: new Date().toISOString(),
-    };
-    handleSaveCurrentCampaign(updatedCampaign);
-    setAttributionModalOpen(false);
   };
 
   // Create brand new blank campaign
@@ -407,7 +392,6 @@ export const App: React.FC = () => {
             campaign={currentCampaign}
             onSelectTechnique={(tech) => setSelectedTechnique(tech)}
             onFilterByTactic={handleFilterByTacticFromOverview}
-            onOpenAttributionModal={() => setAttributionModalOpen(true)}
           />
         )}
 
@@ -489,13 +473,6 @@ export const App: React.FC = () => {
         onClose={() => setAnalyzerModalOpen(false)}
         onApplyInvestigation={handleApplyAnalyzedInvestigation}
         currentCampaign={currentCampaign}
-      />
-
-      <AttributionModal
-        isOpen={attributionModalOpen}
-        onClose={() => setAttributionModalOpen(false)}
-        campaign={currentCampaign}
-        onApplyAttribution={handleApplyAttribution}
       />
     </div>
   );
