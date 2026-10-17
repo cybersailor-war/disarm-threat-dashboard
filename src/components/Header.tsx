@@ -85,7 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <p className="text-[11px] text-slate-300 font-sans tracking-tight leading-tight mt-0.5">
-                Disinformation Analysis &amp; Risk Management <span className="text-slate-500">•</span>{' '}
+                AI-Assisted Disinformation Analysis &amp; Risk Management <span className="text-slate-500">•</span>{' '}
                 <span className="text-sky-300/90 font-medium">Hacking for Influence</span>
               </p>
             </div>

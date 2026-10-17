@@ -1,4 +1,4 @@
-# DISARM.AI — Hacking for Influence & Threat Analysis Dashboard
+# DISARM.AI — AI-Assisted Disinformation Analysis & Risk Management • Hacking for Influence
 ### Plataforma Tática de Análise de Ameaças Informacionais, Guerra Híbrida e Mapeamento de TTPs (DISARM Red Team Framework)
 
 O **DISARM.AI** é uma plataforma analítica moderna, soberana e de alta prontidão operacional, projetada especificamente para analistas de **Cyber Threat Intelligence (CTI)**, operadores de **Operações de Informação (InfoOps/PsyOps)** e comandos de **Defesa Cibernética**.

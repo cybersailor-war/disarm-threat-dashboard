@@ -431,7 +431,7 @@ export const App: React.FC = () => {
             </span>
             <span className="text-slate-600">•</span>
             <span className="text-slate-300 font-medium">
-              Disinformation Analysis &amp; Risk Management
+              AI-Assisted Disinformation Analysis &amp; Risk Management
             </span>
             <span className="text-slate-600">•</span>
             <span className="text-sky-400/90 font-medium font-mono text-[11px] px-1.5 py-0.5 rounded bg-sky-500/10 border border-sky-500/20">
