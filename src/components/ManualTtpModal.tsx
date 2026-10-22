@@ -207,7 +207,7 @@ export const ManualTtpModal: React.FC<ManualTtpModalProps> = ({
           {/* Technique Picker */}
           <div>
             <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
-              Técnica Oficial DISARM (257 disponíveis) *
+              Técnica Oficial DISARM *
             </label>
 
             {isEditing ? (

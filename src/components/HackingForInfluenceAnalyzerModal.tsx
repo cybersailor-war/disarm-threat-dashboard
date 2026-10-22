@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Brain,
   Sparkles,
@@ -17,14 +17,17 @@ import {
   Crosshair,
   Globe,
   Building2,
+  Zap,
+  RotateCcw,
 } from 'lucide-react';
 import {
   OFFICIAL_DISARM_TECHNIQUES,
   OFFICIAL_DISARM_TACTICS,
-  OfficialDisarmTechnique
+  OfficialDisarmTechnique,
 } from '../data/officialDisarmData';
 import { DisarmCampaign, DisarmTechnique, ThreatSeverity, ProcedureEvidence } from '../types/disarm';
 import { buildTacticsList } from '../utils/disarmParser';
+import { extractIocsFromText } from '../utils/iocExtractor';
 
 interface HackingForInfluenceAnalyzerModalProps {
   isOpen: boolean;
@@ -49,60 +52,91 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
   isOpen,
   onClose,
   onApplyInvestigation,
-  currentCampaign,
 }) => {
   // Wizard steps: 'input' | 'review'
   const [step, setStep] = useState<'input' | 'review'>('input');
 
   // Form input state
-  const [caseTitle, setCaseTitle] = useState(
-    currentCampaign ? currentCampaign.name : 'Incidente de Vazamento & Manipulação de Narrativa (Hacking for Influence)'
-  );
-  // Threat actor, target regions and sectors will be populated after TTP analysis in Step 2
-  const [threatActor, setThreatActor] = useState(
-    currentCampaign ? currentCampaign.threatActor : 'Ator de Ameaça sob Investigação'
-  );
+  const [caseTitle, setCaseTitle] = useState('');
+  const [threatActor, setThreatActor] = useState('');
   const [targetRegions, setTargetRegions] = useState('Brasil, América Latina');
-  const [targetSectors, setTargetSectors] = useState('Governamental, Processo Eleitoral, Mídia');
+  const [targetSectors, setTargetSectors] = useState('Governamental, Defesa, Mídia');
   const [incidentText, setIncidentText] = useState('');
   const [rawIocs, setRawIocs] = useState('');
 
+  // Extraction feedback
+  const [extractionFeedback, setExtractionFeedback] = useState<string | null>(null);
+
   // Proposed TTPs state
   const [proposedTtps, setProposedTtps] = useState<ProposedTtp[]>([]);
-  const [editingTtpId, setEditingTtpId] = useState<string | null>(null);
+
+  // Limpar todos os campos do formulário para nova análise
+  const handleResetForm = () => {
+    setCaseTitle('');
+    setThreatActor('');
+    setTargetRegions('Brasil, América Latina');
+    setTargetSectors('Governamental, Defesa, Mídia');
+    setIncidentText('');
+    setRawIocs('');
+    setProposedTtps([]);
+    setStep('input');
+    setExtractionFeedback(null);
+  };
+
+  // Resetar campos ao abrir o modal para garantir início em estado limpo
+  useEffect(() => {
+    if (isOpen) {
+      handleResetForm();
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Preset quick examples for operator convenience
-  const loadExampleHackingForInfluence = () => {
-    setCaseTitle('Operação Vazamento Hack-and-Leak & Clones de Imprensa');
-    setIncidentText(
-      `Detectada invasão prévia de caixas de e-mail e servidores de arquivos de oficiais militares através de campanhas de spear-phishing. Documentos autênticos roubados foram adulterados digitalmente para inserir cláusulas falsas indicando envio de tropas ao exterior.
-Em seguida, foram registrados 15 domínios typosquatted clonando o layout do jornal Le Monde (ex: lemonde.ltd) e Der Spiegel.
-Para disseminação, ativou-se uma rede com centenas de perfis automatizados (bots) no X/Twitter utilizando avatares criados com fotos de inteligência artificial (StyleGAN) e selos azuis comprados. Os bots responderam sincronizadamente às postagens oficiais de ministérios, impulsionando a hashtag #VerdadeOculta.
-Além disso, anúncios patrocinados no Facebook utilizaram scripts de cloaking para burlar os sistemas de moderação e redirecionar cidadãos locais para os artigos forjados.`
-    );
-    setRawIocs(
-      `lemonde.ltd
-der-spiegel.info
-185.220.101.45
-194.36.177.12
-#VerdadeOculta
-dossie_vazamento_militar_alterado.pdf
-SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
-    );
-  };
+  // Extração inteligente de artefatos a partir da narrativa
+  const handleExtractIocsFromNarrative = () => {
+    if (!incidentText.trim()) {
+      setExtractionFeedback('Insira primeiro o relato do incidente para extrair os artefatos.');
+      setTimeout(() => setExtractionFeedback(null), 3500);
+      return;
+    }
 
-  // Automated heuristic pattern analysis engine
-  const handleAnalyze = () => {
-    const text = `${incidentText} ${rawIocs}`.toLowerCase();
-    const proposals: ProposedTtp[] = [];
+    const result = extractIocsFromText(incidentText);
+    if (result.all.length === 0) {
+      setExtractionFeedback('Nenhum artefato específico (IP, domínio, hash, URL, arquivo ou hashtag) identificado no texto.');
+      setTimeout(() => setExtractionFeedback(null), 3500);
+      return;
+    }
 
-    // Extract raw IOC lines
-    const parsedIocs = rawIocs
+    const currentLines = rawIocs
       .split('\n')
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
+
+    const combined = Array.from(new Set([...currentLines, ...result.all]));
+    setRawIocs(combined.join('\n'));
+    setExtractionFeedback(`${result.all.length} artefato(s) extraído(s) automaticamente a partir do relato!`);
+    setTimeout(() => setExtractionFeedback(null), 4000);
+  };
+
+  // Automated heuristic pattern analysis engine across the DISARM Framework
+  const handleAnalyze = () => {
+    // Se o analista não preencheu o campo de IOCs, extrair automaticamente da narrativa
+    let effectiveIocsText = rawIocs.trim();
+    if (!effectiveIocsText && incidentText.trim()) {
+      const autoExtracted = extractIocsFromText(incidentText);
+      if (autoExtracted.all.length > 0) {
+        effectiveIocsText = autoExtracted.all.join('\n');
+        setRawIocs(effectiveIocsText);
+      }
+    }
+
+    const parsedIocs = effectiveIocsText
+      .split('\n')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
+    const text = `${incidentText} ${effectiveIocsText}`.toLowerCase();
+    const proposals: ProposedTtp[] = [];
 
     const checkAndAdd = (
       techId: string,
@@ -116,22 +150,29 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
       if (matchFound) {
         const official = OFFICIAL_DISARM_TECHNIQUES.find((t) => t.id === techId);
         if (official && !proposals.some((p) => p.technique.id === techId)) {
-          // Filter related artifacts for this technique
+          // Filtrar artefatos relacionados especificamente a esta técnica
           const relatedArtifacts = parsedIocs.filter((ioc) => {
-            if (techId.startsWith('T0089') || techId === 'T0045') {
-              return ioc.includes('.pdf') || ioc.includes('SHA256');
+            const lower = ioc.toLowerCase();
+            if (techId.startsWith('T0089') || techId === 'T0088' || techId === 'T0042') {
+              return lower.includes('.pdf') || lower.includes('.xlsx') || lower.includes('.docx') || lower.includes('sha256') || lower.includes('hash');
             }
-            if (techId === 'T0099' || techId.includes('130')) {
-              return ioc.includes('.') || ioc.includes('http') || ioc.includes('185.') || ioc.includes('194.');
+            if (techId.startsWith('T0098') || techId === 'T0099' || techId === 'T0020') {
+              return lower.includes('.') || lower.includes('http') || lower.includes('bit.ly') || lower.includes('auth');
             }
-            if (techId.includes('0015') || techId.includes('0019')) {
-              return ioc.startsWith('#');
+            if (techId === 'T0094' || techId === 'T0026') {
+              return lower.includes('t.me') || lower.includes('telegram');
+            }
+            if (techId.includes('0015') || techId.includes('0049')) {
+              return lower.startsWith('#');
+            }
+            if (techId === 'T0093.002' || techId === 'T0072.004') {
+              return lower.includes('185.') || lower.includes('194.') || lower.includes('.');
             }
             return false;
           });
 
           proposals.push({
-            id: `PROP-${techId}-${Date.now()}`,
+            id: `PROP-${techId}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
             technique: official,
             severity,
             confidence,
@@ -145,105 +186,218 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
       }
     };
 
-    // 1. Hack and leak & document manipulation
+    // --- 1. TA01: Plan Strategy ---
+    checkAndAdd(
+      'T0074',
+      ['estratégia', 'estratégic', 'objetivo estratégico', 'sabotagem', 'neutralizar', 'impedir consolidação', 'impacto assimétrico', 'plano estratégico'],
+      'Definição de objetivos finais e direcionamento de impacto estratégico da operação de influência',
+      'Definição de Objetivos Estratégicos da Operação',
+      'critical',
+      'confirmed'
+    );
+
+    checkAndAdd(
+      'T0002',
+      ['propaganda', 'estatal', 'pró-estado', 'narrativa do país', 'desacreditar estado', 'potência militar'],
+      'Amplificação de mensagens estatais alinhadas aos interesses geopolíticos do adversário',
+      'Alinhamento com Narrativas Estratégicas e Propaganda Estatal',
+      'high',
+      'probable'
+    );
+
+    checkAndAdd(
+      'T0059',
+      ['longo prazo', 'long game', 'preparação prolongada', 'anos de tensão', 'operação continuada'],
+      'Estratégia de influência com desenvolvimento lento e metódico no ambiente de informação',
+      'Operação de Longo Prazo e Preparação de Terreno',
+      'medium',
+      'probable'
+    );
+
+    // --- 2. TA02: Plan Objectives ---
+    checkAndAdd(
+      'T0003',
+      ['narrativa existente', 'narrativas existentes', 'tensão prévia', 'atrito histórico', 'derrota militar', 'ressentimento', 'anexação'],
+      'Aproveitamento e instrumentalização de atritos históricos ou narrativas preexistentes',
+      'Instrumentalização de Narrativas e Ressentimentos Pré-Existentes',
+      'high',
+      'confirmed'
+    );
+
+    // --- 3. TA13: Target Audience Analysis ---
+    checkAndAdd(
+      'T0080',
+      ['mapear público', 'mapeamento de alvos', 'mapearam', 'engenheiros-chefes', 'especialistas recém-retornados', 'parlamentares', 'diretoria-geral', 'dgsn', 'osint'],
+      'Mapeamento detalhado e perfilamento de engenheiros, tomadores de decisão e alvos-chave',
+      'Mapeamento e Perfilamento de Público-Alvo e Especialistas-Chave',
+      'high',
+      'confirmed'
+    );
+
+    // --- 4. TA06: Develop Content ---
     checkAndAdd(
       'T0089.003',
-      ['adulterado', 'alterado', 'modificado', 'falsificado', 'cláusulas falsas', 'forjad'],
-      'Menção explícita a adulteração de documentos ou dados legítimos roubados (Hack and Leak)',
-      'Adulteração de Documentos Oficiais Autênticos',
+      ['adulterado', 'alterado', 'modificado', 'falsificado', 'cláusulas falsas', 'forjad', 'laudo adulterado', 'planilha falsificada', 'documentos falsificados', 'backdoor', 'risco radiológico'],
+      'Adulteração cirúrgica de documentos autênticos exfiltrados para inserir alegações forjadas',
+      'Adulteração de Documentos Oficiais Autênticos (Hack-and-Leak)',
       'critical',
       'confirmed'
     );
 
     checkAndAdd(
       'T0089',
-      ['invasão', 'roubados', 'vazamento', 'spear-phishing', 'exfiltração', 'hack', 'e-mail'],
-      'Comprometimento de caixas de entrada ou exfiltração de dados confidenciais',
-      'Obtenção Não Autorizada de Documentos e Comunicações Privadas',
+      ['hack and leak', 'hack-and-leak', 'vazamento', 'exfiltração', 'caixas de e-mail', 'atas de gestão', 'relatórios de integração', 'roubo de credenciais', 'arquivos originais'],
+      'Desenvolvimento de pacote de dados vazados combinando documentos reais e adulterados',
+      'Desenvolvimento de Pacote de Dados Vazados (Hack-and-Leak)',
       'critical',
       'confirmed'
     );
 
-    // 2. Clone sites & Impersonation
+    checkAndAdd(
+      'T0087',
+      ['deepfake', 'sintétic', 'vídeo deepfake', 'áudio sintético', 'clonagem de voz', 'inteligência artificial', 'ia generativa', 'vídeo forjado'],
+      'Produção de conteúdo multimídia sintético (deepfake) simulando declarações de autoridade',
+      'Criação de Mídia Sintética e Vídeos Deepfake',
+      'critical',
+      'confirmed'
+    );
+
+    // --- 5. TA15: Establish Assets ---
     checkAndAdd(
       'T0098.001',
-      ['clon', 'typosquat', 'portal falso', 'impersonat', 'le monde', 'der spiegel', 'cópia de site'],
-      'Criação de portais clonados ou domínios typosquatted imitando veículos respeitados de imprensa',
-      'Criação de Portais Clonados Inautênticos (Le Monde, Der Spiegel)',
+      ['clon', 'typosquat', 'portal falso', 'impersonat', 'domínio falso', 'domínios falsos', 'cópia de site', 'le monde', 'der spiegel', 'portal-naval-auth', 'lemonde.ltd', 'defesanacional'],
+      'Registro e configuração de domínios typosquatted ou clones de portais legítimos de imprensa e portais corporativos',
+      'Criação de Portais Clonados e Domínios Typosquatted',
       'critical',
       'confirmed'
     );
 
-    // 3. Personas & Bots
+    checkAndAdd(
+      'T0097',
+      ['avatar', 'stylegan', 'foto gerada', 'persona', 'foto de perfil', 'foto de inteligência artificial', 'rosto sintético'],
+      'Criação de avatares sintéticos com rostos gerados por redes neurais (IA) para perfis inautênticos',
+      'Criação de Personas com Avatares Sintéticos Gerados por IA',
+      'high',
+      'confirmed'
+    );
+
     checkAndAdd(
       'T0093.002',
-      ['bot', 'automatizad', 'fazenda de contas', 'enxame', 'sincronizad', 'perfis falsos', 'botnet'],
-      'Identificação de contas automatizadas coordenadas ou botnet atuando em redes sociais',
+      ['bot', 'automatizad', 'fazenda de contas', 'enxame', 'sincronizad', 'perfis falsos', 'botnet', 'contas automatizadas', 'disparos de bots'],
+      'Estruturação de rede coordenada de contas automatizadas (bots) para amplificação em redes sociais',
       'Disparo Coordenado via Rede de Contas Automatizadas (Bots)',
       'high',
       'confirmed'
     );
 
     checkAndAdd(
-      'T0097',
-      ['avatar', 'stylegan', 'inteligência artificial', 'foto gerada', 'persona', 'foto de perfil'],
-      'Utilização de avatares sintéticos gerados por IA para criar personas inautênticas',
-      'Criação de Personas com Avatares Sintéticos Gerados por IA',
+      'T0094',
+      ['telegram', 't.me', 'canal anônimo', 'grupo anônimo', 'canal de vazamento', 'canal no telegram'],
+      'Estabelecimento de canais de mensageria anônimos para publicação inicial e distribuição do vazamento',
+      'Estabelecimento de Canais Anônimos de Vazamento (Telegram)',
+      'high',
+      'confirmed'
+    );
+
+    // --- 6. TA16: Establish Legitimacy ---
+    checkAndAdd(
+      'T0101',
+      ['selo azul', 'selos azuis', 'verificação comprada', 'conta com selo', 'badge de verificação'],
+      'Aquisição de selos de verificação em redes sociais para conferir falsa autoridade aos perfis da operação',
+      'Aquisição Comercial de Selos de Verificação de Perfil',
+      'medium',
+      'confirmed'
+    );
+
+    checkAndAdd(
+      'T0045',
+      ['falso especialista', 'pseudo-especialista', 'especialista forjado', 'parecer de especialista', 'perito forjado'],
+      'Mobilização de pseudo-especialistas para conferir falso endosso técnico às alegações do vazamento',
+      'Mobilização de Falsos Especialistas Técnicos',
       'high',
       'probable'
     );
 
-    // 4. Hashtag hijacking / search pollution
+    checkAndAdd(
+      'T0099',
+      ['impersonar', 'se passar por', 'clonar imprensa', 'clonavam veículos de imprensa', 'identidade forjada'],
+      'Uso indevido da identidade visual e reputação de veículos legítimos de imprensa e portais de defesa',
+      'Impersonificação de Órgãos de Imprensa e Instituições',
+      'critical',
+      'confirmed'
+    );
+
+    // --- 7. TA05: Microtarget ---
+    checkAndAdd(
+      'T0072.004',
+      ['cloaking', 'ad cloaking', 'anúncio', 'anúncios patrocinados', 'malvertising', 'meta ads', 'facebook', 'burlar moderação'],
+      'Uso de scripts de evasão (ad cloaking) em anúncios patrocinados segmentados para tomadores de decisão',
+      'Segmentação Psicográfica e Evasão via Ad Cloaking',
+      'high',
+      'confirmed'
+    );
+
+    checkAndAdd(
+      'T0072',
+      ['segmentação', 'segmentado', 'público específico', 'direcionado ao parlamento', 'direcionado a engenheiros', 'parlamento'],
+      'Microsegmentação e direcionamento da desinformação para alvos parlamentares e formadores de opinião',
+      'Segmentação de Audiência e Microtargeting Político',
+      'high',
+      'confirmed'
+    );
+
+    // --- 8. TA07: Deliver Content ---
+    checkAndAdd(
+      'T0020',
+      ['spear-phishing', 'phishing', 'links encurtados', 'bit.ly', 'credenciais', 'roubo de credenciais', 'e-mail de spear-phishing'],
+      'Disparo de campanhas direcionadas de spear-phishing com links encurtados para roubo de credenciais de acesso',
+      'Campanha de Spear-Phishing para Roubo de Credenciais',
+      'critical',
+      'confirmed'
+    );
+
+    // --- 9. TA09 / TA17: Maximise Exposure & Amplify ---
     checkAndAdd(
       'T0015',
-      ['hashtag', '#', 'tag', 'palavra-chave'],
-      'Emprego de hashtags coordenadas para agrupar e disseminar mensagens da operação',
-      'Criação e Propagação de Hashtags da Campanha',
+      ['hashtag', '#', 'tag', 'palavra-chave', '#chernobylnomar', '#farsanetuno', '#verdadeoculta'],
+      'Criação e indução de hashtags coordenadas para agrupar e disseminar mensagens de impacto na opinião pública',
+      'Criação e Propagação de Hashtags de Campanha',
       'medium',
       'confirmed'
     );
 
     checkAndAdd(
       'T0049.002',
-      ['sequestro de hashtag', 'poluindo', 'poluição de busca', 'responderam', 'injetad', 'inundar hashtag'],
-      'Inundação de seções de comentários e sequestro de hashtags governamentais',
-      'Inundação e Sequestro de Hashtags Existentes',
+      ['inundar', 'sequestro de hashtag', 'poluição de busca', 'responderam sincronizadamente', 'inundação'],
+      'Inundação de seções de comentários e sequestro de fluxos de busca de postagens oficiais',
+      'Inundação de Comentários e Sequestro de Hashtags',
       'high',
-      'probable'
+      'confirmed'
     );
 
-    // 5. Cloaking & Ads
+    // --- 10. TA18: Drive Online Harms / Coerce ---
     checkAndAdd(
-      'T0072.004',
-      ['segmentação', 'anúncio', 'cloaking', 'meta', 'facebook', 'ad library', 'público'],
-      'Uso de anúncios patrocinados hiper-segmentados e técnicas de ad cloaking',
-      'Segmentação Psicográfica e Evasão via Ad Cloaking',
+      'T0036',
+      ['doxing', 'doxxing', 'dados pessoais vazados', 'coação psicológica', 'assédio', 'intimidar engenheiros', 'ameaça'],
+      'Vazamento malicioso de dados pessoais (doxing) e coação psicológica contra engenheiros e oficiais do projeto',
+      'Doxing e Assédio Psicológico a Profissionais do Projeto',
+      'critical',
+      'confirmed'
+    );
+
+    // --- 11. TA11: Persist in the Information Environment ---
+    checkAndAdd(
+      'T0042',
+      ['90%', 'intactos', 'parcialmente autêntico', 'mistura de verdade', 'meia-verdade', 'documentos reais misturados'],
+      'Mistura cirúrgica de documentos verídicos com arquivos forjados para dificultar a desmentida rápida',
+      'Apresentação de Meias-Verdades e Documentos Misto-Falsificados',
       'high',
-      'probable'
+      'confirmed'
     );
 
-    // 6. Propaganda / Strategic objectives
-    checkAndAdd(
-      'T0002',
-      ['propaganda', 'estado', 'desacreditar', 'narrativa', 'desestabiliza'],
-      'Objetivo de amplificar mensagens propagandísticas e enfraquecer instituições',
-      'Promoção de Mensagens Alinhadas aos Objetivos do Adversário',
-      'high',
-      'probable'
-    );
-
-    checkAndAdd(
-      'T0074',
-      ['planejamento', 'estratégia', 'objetivo', 'meta', 'campanha'],
-      'Definição de objetivos estratégicos e direcionamento de impacto de influência',
-      'Definição de Objetivos Finais Estratégicos da Operação',
-      'medium',
-      'probable'
-    );
-
-    // If nothing matched, suggest baseline core techniques
+    // Fallback de contingência caso nenhum padrão tenha correspondido
     if (proposals.length === 0) {
-      const defaultIds = ['T0074', 'T0002', 'T0089', 'T0098.001', 'T0093.002'];
+      const defaultIds = ['T0074', 'T0003', 'T0089', 'T0098.001', 'T0093.002'];
       defaultIds.forEach((id) => {
         const off = OFFICIAL_DISARM_TECHNIQUES.find((t) => t.id === id);
         if (off) {
@@ -252,7 +406,7 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
             technique: off,
             severity: 'high',
             confidence: 'probable',
-            rationale: 'TTP fundamental comumente mobilizado em incidentes de Hacking for Influence',
+            rationale: 'TTP fundamental identificado a partir do escopo de Hacking for Influence',
             extractedProcedureTitle: off.name,
             extractedNote: off.description,
             extractedArtifacts: parsedIocs.slice(0, 2),
@@ -280,7 +434,7 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
     const selectedProposals = proposedTtps.filter((p) => p.selected);
     if (selectedProposals.length === 0) return;
 
-    // Build DisarmTechnique list
+    // Construção das técnicas tipadas
     const techniques: DisarmTechnique[] = selectedProposals.map((p) => {
       const procedure: ProcedureEvidence = {
         id: `PROC-${Date.now().toString().slice(-4)}-${p.technique.id}`,
@@ -289,10 +443,10 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
         operationalNote: p.extractedNote,
         observedArtifacts: p.extractedArtifacts,
         evidenceUrls: [],
-        targetedEntities: targetSectors.split(',').map((s) => s.trim()),
+        targetedEntities: targetSectors.split(',').map((s) => s.trim()).filter((s) => s.length > 0),
         confidence: p.confidence,
         dateObserved: new Date().toISOString().split('T')[0],
-        analyst: 'Operador de Inteligência (Análise Heurística)',
+        analyst: 'Operador de Inteligência (Análise Heurística DISARM)',
       };
 
       return {
@@ -319,20 +473,21 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
       name: caseTitle.trim() || 'Incidente de Hacking for Influence',
       version: '2.0',
       domain: 'disarm-redteam',
-      threatActor: threatActor.trim() || 'Ator de Ameaça em Investigação',
+      threatActor: threatActor.trim() || 'Ator de Ameaça sob Investigação',
       campaignStatus: 'Active Ongoing',
       overallSeverity: 'critical',
       description: incidentText.trim() || 'Investigação de operação de influência gerada via módulo de análise.',
       dateCreated: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
-      targetRegions: targetRegions.split(',').map((r) => r.trim()),
-      targetSectors: targetSectors.split(',').map((s) => s.trim()),
+      targetRegions: targetRegions.split(',').map((r) => r.trim()).filter((r) => r.length > 0),
+      targetSectors: targetSectors.split(',').map((s) => s.trim()).filter((s) => s.length > 0),
       techniques,
       tactics,
       rawSourceType: 'custom-threat-report',
     };
 
     onApplyInvestigation(newCampaign);
+    handleResetForm();
     onClose();
   };
 
@@ -358,12 +513,24 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08]"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleResetForm}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-400 hover:text-white hover:bg-white/[0.08] border border-transparent hover:border-white/[0.08] transition-all"
+              title="Limpar formulário e reiniciar campos"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+              <span>Limpar</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.08] transition-all"
+              title="Fechar janela"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Content Body: Step 1 (Input) vs Step 2 (Review) */}
@@ -407,13 +574,24 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                 />
               </div>
 
-              {/* Right Column (5 cols): Raw IOCs + Tactical Guidance Card */}
+              {/* Right Column (5 cols): Raw IOCs + Extraction Intelligence Card */}
               <div className="lg:col-span-5 flex flex-col space-y-4">
                 <div className="flex flex-col flex-1">
-                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-                    <span>Artefatos &amp; IOCs Brutos Coletados</span>
-                    <span className="text-slate-500 text-[10px]">1 item por linha</span>
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-mono uppercase tracking-wider text-slate-400">
+                      Artefatos &amp; IOCs Coletados
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleExtractIocsFromNarrative}
+                      className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-medium text-amber-300 hover:text-white bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 transition-all cursor-pointer"
+                      title="Identificar e extrair automaticamente IPs, domínios, hashes, URLs, arquivos e hashtags contidos no relato"
+                    >
+                      <Zap className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Extrair do Relato</span>
+                    </button>
+                  </div>
+
                   <textarea
                     value={rawIocs}
                     onChange={(e) => setRawIocs(e.target.value)}
@@ -421,35 +599,45 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                     placeholder="portal-naval-auth.com&#10;185.220.101.45&#10;bit.ly/3xNetunoAuth&#10;t.me/VerdadeOcultaNetuno&#10;defesanacional-azul.org&#10;laudo_reator_cpn_v4_confidencial.pdf&#10;auditoria_obsolescencia_combate.xlsx&#10;#ChernobylNoMar&#10;#FarsaNetuno&#10;SHA256: 3b0c44298fc1c14..."
                     className="w-full px-3 py-2.5 text-xs rounded-xl bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono leading-relaxed resize-y flex-1"
                   />
+
+                  {extractionFeedback && (
+                    <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono flex items-center gap-1.5 animate-in fade-in">
+                      <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-amber-400" />
+                      <span>{extractionFeedback}</span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Tactical Extraction Intelligence Card */}
-                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2">
-                  <span className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider block">
-                    Padrões Detectados pelo Motor Heurístico:
-                  </span>
-                  <ul className="text-xs text-slate-300 space-y-1 font-sans">
-                    <li className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
-                      <span>Spear-phishing &amp; exfiltração de credenciais</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0"></span>
-                      <span>Hack-and-Leak &amp; laudos adulterados (.pdf/.xlsx)</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"></span>
-                      <span>Clonagem de portais de notícias &amp; typosquatting</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>
-                      <span>Vídeos Deepfake &amp; malvertising segmentado</span>
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"></span>
-                      <span>Botnets, amplificação de hashtags &amp; doxing</span>
-                    </li>
-                  </ul>
+                {/* Scope & Framework Coverage Card */}
+                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <Brain className="w-3.5 h-3.5" />
+                      Motor Heurístico DISARM
+                    </span>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                      16 Táticas Ativas
+                    </span>
+                  </div>
+
+                  <p className="text-xs text-slate-300 font-sans leading-relaxed">
+                    Mapeamento multidimensional que correlaciona o relato e os artefatos com o catálogo oficial das <strong>16 Táticas</strong> e técnicas canônicas do DISARM Red Team Framework (Estratégia, Narrativas, Desenvolvimento de Conteúdo, Infraestrutura de Ativos, Microtarget, Disseminação, Amplificação e Evasão).
+                  </p>
+
+                  <div className="pt-1 flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
+                    <span className="px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-300">
+                      Planejamento Estratégico
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300">
+                      Hack-and-Leak &amp; Clones
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20 text-red-300">
+                      Mídia Sintética &amp; Doxing
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
+                      Extração de IOCs Integrada
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -473,6 +661,7 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                     type="text"
                     value={threatActor}
                     onChange={(e) => setThreatActor(e.target.value)}
+                    placeholder="Ex: Unidade 404 / País VERMELHO"
                     className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
@@ -578,7 +767,7 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
 
                         {prop.extractedArtifacts.length > 0 && (
                           <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
-                            <span className="text-[10px] font-mono text-slate-500">IOCs extraídos:</span>
+                            <span className="text-[10px] font-mono text-slate-500">IOCs vinculados:</span>
                             {prop.extractedArtifacts.map((art, i) => (
                               <span
                                 key={i}
@@ -619,7 +808,7 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
             </button>
           ) : (
             <span className="text-[11px] font-mono text-slate-500">
-              Mapeamento automatizado contra a base oficial DISARM Foundation (257 técnicas)
+              Mapeamento automatizado contra a base oficial DISARM Foundation
             </span>
           )}
 
@@ -644,7 +833,7 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                 }`}
               >
                 <Brain className="w-4 h-4" />
-                <span>Analisar Situação & Propor TTPs</span>
+                <span>Analisar Situação &amp; Propor TTPs</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
