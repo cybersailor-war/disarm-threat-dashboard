@@ -609,7 +609,7 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                 </div>
 
                 {/* Scope & Framework Coverage Card */}
-                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2.5">
+                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
                       <Brain className="w-3.5 h-3.5" />
@@ -621,23 +621,8 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                   </div>
 
                   <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                    Mapeamento multidimensional que correlaciona o relato e os artefatos com o catálogo oficial das <strong>16 Táticas</strong> e técnicas canônicas do DISARM Red Team Framework (Estratégia, Narrativas, Desenvolvimento de Conteúdo, Infraestrutura de Ativos, Microtarget, Disseminação, Amplificação e Evasão).
+                    Mapeamento multidimensional que correlaciona a narrativa e os artefatos técnicos diretamente com o catálogo oficial das <strong>16 Táticas</strong> e técnicas canônicas do DISARM Red Team Framework.
                   </p>
-
-                  <div className="pt-1 flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                    <span className="px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/20 text-sky-300">
-                      Planejamento Estratégico
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/20 text-purple-300">
-                      Hack-and-Leak &amp; Clones
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20 text-red-300">
-                      Mídia Sintética &amp; Doxing
-                    </span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-300">
-                      Extração de IOCs Integrada
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
