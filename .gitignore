@@ -28,3 +28,4 @@ yarn-error.log*
 # Local Documents & Reports
 *.odt
 scripts/generate_tcc_odt.cjs
+Cenario_Operacao_Netuno_Slide.jpg
