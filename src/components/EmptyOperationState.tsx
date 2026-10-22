@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FolderOpen,
-  Upload,
   BookOpen,
   ArrowRight,
   ShieldAlert,
@@ -14,14 +13,12 @@ import { DisarmCampaign } from '../types/disarm';
 interface EmptyOperationStateProps {
   allCampaigns: DisarmCampaign[];
   onSelectCampaign: (campaign: DisarmCampaign) => void;
-  onOpenUpload: () => void;
   onExploreFramework: () => void;
 }
 
 export const EmptyOperationState: React.FC<EmptyOperationStateProps> = ({
   allCampaigns,
   onSelectCampaign,
-  onOpenUpload,
   onExploreFramework,
 }) => {
   return (
@@ -42,7 +39,7 @@ export const EmptyOperationState: React.FC<EmptyOperationStateProps> = ({
           </h2>
 
           <p className="text-sm text-slate-300 font-sans leading-relaxed">
-            A ferramenta foi iniciada em estado limpo. Selecione uma investigação abaixo em{' '}
+            Selecione uma investigação abaixo em{' '}
             <strong className="text-sky-300 font-medium">Operações Salvas</strong> ou inicie uma nova análise de incidente através do botão{' '}
             <strong className="text-emerald-300 font-medium">Analisar Caso</strong> no menu superior.
           </p>
@@ -64,20 +61,12 @@ export const EmptyOperationState: React.FC<EmptyOperationStateProps> = ({
             </div>
           </div>
 
-          {/* Secondary Quick Actions */}
+          {/* Secondary Quick Action: DISARM Red Framework */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={onOpenUpload}
-              className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-mono text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all cursor-pointer"
-              title="Importar camada DISARM Navigator em JSON"
-            >
-              <Upload className="w-3.5 h-3.5 text-sky-400" />
-              <span>Upload JSON</span>
-            </button>
             <button
               onClick={onExploreFramework}
               className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-mono text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all cursor-pointer"
-              title="Consultar catálogo de 16 Táticas e 391 Técnicas"
+              title="Consultar catálogo canônico de 16 Táticas e 391 Técnicas"
             >
               <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
               <span>DISARM Red Framework</span>
