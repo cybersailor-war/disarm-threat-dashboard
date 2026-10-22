@@ -29,3 +29,4 @@ yarn-error.log*
 *.odt
 scripts/generate_tcc_odt.cjs
 Cenario_Operacao_Netuno_Slide.jpg
+Cenario_Netuno_Slide_*.jpg
