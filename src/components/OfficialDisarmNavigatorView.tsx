@@ -23,7 +23,7 @@ import {
 import { DisarmCampaign, DisarmTechnique } from '../types/disarm';
 
 interface OfficialDisarmNavigatorViewProps {
-  campaign: DisarmCampaign;
+  campaign?: DisarmCampaign | null;
   onAddTechniqueToCampaign: (technique: OfficialDisarmTechnique) => void;
   onSelectActiveTechnique?: (technique: DisarmTechnique) => void;
 }
@@ -40,8 +40,8 @@ export const OfficialDisarmNavigatorView: React.FC<OfficialDisarmNavigatorViewPr
 
   // Set of technique IDs already in current campaign
   const activeCampaignTechIds = useMemo(() => {
-    return new Set(campaign.techniques.map((t) => t.id));
-  }, [campaign.techniques]);
+    return new Set(campaign?.techniques ? campaign.techniques.map((t) => t.id) : []);
+  }, [campaign?.techniques]);
 
   // Group all techniques by tactic and parent
   const tacticsStructure = useMemo(() => {

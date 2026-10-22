@@ -11,6 +11,7 @@ import { OverviewDashboard } from './components/OverviewDashboard';
 import { MatrixView } from './components/MatrixView';
 import { TableView } from './components/TableView';
 import { OfficialDisarmNavigatorView } from './components/OfficialDisarmNavigatorView';
+import { EmptyOperationState } from './components/EmptyOperationState';
 import { TTPDetailDrawer } from './components/TTPDetailDrawer';
 import { UploadModal } from './components/UploadModal';
 import { ExecutiveReportModal } from './components/ExecutiveReportModal';
@@ -66,19 +67,9 @@ const getInitialCampaigns = (): DisarmCampaign[] => {
 
 export const App: React.FC = () => {
   const [allCampaigns, setAllCampaigns] = useState<DisarmCampaign[]>(getInitialCampaigns);
-  const [currentCampaign, setCurrentCampaign] = useState<DisarmCampaign>(() => {
-    const list = getInitialCampaigns();
-    try {
-      const activeId = localStorage.getItem(ACTIVE_CAMPAIGN_KEY);
-      if (activeId) {
-        const found = list.find((c) => c.id === activeId);
-        if (found) return found;
-      }
-    } catch {
-      // fallback
-    }
-    return list[0];
-  });
+  
+  // A aplicação sempre inicia sem nenhuma operação carregada (estado limpo)
+  const [currentCampaign, setCurrentCampaign] = useState<DisarmCampaign | null>(null);
 
   const [isSavedRecently, setIsSavedRecently] = useState(false);
   const [activeTab, setActiveTab] = useState<ActiveTab>('overview');
@@ -98,6 +89,8 @@ export const App: React.FC = () => {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(list));
       if (activeId) {
         localStorage.setItem(ACTIVE_CAMPAIGN_KEY, activeId);
+      } else {
+        localStorage.removeItem(ACTIVE_CAMPAIGN_KEY);
       }
     } catch (err) {
       console.warn('Erro ao salvar no localStorage:', err);
@@ -106,10 +99,12 @@ export const App: React.FC = () => {
 
   // Switch campaign with automatic persistence of currently active campaign
   const handleCampaignChange = (targetCampaign: DisarmCampaign) => {
-    // 1. Ensure current campaign's current edits are kept in the list
-    const updatedList = allCampaigns.map((c) =>
-      c.id === currentCampaign.id ? currentCampaign : c
-    );
+    let updatedList = allCampaigns;
+    if (currentCampaign) {
+      updatedList = allCampaigns.map((c) =>
+        c.id === currentCampaign.id ? currentCampaign : c
+      );
+    }
 
     const exists = updatedList.some((c) => c.id === targetCampaign.id);
     const finalList = exists ? updatedList : [targetCampaign, ...updatedList];
@@ -128,9 +123,25 @@ export const App: React.FC = () => {
     setSelectedTechnique(null);
   };
 
+  // Descarregar operação para voltar à tela limpa
+  const handleUnloadCampaign = () => {
+    if (currentCampaign) {
+      const updatedList = allCampaigns.map((c) =>
+        c.id === currentCampaign.id ? currentCampaign : c
+      );
+      setAllCampaigns(updatedList);
+      saveToStorage(updatedList);
+    }
+    setCurrentCampaign(null);
+    setSelectedTechnique(null);
+    setSelectedTacticFilter('ALL');
+  };
+
   // Explicit Save Campaign handler
   const handleSaveCurrentCampaign = (overrideCampaign?: DisarmCampaign) => {
     const base = overrideCampaign || currentCampaign;
+    if (!base) return;
+
     const updated: DisarmCampaign = {
       ...base,
       lastUpdated: new Date().toISOString(),
@@ -170,11 +181,15 @@ export const App: React.FC = () => {
       rawSourceType: 'custom-threat-report',
     };
 
-    // Save current campaign first
-    const listWithCurrent = allCampaigns.map((c) =>
-      c.id === currentCampaign.id ? currentCampaign : c
-    );
-    const finalList = [newCampaign, ...listWithCurrent];
+    let finalList = allCampaigns;
+    if (currentCampaign) {
+      const listWithCurrent = allCampaigns.map((c) =>
+        c.id === currentCampaign.id ? currentCampaign : c
+      );
+      finalList = [newCampaign, ...listWithCurrent];
+    } else {
+      finalList = [newCampaign, ...allCampaigns];
+    }
 
     setAllCampaigns(finalList);
     setCurrentCampaign(newCampaign);
@@ -187,16 +202,14 @@ export const App: React.FC = () => {
 
   // Delete campaign
   const handleDeleteCampaign = (campaignId: string) => {
-    if (allCampaigns.length <= 1) return;
     const updatedList = allCampaigns.filter((c) => c.id !== campaignId);
     setAllCampaigns(updatedList);
 
-    if (currentCampaign.id === campaignId) {
-      const nextActive = updatedList[0];
-      setCurrentCampaign(nextActive);
-      saveToStorage(updatedList, nextActive.id);
+    if (currentCampaign?.id === campaignId) {
+      setCurrentCampaign(null);
+      saveToStorage(updatedList);
     } else {
-      saveToStorage(updatedList, currentCampaign.id);
+      saveToStorage(updatedList, currentCampaign?.id);
     }
   };
 
@@ -207,28 +220,47 @@ export const App: React.FC = () => {
 
   // Save (Add or Update) TTP
   const handleSaveTtp = (savedTtp: DisarmTechnique) => {
-    const existingIndex = currentCampaign.techniques.findIndex((t) => t.id === savedTtp.id);
+    const baseCampaign: DisarmCampaign = currentCampaign || {
+      id: `CAMP-HFI-${Date.now().toString().slice(-4)}`,
+      name: `Nova Investigação ${new Date().toLocaleDateString('pt-BR')}`,
+      version: '2.0',
+      domain: 'disarm-redteam',
+      threatActor: 'Ator de Ameaça em Investigação',
+      campaignStatus: 'Active Ongoing',
+      overallSeverity: 'high',
+      description: 'Caso de investigação criado para mapeamento operacional de TTPs e procedimentos de influência.',
+      dateCreated: new Date().toISOString(),
+      lastUpdated: new Date().toISOString(),
+      targetRegions: ['Brasil', 'América Latina'],
+      targetSectors: ['Opinião Pública'],
+      techniques: [],
+      tactics: [],
+      rawSourceType: 'custom-threat-report',
+    };
+
+    const existingIndex = baseCampaign.techniques.findIndex((t) => t.id === savedTtp.id);
     let updatedTechniques: DisarmTechnique[];
 
     if (existingIndex >= 0) {
-      updatedTechniques = [...currentCampaign.techniques];
+      updatedTechniques = [...baseCampaign.techniques];
       updatedTechniques[existingIndex] = savedTtp;
     } else {
-      updatedTechniques = [savedTtp, ...currentCampaign.techniques];
+      updatedTechniques = [savedTtp, ...baseCampaign.techniques];
     }
 
     const updatedTactics = buildTacticsList(updatedTechniques);
 
     const updatedCampaign: DisarmCampaign = {
-      ...currentCampaign,
+      ...baseCampaign,
       techniques: updatedTechniques,
       tactics: updatedTactics,
       lastUpdated: new Date().toISOString(),
     };
 
-    const updatedList = allCampaigns.map((c) =>
-      c.id === updatedCampaign.id ? updatedCampaign : c
-    );
+    const exists = allCampaigns.some((c) => c.id === updatedCampaign.id);
+    const updatedList = exists
+      ? allCampaigns.map((c) => (c.id === updatedCampaign.id ? updatedCampaign : c))
+      : [updatedCampaign, ...allCampaigns];
 
     setCurrentCampaign(updatedCampaign);
     setAllCampaigns(updatedList);
@@ -241,6 +273,7 @@ export const App: React.FC = () => {
 
   // Delete TTP
   const handleDeleteTtp = (techniqueId: string) => {
+    if (!currentCampaign) return;
     const updatedTechniques = currentCampaign.techniques.filter((t) => t.id !== techniqueId);
     const updatedTactics = buildTacticsList(updatedTechniques);
 
@@ -273,6 +306,9 @@ export const App: React.FC = () => {
 
   // Add technique from Official Navigator View
   const handleAddOfficialTechFromNavigator = (tech: OfficialDisarmTechnique) => {
+    if (!currentCampaign) {
+      handleCreateNewCampaign();
+    }
     setEditingTtp(null);
     setInitialOfficialTech(tech);
     setManualTtpModalOpen(true);
@@ -280,6 +316,9 @@ export const App: React.FC = () => {
 
   // Open empty manual TTP modal
   const handleOpenNewManualTtp = () => {
+    if (!currentCampaign) {
+      handleCreateNewCampaign();
+    }
     setEditingTtp(null);
     setInitialOfficialTech(null);
     setManualTtpModalOpen(true);
@@ -292,10 +331,12 @@ export const App: React.FC = () => {
       tactics: newCampaign.tactics.length > 0 ? newCampaign.tactics : buildTacticsList(newCampaign.techniques),
     };
 
-    // Save current first
-    const listWithCurrent = allCampaigns.map((c) =>
-      c.id === currentCampaign.id ? currentCampaign : c
-    );
+    let listWithCurrent = allCampaigns;
+    if (currentCampaign) {
+      listWithCurrent = allCampaigns.map((c) =>
+        c.id === currentCampaign.id ? currentCampaign : c
+      );
+    }
     const updatedList = [enrichedCampaign, ...listWithCurrent.filter((c) => c.id !== enrichedCampaign.id)];
 
     setAllCampaigns(updatedList);
@@ -319,6 +360,7 @@ export const App: React.FC = () => {
         onOpenUpload={() => setUploadModalOpen(true)}
         onOpenReport={() => setReportModalOpen(true)}
         onOpenAnalyzer={() => setAnalyzerModalOpen(true)}
+        onUnloadCampaign={handleUnloadCampaign}
       />
 
       {/* Main Container */}
@@ -387,21 +429,43 @@ export const App: React.FC = () => {
         </div>
 
         {/* Tab Views */}
-        {activeTab === 'overview' && (
-          <OverviewDashboard
-            campaign={currentCampaign}
-            onSelectTechnique={(tech) => setSelectedTechnique(tech)}
-            onFilterByTactic={handleFilterByTacticFromOverview}
+        {!currentCampaign && activeTab !== 'navigator' ? (
+          <EmptyOperationState
+            allCampaigns={allCampaigns}
+            onSelectCampaign={handleCampaignChange}
+            onOpenAnalyzer={() => setAnalyzerModalOpen(true)}
+            onCreateNewCampaign={handleCreateNewCampaign}
+            onOpenUpload={() => setUploadModalOpen(true)}
+            onExploreFramework={() => setActiveTab('navigator')}
           />
-        )}
+        ) : (
+          <>
+            {activeTab === 'overview' && currentCampaign && (
+              <OverviewDashboard
+                campaign={currentCampaign}
+                onSelectTechnique={(tech) => setSelectedTechnique(tech)}
+                onFilterByTactic={handleFilterByTacticFromOverview}
+              />
+            )}
 
-        {activeTab === 'matrix' && (
-          <MatrixView
-            campaign={currentCampaign}
-            onSelectTechnique={(tech) => setSelectedTechnique(tech)}
-            selectedTacticFilter={selectedTacticFilter}
-            onTacticFilterChange={setSelectedTacticFilter}
-          />
+            {activeTab === 'matrix' && currentCampaign && (
+              <MatrixView
+                campaign={currentCampaign}
+                onSelectTechnique={(tech) => setSelectedTechnique(tech)}
+                selectedTacticFilter={selectedTacticFilter}
+                onTacticFilterChange={setSelectedTacticFilter}
+              />
+            )}
+
+            {activeTab === 'table' && currentCampaign && (
+              <TableView
+                campaign={currentCampaign}
+                onSelectTechnique={(tech) => setSelectedTechnique(tech)}
+                selectedTacticFilter={selectedTacticFilter}
+                onTacticFilterChange={setSelectedTacticFilter}
+              />
+            )}
+          </>
         )}
 
         {activeTab === 'navigator' && (
@@ -409,15 +473,6 @@ export const App: React.FC = () => {
             campaign={currentCampaign}
             onAddTechniqueToCampaign={handleAddOfficialTechFromNavigator}
             onSelectActiveTechnique={(tech) => setSelectedTechnique(tech)}
-          />
-        )}
-
-        {activeTab === 'table' && (
-          <TableView
-            campaign={currentCampaign}
-            onSelectTechnique={(tech) => setSelectedTechnique(tech)}
-            selectedTacticFilter={selectedTacticFilter}
-            onTacticFilterChange={setSelectedTacticFilter}
           />
         )}
       </main>
@@ -458,11 +513,13 @@ export const App: React.FC = () => {
         onCampaignLoaded={handleCampaignChange}
       />
 
-      <ExecutiveReportModal
-        isOpen={reportModalOpen}
-        onClose={() => setReportModalOpen(false)}
-        campaign={currentCampaign}
-      />
+      {reportModalOpen && currentCampaign && (
+        <ExecutiveReportModal
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          campaign={currentCampaign}
+        />
+      )}
 
       <ManualTtpModal
         isOpen={manualTtpModalOpen}
@@ -480,7 +537,7 @@ export const App: React.FC = () => {
         isOpen={analyzerModalOpen}
         onClose={() => setAnalyzerModalOpen(false)}
         onApplyInvestigation={handleApplyAnalyzedInvestigation}
-        currentCampaign={currentCampaign}
+        currentCampaign={currentCampaign || undefined}
       />
     </div>
   );

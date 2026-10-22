@@ -23,7 +23,7 @@ import {
 } from '../utils/exportUtils';
 
 interface HeaderProps {
-  currentCampaign: DisarmCampaign;
+  currentCampaign: DisarmCampaign | null;
   allCampaigns: DisarmCampaign[];
   onSelectCampaign: (campaign: DisarmCampaign) => void;
   onSaveCampaign: () => void;
@@ -33,6 +33,7 @@ interface HeaderProps {
   onOpenUpload: () => void;
   onOpenReport: () => void;
   onOpenAnalyzer: () => void;
+  onUnloadCampaign?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -46,11 +47,13 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenUpload,
   onOpenReport,
   onOpenAnalyzer,
+  onUnloadCampaign,
 }) => {
   const [exportDropdownOpen, setExportDropdownOpen] = useState(false);
   const [campaignDropdownOpen, setCampaignDropdownOpen] = useState(false);
 
   const handleDirectPdfExport = () => {
+    if (!currentCampaign) return;
     try {
       exportCampaignAsPdf(currentCampaign);
     } catch (err) {
@@ -110,30 +113,45 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setCampaignDropdownOpen(!campaignDropdownOpen)}
               className="w-full flex items-center justify-between gap-3 px-4 h-10 rounded-xl bg-[#0e1422] hover:bg-[#131b2e] border border-white/[0.1] hover:border-sky-500/50 text-left transition-all text-xs group cursor-pointer min-w-0 shadow-sm"
+              title={currentCampaign ? `Caso ativo: ${currentCampaign.name} (Clique para alternar operações salvas)` : `Nenhuma operação carregada (${allCampaigns.length} salvas disponíveis)`}
             >
-              <div className="flex items-center gap-2.5 min-w-0 truncate">
-                <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
-                </span>
-                <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex-shrink-0 font-medium">Caso Ativo:</span>
-                <span className="font-semibold text-slate-100 truncate group-hover:text-sky-300 transition-colors text-xs sm:text-sm">
-                  {currentCampaign.name}
-                </span>
-              </div>
+              {currentCampaign ? (
+                <div className="flex items-center gap-2.5 min-w-0 truncate">
+                  <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider flex-shrink-0 font-medium">Caso Ativo:</span>
+                  <span className="font-semibold text-slate-100 truncate group-hover:text-sky-300 transition-colors text-xs sm:text-sm">
+                    {currentCampaign.name}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2.5 min-w-0 truncate">
+                  <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-sky-400"></span>
+                  </span>
+                  <span className="font-semibold text-slate-200 group-hover:text-sky-300 transition-colors text-xs sm:text-sm flex items-center gap-2">
+                    <span>Operações Salvas</span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 font-bold">
+                      {allCampaigns.length}
+                    </span>
+                  </span>
+                </div>
+              )}
               <ChevronDown className="w-4 h-4 text-slate-400 group-hover:text-white transition-colors flex-shrink-0 ml-1" />
             </button>
 
             {campaignDropdownOpen && (
               <div className="absolute left-0 mt-2 w-full sm:w-[460px] bg-[#0d131f] border border-white/[0.12] rounded-xl shadow-2xl p-2 z-50 animate-in fade-in duration-150 max-h-[80vh] overflow-y-auto">
                 <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/[0.06] mb-1 flex items-center justify-between">
-                  <span>Operações Salvas &amp; Casos de Investigação ({allCampaigns.length})</span>
+                  <span>Operações Salvas ({allCampaigns.length})</span>
                   <span className="text-emerald-400 text-[9px] font-mono">Persistência Ativa</span>
                 </div>
 
                 <div className="space-y-1">
                   {allCampaigns.map((camp) => {
-                    const isActive = camp.id === currentCampaign.id;
+                    const isActive = currentCampaign ? camp.id === currentCampaign.id : false;
                     const isPreset = ['CAMP-REAL-HFI-2016-DNC'].includes(camp.id);
 
                     return (
@@ -163,8 +181,8 @@ export const Header: React.FC<HeaderProps> = ({
                             <span
                               className={`text-[9px] font-mono px-1.5 py-0.2 rounded border font-bold uppercase flex-shrink-0 ${
                                 camp.overallSeverity === 'critical'
-                                  ? 'text-red-400 bg-red-500/10 border-red-500/20'
-                                  : 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+                                    ? 'text-red-400 bg-red-500/10 border-red-500/20'
+                                    : 'text-amber-400 bg-amber-500/10 border-amber-500/20'
                               }`}
                             >
                               {camp.overallSeverity}
@@ -193,19 +211,36 @@ export const Header: React.FC<HeaderProps> = ({
                     );
                   })}
                 </div>
+
+                {currentCampaign && onUnloadCampaign && (
+                  <div className="pt-2 mt-1.5 border-t border-white/[0.06]">
+                    <button
+                      onClick={() => {
+                        onUnloadCampaign();
+                        setCampaignDropdownOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 py-1.5 px-3 rounded-lg text-xs font-mono text-slate-400 hover:text-amber-300 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all cursor-pointer"
+                    >
+                      <span>Descarregar Operação (Tela Limpa)</span>
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>
 
           {/* Botão Salvar Operação */}
           <button
-            onClick={onSaveCampaign}
-            className={`flex items-center gap-2 px-4 h-10 text-xs font-semibold rounded-xl transition-all whitespace-nowrap cursor-pointer flex-shrink-0 border shadow-sm ${
-              isSavedRecently
-                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)]'
-                : 'bg-[#0e1422] hover:bg-[#141d30] text-slate-200 hover:text-white border-white/[0.1] hover:border-sky-500/40'
+            onClick={currentCampaign ? onSaveCampaign : undefined}
+            disabled={!currentCampaign}
+            className={`flex items-center gap-2 px-4 h-10 text-xs font-semibold rounded-xl transition-all whitespace-nowrap flex-shrink-0 border shadow-sm ${
+              !currentCampaign
+                ? 'opacity-40 cursor-not-allowed bg-[#0e1422] text-slate-500 border-white/[0.06]'
+                : isSavedRecently
+                ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.25)] cursor-pointer'
+                : 'bg-[#0e1422] hover:bg-[#141d30] text-slate-200 hover:text-white border-white/[0.1] hover:border-sky-500/40 cursor-pointer'
             }`}
-            title={`Salvar alterações na operação "${currentCampaign.name}"`}
+            title={currentCampaign ? `Salvar alterações na operação "${currentCampaign.name}"` : 'Nenhuma operação carregada para salvar'}
           >
             {isSavedRecently ? (
               <Check className="w-4 h-4 text-emerald-400" />
@@ -242,13 +277,20 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="h-6 w-px bg-white/[0.12] mx-1 hidden sm:block flex-shrink-0" />
 
           {/* Direct 1-Click PDF Export Button */}
-          <div className="flex items-center rounded-xl bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-400 hover:to-sky-300 shadow-glow-cyan transition-all flex-shrink-0 h-10">
+          <div className={`flex items-center rounded-xl transition-all flex-shrink-0 h-10 ${
+            !currentCampaign
+              ? 'opacity-40 cursor-not-allowed bg-slate-800 border border-white/[0.06]'
+              : 'bg-gradient-to-r from-sky-500 to-sky-400 hover:from-sky-400 hover:to-sky-300 shadow-glow-cyan'
+          }`}>
             <button
-              onClick={handleDirectPdfExport}
-              className="flex items-center gap-2 px-4 h-10 text-xs font-semibold text-slate-950 transition-all cursor-pointer whitespace-nowrap"
-              title="Exportar e baixar imediatamente o Relatório de Inteligência em PDF formatado"
+              onClick={currentCampaign ? handleDirectPdfExport : undefined}
+              disabled={!currentCampaign}
+              className={`flex items-center gap-2 px-4 h-10 text-xs font-semibold transition-all whitespace-nowrap ${
+                !currentCampaign ? 'cursor-not-allowed text-slate-400' : 'cursor-pointer text-slate-950'
+              }`}
+              title={currentCampaign ? "Exportar e baixar imediatamente o Relatório de Inteligência em PDF formatado" : "Carregue uma operação salva para exportar o relatório"}
             >
-              <Download className="w-4 h-4 text-slate-950" />
+              <Download className={`w-4 h-4 ${!currentCampaign ? 'text-slate-400' : 'text-slate-950'}`} />
               <span>Exportar PDF</span>
             </button>
 
@@ -257,9 +299,16 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setExportDropdownOpen(!exportDropdownOpen);
+                  if (currentCampaign) {
+                    setExportDropdownOpen(!exportDropdownOpen);
+                  }
                 }}
-                className="h-10 px-2.5 text-slate-950 hover:bg-black/10 rounded-r-xl border-l border-black/15 flex items-center justify-center transition-colors cursor-pointer"
+                disabled={!currentCampaign}
+                className={`h-10 px-2.5 rounded-r-xl border-l flex items-center justify-center transition-colors ${
+                  !currentCampaign
+                    ? 'border-white/[0.06] text-slate-500 cursor-not-allowed'
+                    : 'border-black/15 text-slate-950 hover:bg-black/10 cursor-pointer'
+                }`}
                 title="Mais opções de exportação"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
@@ -295,7 +344,9 @@ export const Header: React.FC<HeaderProps> = ({
 
                   <button
                     onClick={() => {
-                      exportCampaignAsMarkdown(currentCampaign);
+                      if (currentCampaign) {
+                        exportCampaignAsMarkdown(currentCampaign);
+                      }
                       setExportDropdownOpen(false);
                     }}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-200 hover:bg-white/[0.06] rounded-lg transition-colors text-left"
@@ -306,7 +357,9 @@ export const Header: React.FC<HeaderProps> = ({
 
                   <button
                     onClick={() => {
-                      exportCampaignAsJson(currentCampaign);
+                      if (currentCampaign) {
+                        exportCampaignAsJson(currentCampaign);
+                      }
                       setExportDropdownOpen(false);
                     }}
                     className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-200 hover:bg-white/[0.06] rounded-lg transition-colors text-left"
