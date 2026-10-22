@@ -338,7 +338,7 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-150">
-      <div className="bg-[#0b101b] border border-white/[0.12] rounded-2xl max-w-4xl w-full max-h-[92vh] overflow-hidden flex flex-col shadow-2xl">
+      <div className="bg-[#0b101b] border border-white/[0.12] rounded-2xl max-w-6xl xl:max-w-7xl w-full max-h-[95vh] h-[90vh] overflow-hidden flex flex-col shadow-2xl">
         {/* Modal Top Header */}
         <div className="p-5 border-b border-white/[0.08] flex items-center justify-between bg-[#0e1626]">
           <div className="flex items-center gap-3">
@@ -378,44 +378,80 @@ SHA256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
                 type="text"
                 value={caseTitle}
                 onChange={(e) => setCaseTitle(e.target.value)}
-                placeholder="Ex: Operação Hack-and-Leak & Clones de Imprensa"
-                className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-medium"
+                placeholder="Ex: Operação Netuno - Sabotagem do SN Vanguarda"
+                className="w-full px-3.5 py-2.5 text-sm rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-semibold"
                 required
               />
             </div>
 
-            {/* Incident Text Context */}
-            <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-                <span>Relato do Incidente / Situação Analisada (Hacking for Influence) *</span>
-                <span className="text-slate-500 text-[10px]">O que aconteceu? Descreva as etapas do ataque</span>
-              </label>
-              <textarea
-                value={incidentText}
-                onChange={(e) => setIncidentText(e.target.value)}
-                rows={7}
-                placeholder="Exemplo de entrada:
-Detectamos a invasão de caixas postais de autoridades públicas com exfiltração de minutas internas. Trechos de documentos foram adulterados para imputar crimes a candidatos.
-Simultaneamente, registraram 20 domínios falsos que clonam o portal de notícias do jornal Le Monde e Der Spiegel.
-Centenas de perfis no Twitter/X com avatares gerados por IA e selos de verificação comprados realizaram disparos sincronizados promovendo a hashtag #VerdadeOculta..."
-                className="w-full px-3 py-2.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-sans leading-relaxed"
-                required
-              />
-            </div>
+            {/* Two-Column Grid for Incident Narrative & Raw IOCs */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Left Column (7 cols): Incident Text Context */}
+              <div className="lg:col-span-7 flex flex-col">
+                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                  <span>Relato do Incidente / Situação Analisada (Hacking for Influence) *</span>
+                  <span className="text-slate-500 text-[10px]">Descreva as etapas, alvos e vetores do ataque</span>
+                </label>
+                <textarea
+                  value={incidentText}
+                  onChange={(e) => setIncidentText(e.target.value)}
+                  rows={13}
+                  placeholder="Exemplo de entrada (Cenário Operacional):
+Detectamos a invasão de caixas postais de autoridades públicas e engenheiros navais com exfiltração de minutas internas de projetos estratégicos.
+Documentos confidenciais foram adulterados para forjar laudos de riscos radiológicos e simular backdoors em sistemas de combate.
+Simultaneamente, registraram 15 domínios falsos que clonam veículos de imprensa e criaram canal anônimo no Telegram para vazamento.
+Vídeo em deepfake de autoridade confirmando falsa fraude foi impulsionado via anúncios segmentados para o Parlamento.
+Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e realizaram doxing de especialistas..."
+                  className="w-full px-3.5 py-3 text-xs sm:text-sm rounded-xl bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-sans leading-relaxed resize-y flex-1"
+                  required
+                />
+              </div>
 
-            {/* Raw IOCs / Artifacts */}
-            <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-                <span>Artefatos & IOCs Brutos Coletados (opcional)</span>
-                <span className="text-slate-500 text-[10px]">1 item por linha: IPs, domínios, hashes, URLs, hashtags</span>
-              </label>
-              <textarea
-                value={rawIocs}
-                onChange={(e) => setRawIocs(e.target.value)}
-                rows={4}
-                placeholder={`lemonde.ltd\n185.220.101.45\n#VerdadeOculta\ndossie_militar_alterado.pdf\nSHA256: 3b0c44298fc1c14...`}
-                className="w-full px-3 py-2 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono"
-              />
+              {/* Right Column (5 cols): Raw IOCs + Tactical Guidance Card */}
+              <div className="lg:col-span-5 flex flex-col space-y-4">
+                <div className="flex flex-col flex-1">
+                  <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                    <span>Artefatos &amp; IOCs Brutos Coletados</span>
+                    <span className="text-slate-500 text-[10px]">1 item por linha</span>
+                  </label>
+                  <textarea
+                    value={rawIocs}
+                    onChange={(e) => setRawIocs(e.target.value)}
+                    rows={7}
+                    placeholder="portal-naval-auth.com&#10;185.220.101.45&#10;bit.ly/3xNetunoAuth&#10;t.me/VerdadeOcultaNetuno&#10;defesanacional-azul.org&#10;laudo_reator_cpn_v4_confidencial.pdf&#10;auditoria_obsolescencia_combate.xlsx&#10;#ChernobylNoMar&#10;#FarsaNetuno&#10;SHA256: 3b0c44298fc1c14..."
+                    className="w-full px-3 py-2.5 text-xs rounded-xl bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono leading-relaxed resize-y flex-1"
+                  />
+                </div>
+
+                {/* Tactical Extraction Intelligence Card */}
+                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2">
+                  <span className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider block">
+                    Padrões Detectados pelo Motor Heurístico:
+                  </span>
+                  <ul className="text-xs text-slate-300 space-y-1 font-sans">
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                      <span>Spear-phishing &amp; exfiltração de credenciais</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0"></span>
+                      <span>Hack-and-Leak &amp; laudos adulterados (.pdf/.xlsx)</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0"></span>
+                      <span>Clonagem de portais de notícias &amp; typosquatting</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 flex-shrink-0"></span>
+                      <span>Vídeos Deepfake &amp; malvertising segmentado</span>
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0"></span>
+                      <span>Botnets, amplificação de hashtags &amp; doxing</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         ) : (

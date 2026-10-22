@@ -144,9 +144,8 @@ export const Header: React.FC<HeaderProps> = ({
 
             {campaignDropdownOpen && (
               <div className="absolute left-0 mt-2 w-full sm:w-[460px] bg-[#0d131f] border border-white/[0.12] rounded-xl shadow-2xl p-2 z-50 animate-in fade-in duration-150 max-h-[80vh] overflow-y-auto">
-                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/[0.06] mb-1 flex items-center justify-between">
+                <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-white/[0.06] mb-1">
                   <span>Operações Salvas ({allCampaigns.length})</span>
-                  <span className="text-emerald-400 text-[9px] font-mono">Persistência Ativa</span>
                 </div>
 
                 <div className="space-y-1">

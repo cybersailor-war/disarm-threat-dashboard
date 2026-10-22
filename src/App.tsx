@@ -433,8 +433,6 @@ export const App: React.FC = () => {
           <EmptyOperationState
             allCampaigns={allCampaigns}
             onSelectCampaign={handleCampaignChange}
-            onOpenAnalyzer={() => setAnalyzerModalOpen(true)}
-            onCreateNewCampaign={handleCreateNewCampaign}
             onOpenUpload={() => setUploadModalOpen(true)}
             onExploreFramework={() => setActiveTab('navigator')}
           />
