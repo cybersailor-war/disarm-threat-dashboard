@@ -24,3 +24,7 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+
+# Local Documents & Reports
+*.odt
+scripts/generate_tcc_odt.cjs

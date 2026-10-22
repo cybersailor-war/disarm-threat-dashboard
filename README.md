@@ -167,10 +167,3 @@ npm run build
 ```
 Os artefatos otimizados serão compilados no diretório `/dist`.
 
----
-
-## 📜 Referências e Alinhamento Doutrinário
-* **DISARM Foundation:** *DISARM Red Team Framework (v1.4)*. Taxonomy and Model for Information Operations and Disinformation Tactics, Techniques, and Procedures (TTPs).
-* **DoD (United States):** *Strategy for Operations in the Information Environment (OIE)*, 2023.
-* **Ministério da Defesa (Brasil):** *MD33-M-02: Manual de Operações de Informação*, 2ª Edição, 2021.
-* **Russell, S.; Norvig, P.:** *Artificial Intelligence: A Modern Approach*, 4th ed., Pearson, 2020.
