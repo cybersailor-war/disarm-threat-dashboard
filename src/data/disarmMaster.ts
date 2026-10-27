@@ -61,7 +61,7 @@ export const DISARM_TECHNIQUES_DATABASE: Record<string, DisarmMasterTechniqueDef
         tacticId: 'TA01',
         tacticName: 'Plan Strategy',
         description: `Técnica DISARM oficial ${prop}`,
-        adversaryObjective: `Procedimento operacional associado ao identificador ${prop}`,
+        adversaryObjective: '',
         url: `https://github.com/DISARMFoundation/DISARM_framework/blob/master/techniques/${prop}.md`,
       };
     }

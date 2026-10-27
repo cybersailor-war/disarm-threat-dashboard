@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   X,
-  Crosshair,
   FileSearch,
   ExternalLink,
   Copy,
@@ -9,14 +8,12 @@ import {
   Globe,
   Database,
   Calendar,
-  Languages,
   FileText,
   Target,
-  CheckCircle2,
 } from 'lucide-react';
 import { DisarmTechnique, ThreatSeverity } from '../types/disarm';
 import { filterRealEvidenceUrls } from '../utils/exportUtils';
-import { getDisarmPortugueseTranslation, formatCleanText } from '../utils/disarmTranslations';
+import { formatCleanText } from '../utils/disarmTranslations';
 
 interface TTPDetailDrawerProps {
   technique: DisarmTechnique | null;
@@ -32,11 +29,6 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
   onDelete,
 }) => {
   const [copiedArtifact, setCopiedArtifact] = useState<string | null>(null);
-  const [showTranslation, setShowTranslation] = useState(false);
-
-  useEffect(() => {
-    setShowTranslation(false);
-  }, [technique?.id]);
 
   if (!technique) return null;
 
@@ -133,70 +125,23 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
 
           {/* Drawer Body */}
           <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs sm:text-sm">
-            {/* Canonical DISARM Definition */}
+            {/* Canonical DISARM Definition (English Original) */}
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <div className="p-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-400">
-                    <FileSearch className="w-3.5 h-3.5" />
-                  </div>
-                  <span className="text-xs sm:text-sm font-mono font-bold text-sky-400 tracking-wide uppercase">
-                    Definição Oficial DISARM Framework
-                  </span>
+              <div className="flex items-center gap-2">
+                <div className="p-1 rounded-md bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                  <FileSearch className="w-3.5 h-3.5" />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setShowTranslation(!showTranslation)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer border ${
-                    showTranslation
-                      ? 'bg-sky-500/20 text-sky-300 border-sky-500/40 font-bold shadow-sm'
-                      : 'bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border-white/[0.08] hover:text-white'
-                  }`}
-                  title="Alternar tradução literal para Português"
-                >
-                  <Languages className="w-3.5 h-3.5 text-sky-400" />
-                  <span>{showTranslation ? 'Ver Original (EN)' : 'Tradução Literal (PT-BR)'}</span>
-                </button>
+                <span className="text-xs sm:text-sm font-mono font-bold text-sky-400 tracking-wide uppercase">
+                  Definição Oficial DISARM Framework (EN)
+                </span>
               </div>
 
-              {(() => {
-                const translationResult = getDisarmPortugueseTranslation(technique.id, technique.description);
-                return (
-                  <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans shadow-inner space-y-2">
-                    {showTranslation && (
-                      <div className="flex items-center gap-2 pb-2 mb-2 border-b border-white/[0.06]">
-                        {translationResult.isLiteralCataloged ? (
-                          <span className="text-[11px] font-mono text-emerald-400 font-semibold flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                            Tradução Literal Estrita (1:1 com DISARM Foundation v1.4)
-                          </span>
-                        ) : (
-                          <span className="text-[11px] font-mono text-amber-400/90 font-medium">
-                            Tradução literal não catalogada • Exibindo texto canônico oficial em inglês
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line">
-                      {showTranslation ? translationResult.text : formatCleanText(technique.description)}
-                    </p>
-                  </div>
-                );
-              })()}
-            </div>
-
-            {/* Custom Adversary Objective if different from description */}
-            {technique.adversaryObjective && technique.adversaryObjective !== technique.description && (
-              <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-red-400 uppercase tracking-wider">
-                  <Crosshair className="w-4 h-4" />
-                  <span>Objetivo Operacional Específico</span>
-                </div>
-                <p className="text-xs text-slate-200 leading-relaxed font-sans">
-                  {technique.adversaryObjective}
+              <div className="bg-[#090A0F] p-4 rounded-xl border border-white/[0.06] font-sans shadow-inner">
+                <p className="text-xs text-slate-200 leading-relaxed whitespace-pre-line font-sans">
+                  {formatCleanText(technique.description)}
                 </p>
               </div>
-            )}
+            </div>
 
             {/* Mapped Operational Procedure (Evidence) */}
             <div className="space-y-3">
@@ -240,7 +185,7 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                       <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
                         <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
                           <Database className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
-                          <span>Artefatos Digitais & Indicadores de Comprometimento (IOCs):</span>
+                          <span>Artefatos Digitais &amp; Indicadores de Comprometimento (IOCs):</span>
                         </span>
                         <div className="space-y-1 pl-1">
                           {technique.procedureEvidence.observedArtifacts.map((artifact, i) => (
@@ -274,7 +219,7 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                     <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
                       <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
                         <ExternalLink className="w-3.5 h-3.5 text-purple-400 flex-shrink-0" />
-                        <span>Fontes & Repositórios de Evidência:</span>
+                        <span>Fontes &amp; Repositórios de Evidência:</span>
                       </span>
                       <div className="space-y-1">
                         {filterRealEvidenceUrls(technique.procedureEvidence.evidenceUrls).map((url, i) => (
@@ -299,7 +244,7 @@ export const TTPDetailDrawer: React.FC<TTPDetailDrawerProps> = ({
                       <div className="space-y-1.5 pt-2 border-t border-white/[0.05]">
                         <span className="text-[11px] font-mono font-semibold text-slate-400 flex items-center gap-1.5 uppercase tracking-wide">
                           <Target className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-                          <span>Alvos & Entidades Visadas:</span>
+                          <span>Alvos &amp; Entidades Visadas:</span>
                         </span>
                         <div className="flex flex-wrap gap-2 pt-0.5">
                           {technique.procedureEvidence.targetedEntities.map((tgt, i) => (

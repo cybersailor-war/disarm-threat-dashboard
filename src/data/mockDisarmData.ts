@@ -3,24 +3,23 @@ import { DISARM_TECHNIQUES_DATABASE } from './disarmMaster';
 
 /**
  * Operação Real e Histórica Documentada de Hacking for Influence:
- * Operação Grizzly Steppe / DNC & Podesta Hack-and-Leak (2016)
- * Atribuída pelo Departamento de Justiça dos EUA (DOJ Indictment 1:18-cr-00215-ABJ),
- * Comitê de Inteligência do Senado dos EUA (SSCI Vol. 2) e CISA/FBI.
+ * Iranian State Actors Conduct Cyber Operations Against the Government of Albania (HomeLand Justice)
+ * Fonte Oficial: CISA & FBI Joint Cybersecurity Advisory (AA22-264A) & Microsoft Threat Intelligence (DEV-0861 /Polonium / MOIS).
  */
-export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
-  id: 'CAMP-REAL-HFI-2016-DNC',
-  name: 'Operação Grizzly Steppe: DNC & Podesta Hack-and-Leak (Guccifer 2.0 & DCLeaks)',
+export const REAL_CAMPAIGN_ALBANIA_HOMELAND_JUSTICE: DisarmCampaign = {
+  id: 'CAMP-REAL-HFI-2022-ALBANIA-HJ',
+  name: 'Iranian State Actors Conduct Cyber Operations Against the Government of Albania (HomeLand Justice)',
   version: '2.0',
   domain: 'disarm-redteam',
-  threatActor: 'APT28 (Fancy Bear / Unidade 26165 GRU) & Unidade 74455 GRU (Federação Russa)',
+  threatActor: 'Atores Estatais Iranianos (MOIS / DEV-0861) sob a Persona "HomeLand Justice"',
   campaignStatus: 'Historical',
   overallSeverity: 'critical',
   description:
-    'Caso real e canônico de Hacking for Influence (Hack-and-Leak conduzido pelo serviço militar de inteligência russo GRU) durante o ciclo eleitoral presidencial dos Estados Unidos em 2016. A operação integrou intrusão cibernética ofensiva via spear-phishing e implantação de malwares Sofacy/X-Agent nos servidores do DNC/DCCC, roubo de credenciais da conta pessoal de John Podesta, exfiltração de mais de 50.000 e-mails confidenciais, forja da persona hacktivista "Guccifer 2.0" e do portal dcleaks.com, e vazamentos sincronizados com momentos-chave de campanha via WikiLeaks e grande imprensa.',
-  dateCreated: '2016-03-15T09:00:00Z',
-  lastUpdated: '2016-11-08T23:59:00Z',
-  targetRegions: ['Estados Unidos', 'Washington D.C.'],
-  targetSectors: ['Processo Eleitoral Presidencial', 'Partidos Políticos (DNC/DCCC)', 'Mídia & Imprensa Investigativa', 'Opinião Pública'],
+    'Operação coordenada de Hacking for Influence conduzida por atores estatais iranianos (Ministério de Inteligência e Segurança do Irã - MOIS) contra o Governo da Albânia em julho de 2022 (documentada no alerta conjunto CISA/FBI AA22-264A). Após 14 meses de acesso persistente na rede governamental albanesa (AKSHI / portal e-Albania) explorando vulnerabilidades do Microsoft SharePoint e Exchange, os operadores combinaram ataques destrutivos (ransomware RoadSweep e wiper ZeroCleare) com uma campanha de influência psicológica sob a persona hacktivista forjada "HomeLand Justice". O grupo lançou o portal dedicado homelandjustice[.]ru e canais no Telegram para vazar gigabytes de documentos governamentais exfiltrados, e-mails de ministros e dados pessoais de cidadãos (doxing), além de difundir vídeos e hashtags (#HomeLandJustice, #Maneuver_of_Conquerors) visando intimidar a população e paralisar a decisão governamental albanesa.',
+  dateCreated: '2022-07-18T08:00:00Z',
+  lastUpdated: '2022-09-23T18:00:00Z',
+  targetRegions: ['Albânia', 'Tirana', 'OTAN / Balcãs'],
+  targetSectors: ['Serviços Públicos Digitais (e-Albania / AKSHI)', 'Governo e Parlamento Albanês', 'Opinião Pública'],
   rawSourceType: 'disarm-navigator',
   techniques: [
     {
@@ -28,87 +27,22 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-001',
+        id: 'PROC-HJ-001',
         techniqueId: 'T0002',
-        title: 'Diretriz Estratégica Governamental de Desestabilização Eleitoral',
+        title: 'Diretriz Estatal de Coerção Geopolítica contra o Governo da Albânia',
         operationalNote:
-          'Oficiais de alta patente da inteligência militar russa (GRU - Unidades Militares 26165 e 74455) receberam diretrizes governamentais explícitas para planejar e executar operações cibernéticas ofensivas combinadas com medidas ativas de influência psicológica para aprofundar polarizações sócio-políticas e enfraquecer a confiança pública no sistema democrático ocidental.',
+          'Atores vinculados ao Estado iraniano (MOIS) planejaram e executaram uma operação híbrida combinando sabotagem cibernética de serviços públicos essenciais (portal e-Albania) e campanha de influência para coagir o governo albanês a cancelar a Cúpula Mundial do Irã Livre (MEK) em Durrës e corroer a confiança dos cidadãos na segurança do Estado.',
         observedArtifacts: [
-          'DOJ Indictment 1:18-cr-00215-ABJ (Grand Jury Mueller Report)',
-          'Relatório Bipartidário do Comitê de Inteligência do Senado dos EUA (SSCI Vol. 2)'
+          'CISA / FBI Joint Cybersecurity Advisory AA22-264A',
+          'Relatório Microsoft Threat Intelligence Center (MSTIC) sobre DEV-0861'
         ],
         evidenceUrls: [
-          'https://www.justice.gov/opa/pr/grand-jury-indicts-12-russian-intelligence-officers-hacking-offenses-related-to-2016-presidential',
-          'https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        targetedEntities: ['Eleitorado norte-americano', 'Sistema político e institucional dos EUA'],
+        targetedEntities: ['Governo da Albânia', 'Agência Nacional para a Sociedade da Informação (AKSHI)'],
         confidence: 'confirmed',
-        dateObserved: '2016-03-15',
-        analyst: 'Relatório Conjunto de Inteligência CTI & Red Team DISARM'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0081.008'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-002',
-        techniqueId: 'T0081.008',
-        title: 'Mapeamento da Voracidade do Ciclo de Notícias de 24h e Correspondentes Políticos',
-        operationalNote:
-          'Os operadores mapearam as fragilidades estruturais da imprensa de Washington, identificando que redações digitais e colunistas de bastidores priorizam a velocidade e o furo jornalístico sobre a checagem rigorosa da proveniência ilícita de materiais vazados.',
-        observedArtifacts: [
-          'Mapeamento de jornalistas investigativos (The Smoking Gun, Motherboard, Gawker)',
-          'Dossiê de Vulnerabilidade do Ciclo Noticioso Político'
-        ],
-        evidenceUrls: ['https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'],
-        targetedEntities: ['Jornalistas e repórteres do ecossistema político de Washington'],
-        confidence: 'confirmed',
-        dateObserved: '2016-03-22',
-        analyst: 'Especialista em Ecossistemas Midiáticos'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0083'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-003',
-        techniqueId: 'T0083',
-        title: 'Exploração de Tensões e Fraturas Internas no Partido Democrata',
-        operationalNote:
-          'A exploração narrativa foi calibrada para explorar o ressentimento entre a ala progressista (apoiadores de Bernie Sanders) e o establishment partidário (Hillary Clinton), selecionando trechos de e-mails de dirigentes partidários do DNC que sugeriam favoritismo e desdém contra a candidatura insurgente.',
-        observedArtifacts: [
-          'Compilação de e-mails internos do DNC classificados por potencial de fricção interna',
-          'Campanhas de hashtags dirigidas #DNCGate e #BernieWasRobbed'
-        ],
-        evidenceUrls: ['https://www.dni.gov/files/documents/ICA_2017_01.pdf'],
-        targetedEntities: ['Apoiadores democratas independentes', 'Delegados da Convenção Partidária'],
-        confidence: 'confirmed',
-        dateObserved: '2016-04-10',
-        analyst: 'Analista de Estratégia Narrativa e Dinâmicas Eleitorais'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0149.003'],
-      severity: 'critical',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-004',
-        techniqueId: 'T0149.003',
-        title: 'Spear-Phishing com Domínio Falso Google Lookalike contra John Podesta',
-        operationalNote:
-          'Em 19 de março de 2016, operadores da Unidade 26165 enviaram e-mail de falso alerta de segurança a John Podesta com link encurtado bit.ly/1WvD74X mascarando o domínio malicioso myaccount.google.com-securitysettingpage[.]info. A vítima inseriu suas credenciais, concedendo aos operadores russos acesso total à sua caixa postal com mais de 50.000 mensagens privadas.',
-        observedArtifacts: [
-          'Domínio Phishing: myaccount.google.com-securitysettingpage.info',
-          'Encurtador Bit.ly (conta russa "hirsh_arm")',
-          'E-mail com remetente forjado: no-reply@accounts.googlesupport.com'
-        ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['John Podesta (Presidente de Campanha)', 'Equipe de Finanças e Relações Governamentais'],
-        confidence: 'confirmed',
-        dateObserved: '2016-03-19',
-        analyst: 'Unidade de Inteligência de Ameaças Cibernéticas (CTI)'
+        dateObserved: '2022-07-17',
+        analyst: 'Analista CTI / CISA AA22-264A'
       }
     },
     {
@@ -116,24 +50,23 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-005',
+        id: 'PROC-HJ-002',
         techniqueId: 'T0123',
-        title: 'Invasão Cibernética Ofensiva da Rede do DNC/DCCC com Malwares Sofacy e X-Agent',
+        title: 'Intrusão Cibernética Ofensiva na Rede AKSHI e Implantação de RoadSweep / ZeroCleare',
         operationalNote:
-          'Operadores da Unidade 26165 do GRU penetraram na rede corporativa do Comitê de Campanha Congressional Democrata (DCCC) e do DNC em abril de 2016. Foram implantados keyloggers e o backdoor X-Agent (Sofacy), além do utilitário X-Tunnel para extrair tráfego e controlar remotamente estações de trabalho e servidores Exchange.',
+          'Os operadores obtiveram acesso inicial cerca de 14 meses antes do ataque explorando servidores vulneráveis (CVE-2019-0604 no SharePoint e CVE-2021-26855 ProxyLogon no Exchange), mantendo persistência via web shells (.aspx) e ferramentas de acesso remoto antes de acionar o ransomware RoadSweep e o wiper destrutivo ZeroCleare com o banner político da HomeLand Justice.',
         observedArtifacts: [
-          'Implante X-Agent (MD5: 7c5d984cfb72183e8b4e3e3b33df1b80)',
-          'Servidor de Comando e Controle (C2) IP 176.31.112.70',
-          'Dump de análise de memória CrowdStrike Falcon'
+          'Ransomware RoadSweep e Wiper ZeroCleare (CISA AA22-264A)',
+          'Web shells ASPX em servidores governamentais albaneses',
+          'Banner de bloqueio de tela exigindo "Why should our taxes be spent on the benefit of DURRES terrorists?"'
         ],
         evidenceUrls: [
-          'https://www.crowdstrike.com/blog/bears-in-the-midst-intrusion-democratic-national-committee/',
-          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a'
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        targetedEntities: ['Servidores Exchange do DNC', 'Estações de trabalho do DCCC'],
+        targetedEntities: ['Infraestrutura Governamental e-Albania (AKSHI)', 'Servidores Microsoft Exchange e SharePoint'],
         confidence: 'confirmed',
-        dateObserved: '2016-04-18',
-        analyst: 'Perito Forense de Resposta a Incidentes (DFIR)'
+        dateObserved: '2022-07-18',
+        analyst: 'Equipe de Resposta a Incidentes CISA / FBI'
       }
     },
     {
@@ -141,41 +74,22 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-006',
+        id: 'PROC-HJ-003',
         techniqueId: 'T0089',
-        title: 'Exfiltração e Compactação de dezenas de Gigabytes de Dados Confidenciais',
+        title: 'Exfiltração de Documentos Governamentais, E-mails Ministeriais e Dados de Cidadãos',
         operationalNote:
-          'Operadores da Unidade 74455 do GRU compactaram gigabytes de e-mails, listas de doadores e memorandos estratégicos dos servidores invadidos em arquivos RAR protegidos por senha (ex: 70850.rar) e os exfiltraram via túneis SSL seguros para servidores arrendados na Europa.',
+          'Durante os meses de acesso furtivo à rede governamental albanesa, os atores estatais exfiltraram grandes volumes de correspondências oficiais do gabinete do Primeiro-Ministro, registros policiais, dados do sistema TIMS de controle de fronteiras e documentos confidenciais de segurança nacional para municiar a campanha de vazamentos.',
         observedArtifacts: [
-          'Volume criptografado de exfiltração: 70850.rar (5.2 GB de correspondências .eml)',
-          'Tráfego anômalo na porta 443 direcionado ao IP 185.86.151.11'
+          'Arquivos compactados contendo dumps de caixas postais governamentais (.pst / .rar)',
+          'Registros exfiltrados do sistema fronteiriço TIMS e portal e-Albania'
         ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['Comitê Nacional Democrata (DNC)', 'Comitê Financeiro Partidário'],
-        confidence: 'confirmed',
-        dateObserved: '2016-04-22',
-        analyst: 'Analista de Forense em Redes & Tráfego Exfiltrado'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0149.001'],
-      severity: 'high',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-007',
-        techniqueId: 'T0149.001',
-        title: 'Aquisição do Domínio dcleaks.com com Bitcoins Lavados pela Unidade 74455',
-        operationalNote:
-          'Em 19 de abril de 2016, a Unidade 74455 do GRU registrou o domínio dcleaks[.]com usando o serviço de proxy PrivacyProtect na Malásia. O pagamento da hospedagem e registro foi feito em frações de Bitcoin mineradas e operadas pelos próprios militares russos para impedir a atribuição bancária.',
-        observedArtifacts: [
-          'Histórico WHOIS de dcleaks.com (PrivacyProtect.org)',
-          'Transação Bitcoin na blockchain: carteira 1E18vy2L... vinculada ao GRU'
+        evidenceUrls: [
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['Infraestrutura pública de vazamentos independentes'],
+        targetedEntities: ['Gabinete do Primeiro-Ministro da Albânia', 'Ministério do Interior e Polícia Estatal'],
         confidence: 'confirmed',
-        dateObserved: '2016-04-19',
-        analyst: 'Perito Forense de Rastreamento em Blockchain & OSINT'
+        dateObserved: '2022-07-18',
+        analyst: 'Perito Forense Digital (DFIR)'
       }
     },
     {
@@ -183,108 +97,91 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-008',
+        id: 'PROC-HJ-004',
         techniqueId: 'T0097.104',
-        title: 'Criação da Persona Hacktivista Forjada "Guccifer 2.0" para Falsificar Atribuição',
+        title: 'Criação da Persona Hacktivista Forjada "HomeLand Justice" (Falsa Bandeira Doméstica)',
         operationalNote:
-          'Após o anúncio público da CrowdStrike identificando a autoria russa na invasão em junho de 2016, o GRU criou no dia seguinte a persona forjada "Guccifer 2.0", alegando ser um hacktivista independente da Romênia. Uma falha de segurança operacional (OPSEC) revelou acessos sem VPN com IP associado diretamente ao complexo do GRU em Moscou, além de metadados em língua russa ("Феликс Эдмундович") nos documentos em Word vazados.',
+          'Para ocultar o patrocínio estatal iraniano e simular uma revolta popular interna, o MOIS fabricou a persona hacktivista "HomeLand Justice", apresentando-se falsamente como um grupo de cidadãos nacionalistas albaneses indignados com a corrupção governamental e com o abrigo concedido a dissidentes estrangeiros.',
         observedArtifacts: [
-          'Blog WordPress: guccifer2.wordpress.com',
-          'Documento "DNC-confidential-memo.docx" com autor russo nos metadados',
-          'Log de conexão sem VPN da sede do GRU na rua Komsomolsky em Moscou'
+          'Identidade visual e logotipo "HomeLand Justice"',
+          'Manifestos políticos redigidos em albanês e inglês atribuindo o ataque a "cidadãos locais"'
         ],
         evidenceUrls: [
-          'https://www.justice.gov/file/1080281/download',
-          'https://www.mandiant.com/resources/apt28-at-the-center-of-the-storm'
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        targetedEntities: ['Comunidade internacional de CTI', 'Imprensa e opinião pública global'],
+        targetedEntities: ['Opinião pública albanesa', 'Imprensa nacional e internacional'],
         confidence: 'confirmed',
-        dateObserved: '2016-06-15',
-        analyst: 'Especialista em Atribuição de Ameaças Estatais (APTs)'
+        dateObserved: '2022-07-19',
+        analyst: 'Analista de Operações de Influência & Atribuição'
       }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0144.001'],
+      ...DISARM_TECHNIQUES_DATABASE['T0149.001'],
       severity: 'high',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-009',
-        techniqueId: 'T0144.001',
-        title: 'Presença Cruzada da Persona Guccifer 2.0 e DCLeaks em Múltiplas Plataformas',
+        id: 'PROC-HJ-005',
+        techniqueId: 'T0149.001',
+        title: 'Registro e Operação do Portal Dedicado de Vazamentos homelandjustice.ru',
         operationalNote:
-          'A persona forjada operava de maneira coordenada em perfis no Twitter (@Guccifer_2 e @DCleaks), no blog WordPress oficial e em canais de mensageria direta, mantendo consistência de tom, identidade visual e links cruzados para simular autenticidade perante repórteres.',
+          'Os operadores registraram o domínio dedicado homelandjustice[.]ru para hospedar os lotes de documentos exfiltrados, vídeos de reivindicação do ataque cibernético e comunicados contra o governo albanês, servindo como repositório central da operação de Hack-and-Leak.',
         observedArtifacts: [
-          'Conta do Twitter @Guccifer_2 (ID 743118942004240384)',
-          'Feed RSS e diretórios públicos de arquivos no portal dcleaks.com'
+          'Domínio de vazamento: homelandjustice[.]ru',
+          'Repositórios públicos de arquivos governamentais vazados'
         ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['Usuários de redes sociais', 'Jornalistas investigativos'],
+        evidenceUrls: [
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
+        ],
+        targetedEntities: ['Jornalistas, pesquisadores e cidadãos albaneses'],
         confidence: 'confirmed',
-        dateObserved: '2016-06-20',
-        analyst: 'Analista de Identidade Digital e Personas Operacionais'
+        dateObserved: '2022-07-21',
+        analyst: 'Analista de Infraestrutura de Ameaças (OSINT)'
       }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0155.007'],
+      ...DISARM_TECHNIQUES_DATABASE['T0094'],
       severity: 'high',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-010',
-        techniqueId: 'T0155.007',
-        title: 'Transferência Criptografada de Dados Exfiltrados para a Organização WikiLeaks',
+        id: 'PROC-HJ-006',
+        techniqueId: 'T0094',
+        title: 'Disseminação Massiva e Coordenação via Canal no Telegram (@HomeLandJustice)',
         operationalNote:
-          'Em meados de julho de 2016, operadores da Unidade 74455 estabeleceram canais criptografados via Twitter DMs e túneis VPN utilizando chaves PGP com a organização WikiLeaks. Foi transferido um lote de 1 Gigabyte contendo milhares de e-mails internos do DNC com instruções de cronograma de publicação.',
+          'Após a derrubada de perfis em redes sociais convencionais, a campanha concentrou sua distribuição em canais do Telegram operados pela persona HomeLand Justice, utilizando enquetes interativas para perguntar aos seguidores "de qual político ou instituição devemos vazar os dados agora?", gamificando o vazamento para maximizar o engajamento.',
         observedArtifacts: [
-          'Conversas em DMs criptografadas entre @Guccifer_2 e @wikileaks',
-          'Arquivo protegido por chave PGP transferido via VPN com saída na Alemanha'
+          'Canal Telegram: t.me/HomeLandJustice',
+          'Vídeos de captura de tela da invasão aos servidores governamentais publicados no Telegram'
         ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['Redação editorial da WikiLeaks', 'Mídia internacional'],
+        evidenceUrls: [
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
+        ],
+        targetedEntities: ['Usuários do Telegram nos Balcãs', 'Mídia local albanesa'],
         confidence: 'confirmed',
-        dateObserved: '2016-07-14',
-        analyst: 'Perito Forense de Criptografia & Canais Ocultos'
+        dateObserved: '2022-07-23',
+        analyst: 'Especialista em Monitoramento de Mídias Sociais'
       }
     },
     {
-      ...DISARM_TECHNIQUES_DATABASE['T0117'],
+      ...DISARM_TECHNIQUES_DATABASE['T0048.004'],
       severity: 'critical',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-011',
-        techniqueId: 'T0117',
-        title: 'Alavancagem e Sedução da Grande Imprensa com Furos Exclusivos de Dados Hackeados',
+        id: 'PROC-HJ-007',
+        techniqueId: 'T0048.004',
+        title: 'Doxing Sistemático de Autoridades Governamentais, Policiais e Cidadãos',
         operationalNote:
-          'Os operadores russos enviaram e-mails e mensagens diretas oferecendo acessos antecipados e senhas exclusivas de diretórios do dcleaks[.]com a jornalistas de veículos prestigiados como The Smoking Gun, Motherboard/Vice, Gawker e The Wall Street Journal, transformando a imprensa investigativa em vetor involuntário de difusão da operação.',
+          'A operação publicou listas contendo números de identidade pessoal (NID), números de telefone, salários, placas de veículos e registros de entrada e saída do país de autoridades albanesas, ex-chefes de polícia e milhares de cidadãos, gerando temor coletivo, constrangimento institucional e pressão política direta sobre o Estado.',
         observedArtifacts: [
-          'Mensagens DMs de @Guccifer_2 oferecendo pastas de documentos de campanhas',
-          'Matérias de capa publicadas na grande imprensa com documentos do dcleaks.com'
+          'Planilhas PDF/XLSX com dados pessoais e números de telefone de servidores públicos e cidadãos',
+          'Vazamento de e-mails e documentos de identidade de autoridades do governo'
         ],
-        evidenceUrls: ['https://www.justice.gov/file/1080281/download'],
-        targetedEntities: ['Redações de jornais de circulação nacional e portais de notícias'],
-        confidence: 'confirmed',
-        dateObserved: '2016-07-18',
-        analyst: 'Analista de Ecossistema Midiático'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0015'],
-      severity: 'critical',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-012',
-        techniqueId: 'T0015',
-        title: 'Liberação Sincronizada com a Convenção Democrata e Debates Presidenciais',
-        operationalNote:
-          'Os vazamentos foram calibrados com precisão cirúrgica: 19.252 e-mails do DNC foram liberados pela WikiLeaks em 22 de julho de 2016, 72 horas antes da abertura da Convenção Democrata na Filadélfia, forçando a renúncia da presidente do comitê. Em 7 de outubro de 2016, 33 minutos após a revelação da fita de áudio do candidato republicano, a WikiLeaks iniciou a publicação diária contínua dos e-mails de John Podesta, recapturando e dominando o ciclo de notícias de 24 horas até a votação.',
-        observedArtifacts: [
-          'Cronologia comparativa dos lotes de vazamento vs eventos de campanha de 2016',
-          'Picos de buscas no Google Trends e menções no Twitter'
+        evidenceUrls: [
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        evidenceUrls: ['https://www.cisa.gov/sites/default/files/publications/tactics-of-disinformation_508.pdf'],
-        targetedEntities: ['Convenção Nacional Democrata', 'Audiências de debates presidenciais'],
+        targetedEntities: ['Autoridades governamentais, agentes de segurança e população civil da Albânia'],
         confidence: 'confirmed',
-        dateObserved: '2016-07-22',
-        analyst: 'Especialista em Cronologia de Operações de Influência'
+        dateObserved: '2022-08-05',
+        analyst: 'Analista de Proteção de Dados & Ameaças Híbridas'
       }
     },
     {
@@ -292,41 +189,22 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
       severity: 'high',
       isActive: true,
       procedureEvidence: {
-        id: 'PROC-HFI-013',
+        id: 'PROC-HJ-008',
         techniqueId: 'T0093.002',
-        title: 'Amplificação por Redes Automatizadas (Botnets) da Internet Research Agency (IRA)',
+        title: 'Amplificação Coordenada por Bots e Contas Inautênticas nas Redes Sociais',
         operationalNote:
-          'Em paralelo à intrusão cibernética do GRU, a Internet Research Agency (IRA / Project Lakhta de São Petersburgo) mobilizou fazendas de milhares de bots automatizados e contas inautênticas no Twitter e Facebook para retweetar os vazamentos e forçar hashtags como #DNCLeak, #PodestaEmails e #Guccifer2 nos trending topics mundiais.',
+          'Contas automatizadas e perfis inautênticos recém-criados responderam de forma coordenada às postagens oficiais de ministérios e veículos de imprensa da Albânia, espalhando links para o portal homelandjustice[.]ru e promovendo hashtags como #HomeLandJustice e #Maneuver_of_Conquerors.',
         observedArtifacts: [
-          'Dataset do Twitter de operações atribuídas à Federação Russa (Twitter Transparency)',
-          'Mais de 3.800 contas inautênticas coordenadas identificadas pelo comitê do Senado'
+          'Hashtags coordenadas: #HomeLandJustice, #Maneuver_of_Conquerors',
+          'Rede de bots respondendo sincronizadamente a perfis governamentais no Twitter/X'
         ],
-        evidenceUrls: ['https://www.intelligence.senate.gov/sites/default/files/documents/Report_Volume2.pdf'],
-        targetedEntities: ['Algoritmos de trending topics das redes sociais', 'Eleitores em swing states'],
-        confidence: 'confirmed',
-        dateObserved: '2016-07-24',
-        analyst: 'Perito em Comportamento Inautêntico Coordenado (CIB)'
-      }
-    },
-    {
-      ...DISARM_TECHNIQUES_DATABASE['T0134.002'],
-      severity: 'medium',
-      isActive: true,
-      procedureEvidence: {
-        id: 'PROC-HFI-014',
-        techniqueId: 'T0134.002',
-        title: 'Monitoramento Contínuo de Métricas de Engajamento e Repercussão Eleitoral',
-        operationalNote:
-          'Avaliação periódica do alcance orgânico, volume de retuítes das postagens de Guccifer 2.0, número de downloads dos arquivos brutos no DCLeaks e frequência de citações nas sabatinas de domingo da grande imprensa americana, subsidiando o ritmo dos próximos lotes.',
-        observedArtifacts: [
-          'Planilhas de mensuração de KPI de cobertura de imprensa e impacto de audiência',
-          'Relatório de Desempenho de Campanha de Informação'
+        evidenceUrls: [
+          'https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-264a'
         ],
-        evidenceUrls: ['https://www.dni.gov/files/documents/ICA_2017_01.pdf'],
-        targetedEntities: ['Metrificação de impacto em eleitores e mídia'],
+        targetedEntities: ['Debate público digital na Albânia', 'Perfis oficiais de imprensa e governo'],
         confidence: 'confirmed',
-        dateObserved: '2016-10-15',
-        analyst: 'Analista de Avaliação de Eficácia & Impacto Estratégico'
+        dateObserved: '2022-07-25',
+        analyst: 'Analista de Comportamento Inautêntico Coordenado (CIB)'
       }
     }
   ],
@@ -334,66 +212,66 @@ export const REAL_CAMPAIGN_DNC_HACK_LEAK: DisarmCampaign = {
 };
 
 export const SAMPLE_NAVIGATOR_LAYER_JSON = {
-  name: 'DISARM Layer - DNC & Podesta Hack-and-Leak (Grizzly Steppe / APT28)',
+  name: 'DISARM Layer - Iranian State Actors vs Government of Albania (HomeLand Justice / AA22-264A)',
   version: '2.0',
   domain: 'disarm-redteam',
   description:
-    'Camada oficial no formato padrão DISARM Navigator mapeando o caso real de Hacking for Influence (APT28 / GRU)',
+    'Camada oficial no formato DISARM Navigator mapeando a operação de Hacking for Influence contra o Governo da Albânia (HomeLand Justice)',
   techniques: [
     {
       techniqueID: 'T0002',
-      score: 90,
-      color: '#ef4444',
-      comment: 'Facilitate State Propaganda - Diretriz Estratégica do GRU',
+      score: 95,
+      color: '#dc2626',
+      comment: 'Facilitate State Propaganda - Diretriz Estatal Iraniana (MOIS)',
       enabled: true
     },
     {
       techniqueID: 'T0123',
       score: 95,
       color: '#dc2626',
-      comment: 'Offensive Cyberspace Operations - Invasão Sofacy/X-Agent',
-      enabled: true
-    },
-    {
-      techniqueID: 'T0149.003',
-      score: 95,
-      color: '#dc2626',
-      comment: 'Lookalike Domain - Phishing John Podesta',
+      comment: 'Offensive Cyberspace Operations - Intrusão AKSHI + RoadSweep/ZeroCleare',
       enabled: true
     },
     {
       techniqueID: 'T0089',
       score: 95,
       color: '#dc2626',
-      comment: 'Obtain Private Documents - Exfiltração de e-mails do DNC',
+      comment: 'Obtain Private Documents - Exfiltração e-Albania e TIMS',
       enabled: true
     },
     {
       techniqueID: 'T0097.104',
       score: 95,
       color: '#dc2626',
-      comment: 'Hacktivist Persona - Guccifer 2.0',
+      comment: 'Hacktivist Persona - Persona forjada HomeLand Justice',
       enabled: true
     },
     {
-      techniqueID: 'T0117',
+      techniqueID: 'T0149.001',
       score: 90,
       color: '#ef4444',
-      comment: 'Attract Traditional Media - Sedução de jornalistas com furos',
+      comment: 'Acquire Domain - Portal de vazamentos homelandjustice.ru',
       enabled: true
     },
     {
-      techniqueID: 'T0015',
+      techniqueID: 'T0094',
+      score: 90,
+      color: '#ef4444',
+      comment: 'Chat Apps - Disseminação no canal Telegram @HomeLandJustice',
+      enabled: true
+    },
+    {
+      techniqueID: 'T0048.004',
       score: 95,
       color: '#dc2626',
-      comment: 'Event & Trend Hijacking - Liberação sincronizada',
+      comment: 'Doxing - Exposição de dados pessoais de autoridades e cidadãos',
       enabled: true
     },
     {
       techniqueID: 'T0093.002',
       score: 85,
       color: '#f97316',
-      comment: 'Acquire Botnets - Amplificação por bots da IRA',
+      comment: 'Acquire Botnets - Amplificação #HomeLandJustice',
       enabled: true
     }
   ]

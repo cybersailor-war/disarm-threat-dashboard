@@ -95,7 +95,7 @@ export const MatrixView: React.FC<MatrixViewProps> = ({
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Buscar TTP por ID (ex: T0038), Nome, Evidência ou Artefato..."
+            placeholder="Buscar TTP por ID (ex: T0089), Nome, Evidência ou Artefato..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-[#090A0F] border border-white/[0.08] focus:border-sky-500/50 rounded-lg pl-9 pr-4 py-2 text-xs font-mono text-white placeholder-slate-500 focus:outline-none transition-colors"

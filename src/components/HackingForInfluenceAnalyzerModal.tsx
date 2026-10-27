@@ -156,10 +156,10 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
             if (techId.startsWith('T0089') || techId === 'T0088' || techId === 'T0042') {
               return lower.includes('.pdf') || lower.includes('.xlsx') || lower.includes('.docx') || lower.includes('sha256') || lower.includes('hash');
             }
-            if (techId.startsWith('T0098') || techId === 'T0099' || techId === 'T0020') {
+            if (techId.startsWith('T0098') || techId === 'T0143.003' || techId === 'T0020') {
               return lower.includes('.') || lower.includes('http') || lower.includes('bit.ly') || lower.includes('auth');
             }
-            if (techId === 'T0094' || techId === 'T0026') {
+            if (techId === 'T0094' || techId === 'T0155.007') {
               return lower.includes('t.me') || lower.includes('telegram');
             }
             if (techId.includes('0015') || techId.includes('0049')) {
@@ -319,7 +319,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
     );
 
     checkAndAdd(
-      'T0099',
+      'T0143.003',
       ['impersonar', 'se passar por', 'clonar imprensa', 'clonavam veículos de imprensa', 'identidade forjada'],
       'Uso indevido da identidade visual e reputação de veículos legítimos de imprensa e portais de defesa',
       'Impersonificação de Órgãos de Imprensa e Instituições',
@@ -377,7 +377,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
 
     // --- 10. TA18: Drive Online Harms / Coerce ---
     checkAndAdd(
-      'T0036',
+      'T0048.004',
       ['doxing', 'doxxing', 'dados pessoais vazados', 'coação psicológica', 'assédio', 'intimidar engenheiros', 'ameaça'],
       'Vazamento malicioso de dados pessoais (doxing) e coação psicológica contra engenheiros e oficiais do projeto',
       'Doxing e Assédio Psicológico a Profissionais do Projeto',
@@ -535,9 +535,9 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
 
         {/* Content Body: Step 1 (Input) vs Step 2 (Review) */}
         {step === 'input' ? (
-          <div className="p-6 space-y-5 overflow-y-auto flex-1">
+          <div className="p-6 space-y-3.5 flex-1 flex flex-col min-h-0 overflow-hidden">
             {/* Case Title */}
-            <div>
+            <div className="flex-shrink-0">
               <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">
                 Título da Operação / Caso *
               </label>
@@ -545,40 +545,36 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
                 type="text"
                 value={caseTitle}
                 onChange={(e) => setCaseTitle(e.target.value)}
-                placeholder="Ex: Operação Netuno - Sabotagem do SN Vanguarda"
-                className="w-full px-3.5 py-2.5 text-sm rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-semibold"
+                className="w-full px-3.5 py-2 text-sm rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-semibold"
                 required
               />
             </div>
 
             {/* Two-Column Grid for Incident Narrative & Raw IOCs */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1 min-h-0">
               {/* Left Column (7 cols): Incident Text Context */}
-              <div className="lg:col-span-7 flex flex-col">
-                <label className="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-                  <span>Relato do Incidente / Situação Analisada (Hacking for Influence) *</span>
-                  <span className="text-slate-500 text-[10px]">Descreva as etapas, alvos e vetores do ataque</span>
-                </label>
+              <div className="lg:col-span-7 flex flex-col h-full min-h-0">
+                <div className="flex items-center justify-between mb-1.5 flex-shrink-0">
+                  <label className="text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
+                    Relato do Incidente *
+                  </label>
+                  <span className="text-slate-500 text-[11px] font-sans">
+                    Descreva as etapas, alvos e vetores da operação
+                  </span>
+                </div>
                 <textarea
                   value={incidentText}
                   onChange={(e) => setIncidentText(e.target.value)}
-                  rows={13}
-                  placeholder="Exemplo de entrada (Cenário Operacional):
-Detectamos a invasão de caixas postais de autoridades públicas e engenheiros navais com exfiltração de minutas internas de projetos estratégicos.
-Documentos confidenciais foram adulterados para forjar laudos de riscos radiológicos e simular backdoors em sistemas de combate.
-Simultaneamente, registraram 15 domínios falsos que clonam veículos de imprensa e criaram canal anônimo no Telegram para vazamento.
-Vídeo em deepfake de autoridade confirmando falsa fraude foi impulsionado via anúncios segmentados para o Parlamento.
-Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e realizaram doxing de especialistas..."
-                  className="w-full px-3.5 py-3 text-xs sm:text-sm rounded-xl bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-sans leading-relaxed resize-y flex-1"
+                  className="w-full h-full flex-1 min-h-0 p-3.5 text-xs sm:text-sm rounded-xl bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-sans leading-relaxed resize-none"
                   required
                 />
               </div>
 
-              {/* Right Column (5 cols): Raw IOCs + Extraction Intelligence Card */}
-              <div className="lg:col-span-5 flex flex-col space-y-4">
-                <div className="flex flex-col flex-1">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-xs font-mono uppercase tracking-wider text-slate-400">
+              {/* Right Column (5 cols): Raw IOCs + Scope Indicator */}
+              <div className="lg:col-span-5 flex flex-col h-full min-h-0 space-y-3">
+                <div className="flex flex-col flex-1 min-h-0">
+                  <div className="flex items-center justify-between mb-1.5 flex-shrink-0">
+                    <label className="text-xs font-mono uppercase tracking-wider text-slate-300 font-semibold">
                       Artefatos &amp; IOCs Coletados
                     </label>
                     <button
@@ -595,13 +591,11 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                   <textarea
                     value={rawIocs}
                     onChange={(e) => setRawIocs(e.target.value)}
-                    rows={7}
-                    placeholder="portal-naval-auth.com&#10;185.220.101.45&#10;bit.ly/3xNetunoAuth&#10;t.me/VerdadeOcultaNetuno&#10;defesanacional-azul.org&#10;laudo_reator_cpn_v4_confidencial.pdf&#10;auditoria_obsolescencia_combate.xlsx&#10;#ChernobylNoMar&#10;#FarsaNetuno&#10;SHA256: 3b0c44298fc1c14..."
-                    className="w-full px-3 py-2.5 text-xs rounded-xl bg-[#070b12] border border-white/[0.08] text-white placeholder-slate-600 focus:outline-none focus:border-sky-500 font-mono leading-relaxed resize-y flex-1"
+                    className="w-full h-full flex-1 min-h-0 p-3 text-xs rounded-xl bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500 font-mono leading-relaxed resize-none"
                   />
 
                   {extractionFeedback && (
-                    <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono flex items-center gap-1.5 animate-in fade-in">
+                    <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono flex items-center gap-1.5 animate-in fade-in flex-shrink-0">
                       <Sparkles className="w-3.5 h-3.5 flex-shrink-0 text-amber-400" />
                       <span>{extractionFeedback}</span>
                     </div>
@@ -609,19 +603,10 @@ Redes de bots com avatares de IA coordenaram disparos das hashtags de pânico e 
                 </div>
 
                 {/* Scope & Framework Coverage Card */}
-                <div className="p-3.5 rounded-xl bg-[#0e1628] border border-white/[0.06] space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-mono text-sky-400 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                      <Brain className="w-3.5 h-3.5" />
-                      Motor Heurístico DISARM
-                    </span>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                      16 Táticas Ativas
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-300 font-sans leading-relaxed">
-                    Mapeamento multidimensional que correlaciona a narrativa e os artefatos técnicos diretamente com o catálogo oficial das <strong>16 Táticas</strong> e técnicas canônicas do DISARM Red Team Framework.
+                <div className="p-3 rounded-xl bg-[#0e1628] border border-white/[0.06] flex items-center gap-2.5 flex-shrink-0">
+                  <Brain className="w-4 h-4 text-sky-400 flex-shrink-0" />
+                  <p className="text-xs text-slate-300 font-sans leading-snug">
+                    Correlação automática contra o catálogo oficial das <strong>16 Táticas DISARM</strong>.
                   </p>
                 </div>
               </div>

@@ -68,28 +68,28 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-3 lg:gap-4 flex-wrap xl:flex-nowrap">
         {/* Left: Brand Identity & Subtitle */}
         <div className="flex items-center gap-3.5 w-full md:w-auto justify-between md:justify-start flex-shrink-0">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3.5">
             {/* Tactical Radar Badge */}
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500/20 via-sky-600/10 to-transparent border border-sky-500/30 text-sky-400 shadow-[0_0_15px_rgba(56,189,248,0.2)] flex-shrink-0">
-              <Radar className="w-5 h-5 animate-pulse text-sky-400" />
-              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <div className="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500/20 via-sky-600/10 to-transparent border border-sky-500/30 text-sky-400 shadow-[0_0_20px_rgba(56,189,248,0.25)] flex-shrink-0">
+              <Radar className="w-6 h-6 animate-pulse text-sky-400" />
+              <span className="absolute -top-1 -right-1 flex h-3 w-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.9)]"></span>
               </span>
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-base font-extrabold tracking-wider text-white font-mono">
+              <div className="flex items-center gap-2.5">
+                <span className="text-xl lg:text-2xl font-black tracking-wider text-white font-mono">
                   DISARM<span className="text-sky-400">.AI</span>
                 </span>
-                <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-md bg-red-500/15 text-red-400 border border-red-500/30 font-bold tracking-widest shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                <span className="text-xs uppercase font-mono px-2.5 py-0.5 rounded-md bg-red-500/20 text-red-400 border border-red-500/35 font-bold tracking-widest shadow-[0_0_12px_rgba(239,68,68,0.25)]">
                   RED TEAM
                 </span>
               </div>
-              <p className="text-[11px] text-slate-300 font-sans tracking-tight leading-tight mt-0.5">
+              <p className="text-xs lg:text-[13px] text-slate-300 font-sans tracking-tight leading-tight mt-1">
                 AI-Assisted Disinformation Analysis &amp; Risk Management <span className="text-slate-500">•</span>{' '}
-                <span className="text-sky-300/90 font-medium">Hacking for Influence</span>
+                <span className="text-sky-300 font-medium">Hacking for Influence</span>
               </p>
             </div>
           </div>
@@ -151,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <div className="space-y-1">
                   {allCampaigns.map((camp) => {
                     const isActive = currentCampaign ? camp.id === currentCampaign.id : false;
-                    const isPreset = ['CAMP-REAL-HFI-2016-DNC'].includes(camp.id);
+                    const isPreset = ['CAMP-REAL-HFI-2022-ALBANIA-HJ'].includes(camp.id);
 
                     return (
                       <div

@@ -19,25 +19,51 @@ import { ManualTtpModal } from './components/ManualTtpModal';
 import { HackingForInfluenceAnalyzerModal } from './components/HackingForInfluenceAnalyzerModal';
 import { DisarmCampaign, DisarmTechnique } from './types/disarm';
 import { OfficialDisarmTechnique } from './data/officialDisarmData';
-import { REAL_CAMPAIGN_DNC_HACK_LEAK } from './data/mockDisarmData';
+import { REAL_CAMPAIGN_ALBANIA_HOMELAND_JUSTICE } from './data/mockDisarmData';
 import { buildTacticsList } from './utils/disarmParser';
 
 type ActiveTab = 'overview' | 'matrix' | 'navigator' | 'table';
 
-const LOCAL_STORAGE_KEY = 'disarm_campaigns_store_v2';
-const ACTIVE_CAMPAIGN_KEY = 'disarm_active_campaign_id_v2';
+const LOCAL_STORAGE_KEY = 'disarm_campaigns_store_v3';
+const ACTIVE_CAMPAIGN_KEY = 'disarm_active_campaign_id_v3';
+
+// Sanitiza técnicas legadas ou com IDs descontinuados para garantir conformidade 100% canônica com a DISARM Foundation
+const sanitizeTechnique = (tech: DisarmTechnique): DisarmTechnique => {
+  if (tech.id === 'T0036') {
+    return {
+      ...tech,
+      id: 'T0048.004',
+      name: 'Dox',
+      tacticId: 'TA18',
+      tacticName: 'Drive Online Harms',
+      description:
+        'Doxing refers to online harassment in which individuals publicly release private information about another individual, including names, addresses, employment information, pictures, family members, and other sensitive information. An influence operation may dox its opposition to encourage individuals aligned with operation narratives to harass the doxed individuals themselves or otherwise discourage the doxed individuals from posting or proliferating conflicting content.',
+      adversaryObjective: '',
+      procedureEvidence: tech.procedureEvidence
+        ? {
+            ...tech.procedureEvidence,
+            techniqueId: 'T0048.004',
+          }
+        : undefined,
+    };
+  }
+  return tech;
+};
 
 const getInitialCampaigns = (): DisarmCampaign[] => {
-  // Limpar resíduos antigos de mocks do localStorage se existirem
+  // Limpar operações salvas anteriores do localStorage
   try {
     localStorage.removeItem('disarm_campaigns_store_v1');
     localStorage.removeItem('disarm_active_campaign_id_v1');
+    localStorage.removeItem('disarm_campaigns_store_v2');
+    localStorage.removeItem('disarm_active_campaign_id_v2');
   } catch {}
 
   const defaultList: DisarmCampaign[] = [
     {
-      ...REAL_CAMPAIGN_DNC_HACK_LEAK,
-      tactics: buildTacticsList(REAL_CAMPAIGN_DNC_HACK_LEAK.techniques),
+      ...REAL_CAMPAIGN_ALBANIA_HOMELAND_JUSTICE,
+      techniques: REAL_CAMPAIGN_ALBANIA_HOMELAND_JUSTICE.techniques.map(sanitizeTechnique),
+      tactics: buildTacticsList(REAL_CAMPAIGN_ALBANIA_HOMELAND_JUSTICE.techniques.map(sanitizeTechnique)),
     },
   ];
 
@@ -46,15 +72,21 @@ const getInitialCampaigns = (): DisarmCampaign[] => {
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        // Garantir que mocks antigos não permaneçam
         const valid = parsed.filter(
-          (c: DisarmCampaign) => c.id !== 'CAMP-HFI-2026-089' && c.id !== 'CAMP-HFI-2026-042'
+          (c: DisarmCampaign) =>
+            c.id !== 'CAMP-HFI-2026-089' &&
+            c.id !== 'CAMP-HFI-2026-042' &&
+            c.id !== 'CAMP-REAL-HFI-2016-DNC'
         );
         if (valid.length > 0) {
-          return valid.map((c: DisarmCampaign) => ({
-            ...c,
-            tactics: c.tactics && c.tactics.length > 0 ? c.tactics : buildTacticsList(c.techniques || []),
-          }));
+          return valid.map((c: DisarmCampaign) => {
+            const cleanTechniques = (c.techniques || []).map(sanitizeTechnique);
+            return {
+              ...c,
+              techniques: cleanTechniques,
+              tactics: buildTacticsList(cleanTechniques),
+            };
+          });
         }
       }
     }
@@ -110,9 +142,11 @@ export const App: React.FC = () => {
     const finalList = exists ? updatedList : [targetCampaign, ...updatedList];
 
     const target = finalList.find((c) => c.id === targetCampaign.id) || targetCampaign;
+    const cleanTechniques = (target.techniques || []).map(sanitizeTechnique);
     const enrichedTarget: DisarmCampaign = {
       ...target,
-      tactics: target.tactics && target.tactics.length > 0 ? target.tactics : buildTacticsList(target.techniques),
+      techniques: cleanTechniques,
+      tactics: buildTacticsList(cleanTechniques),
     };
 
     setAllCampaigns(finalList);

@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISARM.AI — Apresentação Executiva v3 | C Av G Ciber 2026</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" crossorigin="anonymous"></script>
+  <!-- PptxGenJS -->
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #070A12;
+      color: #F8FAFC;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-image: 
+        radial-gradient(circle at 80% 10%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 15% 90%, rgba(16, 185, 129, 0.06) 0%, transparent 45%);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* =========================================================
+       SLIDES: FULL PROJECTOR WIDESCREEN (100% DA TELA ÚTIL)
+       ========================================================= */
+    .slide {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                  visibility 0.4s;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2.5vh 3.5vw;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      z-index: 10;
+    }
+
+    .projector-container {
+      width: 100%;
+      max-width: 93vw;
+      margin: 0 auto;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* =========================================================
+       PONTILHADINHO DE EDIÇÃO (APARECE AO EDITAR, SOME AO SALVAR!)
+       ========================================================= */
+    body.editing [data-edit="true"],
+    body.editing .canvas-item {
+      outline: 1px dashed rgba(56, 189, 248, 0.55);
+      outline-offset: 5px;
+      border-radius: 6px;
+      transition: background 0.15s ease, outline-color 0.15s ease;
+    }
+
+    body.editing [data-edit="true"]:hover,
+    body.editing .canvas-item:hover {
+      background: rgba(56, 189, 248, 0.05);
+      outline-color: #38BDF8;
+    }
+
+    body.editing [data-edit="true"]:focus,
+    body.editing .canvas-item.selected {
+      outline: 2px dashed #10B981 !important;
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    body:not(.editing) [data-edit="true"],
+    body:not(.editing) .canvas-item {
+      outline: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    body:not(.editing) .edit-only,
+    body:not(.editing) .resize-handle,
+    body:not(.editing) .canvas-item-toolbar,
+    body:not(.editing) .move-grip,
+    body:not(.editing) #format-inspector {
+      display: none !important;
+    }
+
+    /* =========================================================
+       MODO APRESENTAÇÃO: OCULTA 100% DOS BOTÕES FLUTUANTES
+       ========================================================= */
+    body.presenting #floating-dock,
+    body.presenting #format-inspector {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateY(20px) !important;
+    }
+
+    #present-hover-zone {
+      display: none;
+    }
+    body.presenting #present-hover-zone {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      width: 200px;
+      height: 64px;
+      z-index: 90;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 12px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    body.presenting #present-hover-zone:hover {
+      opacity: 1;
+    }
+
+    /* =========================================================
+       BLOCOS LIVRES, IMAGENS E VÍDEOS (TRANSPARENTES COM PONTILHADO!)
+       ========================================================= */
+    .canvas-item {
+      position: absolute;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      background: transparent;
+    }
+
+    body.editing .canvas-item.selected {
+      z-index: 35 !important;
+    }
+
+    .move-grip {
+      display: none;
+      position: absolute;
+      top: -26px;
+      left: 0;
+      background: #0F172A;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #38BDF8;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      cursor: grab;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+      z-index: 48;
+      white-space: nowrap;
+    }
+    .move-grip:active {
+      cursor: grabbing;
+    }
+
+    body.editing .canvas-item:hover .move-grip,
+    body.editing .canvas-item.selected .move-grip {
+      display: inline-flex;
+    }
+
+    /* 8 Resize Handles */
+    .resize-handle {
+      display: none;
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #38BDF8;
+      border: 2px solid #070A12;
+      border-radius: 9999px;
+      z-index: 45;
+      touch-action: none;
+    }
+
+    body.editing .canvas-item.selected .resize-handle {
+      display: block;
+    }
+
+    .resize-handle.nw { top: -8px; left: -8px; cursor: nwse-resize; }
+    .resize-handle.ne { top: -8px; right: -8px; cursor: nesw-resize; }
+    .resize-handle.sw { bottom: -8px; left: -8px; cursor: nesw-resize; }
+    .resize-handle.se { bottom: -8px; right: -8px; cursor: nwse-resize; }
+    .resize-handle.n  { top: -8px; left: calc(50% - 10px); cursor: ns-resize; width: 20px; border-radius: 4px; }
+    .resize-handle.s  { bottom: -8px; left: calc(50% - 10px); cursor: ns-resize; width: 20px; border-radius: 4px; }
+    .resize-handle.w  { left: -8px; top: calc(50% - 10px); cursor: ew-resize; height: 20px; border-radius: 4px; }
+    .resize-handle.e  { right: -8px; top: calc(50% - 10px); cursor: ew-resize; height: 20px; border-radius: 4px; }
+
+    /* Dedicated Drag Handle per Modern Web Guidance (`drag`) */
+    .drag-handle {
+      cursor: grab;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .drag-handle.dragging {
+      cursor: grabbing;
+    }
+
+    /* Drag & Drop Overlay on Slide */
+    .slide.drag-over::after {
+      content: 'Solte a imagem ou vídeo aqui — Depois puxe pelas bolinhas azuis para esticar!';
+      position: absolute;
+      inset: 1.5rem;
+      border: 3px dashed #38BDF8;
+      border-radius: 1.25rem;
+      background: rgba(7, 10, 18, 0.9);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: #38BDF8;
+      z-index: 80;
+      pointer-events: none;
+    }
+
+    dialog::backdrop {
+      background: rgba(4, 7, 15, 0.85);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Print / PDF Landscape Rules */
+    @media print {
+      @page {
+        size: landscape;
+        margin: 0;
+      }
+      body {
+        overflow: visible !important;
+        background: #070A12 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      #floating-dock, #format-inspector, #present-hover-zone, #top-progress, #toast, .edit-only, .resize-handle, .move-grip, dialog {
+        display: none !important;
+      }
+      main {
+        position: static !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .slide {
+        position: relative !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        page-break-after: always;
+        height: 100vh !important;
+        width: 100vw !important;
+      }
+      [data-edit="true"], .canvas-item {
+        outline: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="h-screen w-screen relative editing">
+
+  <!-- Minimal Top Progress Line -->
+  <div id="top-progress" class="fixed top-0 left-0 right-0 h-1 bg-slate-900/80 z-40">
+    <div id="progress-fill" class="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-500" style="width: 7.14%;"></div>
+  </div>
+
+  <!-- BARRA SUPERIOR DE FORMATAÇÃO DO PONTILHADO SELECIONADO -->
+  <div id="format-inspector" class="edit-only fixed top-3 left-1/2 -translate-x-1/2 z-40 hidden items-center gap-1.5 bg-slate-900/95 backdrop-blur-md border border-sky-500/40 px-3 py-1.5 rounded-full shadow-2xl text-xs font-mono">
+    <span class="text-sky-400 font-semibold mr-1 flex items-center gap-1">
+      <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i> Pontilhado:
+    </span>
+
+    <div id="inspector-text-controls" class="flex items-center gap-1">
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedFontSize(-4)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold" title="Diminuir fonte">A-</button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedFontSize(4)" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold" title="Aumentar fonte">A+</button>
+
+      <div class="h-3.5 w-px bg-slate-700 mx-1"></div>
+
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#FFFFFF')" class="w-4 h-4 rounded-full bg-white border border-slate-600" title="Branco"></button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#CBD5E1')" class="w-4 h-4 rounded-full bg-slate-300 border border-slate-600" title="Cinza Claro"></button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#38BDF8')" class="w-4 h-4 rounded-full bg-sky-400 border border-slate-600" title="Azul Ciano"></button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#34D399')" class="w-4 h-4 rounded-full bg-emerald-400 border border-slate-600" title="Verde Esmeralda"></button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#FBBF24')" class="w-4 h-4 rounded-full bg-amber-400 border border-slate-600" title="Amarelo Âmbar"></button>
+      <button onmousedown="event.preventDefault()" onclick="changeSelectedColor('#FB7185')" class="w-4 h-4 rounded-full bg-rose-400 border border-slate-600" title="Vermelho Rosa"></button>
+
+      <div class="h-3.5 w-px bg-slate-700 mx-1"></div>
+
+      <select onchange="applyPresetStyleToSelected(this.value); this.value='';" class="bg-slate-800 text-slate-200 rounded px-2 py-1 border border-slate-700 outline-none cursor-pointer" title="Aplicar formatação pronta dos slides">
+        <option value="">Trocar Modelo...</option>
+        <option value="tag">01 / Etiqueta Ciano (Mono)</option>
+        <option value="h1">Título Gigante (Capa)</option>
+        <option value="h2">Título Principal de Slide</option>
+        <option value="h3">Subtítulo Negrito</option>
+        <option value="body">Parágrafo Explicativo</option>
+        <option value="phase">Bloco de Fase (FASE + Título + Texto)</option>
+        <option value="callout">Faixa de Destaque Lateral Verde</option>
+      </select>
+    </div>
+
+    <div id="inspector-box-controls" class="hidden items-center gap-1">
+      <div class="h-3.5 w-px bg-slate-700 mx-1"></div>
+      <button onmousedown="event.preventDefault()" onclick="presetSelectedBox('full')" class="px-2 py-1 rounded bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400" title="Ocupar 100% da tela do projetor">🖥️ 100% Tela</button>
+      <button onmousedown="event.preventDefault()" onclick="presetSelectedBox('left')" class="px-2 py-1 rounded bg-slate-800 text-slate-200 hover:bg-slate-700" title="Encaixar na metade esquerda">⬅ Esq</button>
+      <button onmousedown="event.preventDefault()" onclick="presetSelectedBox('right')" class="px-2 py-1 rounded bg-slate-800 text-slate-200 hover:bg-slate-700" title="Encaixar na metade direita">➡ Dir</button>
+      <button id="btn-stretch-toggle" onmousedown="event.preventDefault()" onclick="toggleSelectedStretch()" class="px-2 py-1 rounded bg-slate-800 text-sky-300 hover:bg-slate-700" title="Alternar entre Esticar Livremente ou Manter Proporção">🔓 Esticar</button>
+    </div>
+
+    <div class="h-3.5 w-px bg-slate-700 mx-1"></div>
+
+    <button onmousedown="event.preventDefault()" onclick="duplicateSelectedElement()" class="px-2 py-1 rounded bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 flex items-center gap-1" title="Criar uma cópia livre deste pontilhado para arrastar onde quiser">
+      <i data-lucide="copy" class="w-3.5 h-3.5"></i> Duplicar
+    </button>
+    <button onmousedown="event.preventDefault()" onclick="deleteSelectedElement()" class="p-1 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500 hover:text-white" title="Apagar este bloco pontilhado">
+      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+    </button>
+  </div>
+
+  <!-- Hidden File Inputs for Quick Image & Video Upload -->
+  <input type="file" id="image-file-input" accept="image/*" multiple class="hidden">
+  <input type="file" id="video-file-input" accept="video/*" class="hidden">
+
+  <!-- SLIDES CONTAINER -->
+  <main id="slides-main" class="relative w-full h-full overflow-hidden">
+
+    <!-- =====================================================
+         SLIDE 1: CAPA
+         ===================================================== -->
+    <section class="slide active" data-title="Capa" data-slide-id="slide-1">
+      <div class="projector-container">
+        
+        <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-sky-400 font-mono text-xs sm:text-sm uppercase tracking-widest mb-10">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse"></span>
+          <span data-edit="true" data-id="node-0" contenteditable="true">EXÉRCITO BRASILEIRO • CIGE • C Av G Ciber 2026</span>
+        </div>
+
+        <h1 data-edit="true" class="text-6xl sm:text-8xl lg:text-9xl font-extrabold tracking-tight text-white leading-none mb-6" data-id="node-1" contenteditable="true">
+          DISARM<span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-emerald-400">.AI</span>
+        </h1>
+
+        <p data-edit="true" class="text-2xl sm:text-4xl lg:text-5xl text-slate-300 font-light max-w-[85vw] leading-snug mb-14" data-id="node-2" contenteditable="true">
+          Mapeamento Automatizado de TTPs em Operações de <span class="text-white font-semibold">Hacking for Influence</span> para Incremento da Consciência Situacional
+        </p>
+
+        <div class="flex flex-wrap items-center justify-between gap-8 pt-10 border-t border-slate-800/80 text-slate-400">
+          <div>
+            <div class="text-xs sm:text-sm font-mono uppercase tracking-widest text-slate-500 mb-1">Autor / Projeto Interdisciplinar</div>
+            <div data-edit="true" class="text-xl sm:text-2xl font-semibold text-slate-200" data-id="node-3" contenteditable="true"><div>CC Rodrigues</div><div>1º SG Maradonne<br>1º SG Lobato</div></div>
+          </div>
+          <div class="flex items-center gap-8 font-mono text-xs text-slate-400">
+            <span data-edit="true" data-id="node-4" contenteditable="true"><br></span>
+            <span class="text-slate-700">•</span>
+            <span data-edit="true" data-id="node-5" contenteditable="true"><br></span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 2: 01 / PROBLEMA (REDESENHADO LIMPO — SEM CONCEITOS ANTIGOS, SEM CICLO OODA)
+         ===================================================== -->
+    <section class="slide" data-title="1. Problema" data-slide-id="slide-2">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-sky-400 mb-4" data-edit="true" data-id="node-6" contenteditable="true">
+          01 / PROBLEMA
+        </div>
+
+        <h2 data-edit="true" class="text-3xl sm:text-5xl lg:text-[3.35rem] font-bold text-white leading-tight mb-14" data-id="node-7" contenteditable="true">
+          A Defesa Cibernética tradicional foca na proteção de redes e sistemas, mas carece de meios ágeis para mapear operações em que o ataque cibernético é usado como gatilho para <span class="text-sky-400">manipular a percepção pública</span> e paralisar o <span class="text-rose-400">processo decisório</span>.
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 border-t border-slate-800 pt-12">
+          
+          <div>
+            <div class="font-mono text-3xl text-sky-400 font-bold mb-4" data-edit="true" data-id="node-8" contenteditable="true">01</div>
+            <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 font-light leading-relaxed" data-id="node-10" contenteditable="true">
+              <strong class="text-white font-semibold">O comprometimento de sistemas</strong> e o roubo de credenciais deixam de ser um fim em si mesmos e passam a servir para moldar a opinião pública.
+            </p>
+            <div data-edit="true" class="mt-4 font-mono text-sm text-slate-500" data-id="node-11" contenteditable="true">Brangetto &amp; Veenendaal (2016)</div>
+          </div>
+
+          <div>
+            <div class="font-mono text-3xl text-amber-400 font-bold mb-4" data-edit="true" data-id="node-12" contenteditable="true">02</div>
+            <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 font-light leading-relaxed" data-id="node-14" contenteditable="true">
+              <strong class="text-white font-semibold">A exfiltração de dados</strong> combinada à adulteração seletiva de documentos (<em>Tainted Leaks</em>) corrói a confiança nas instituições <strong class="text-white font-semibold">sem desencadear uma guerra declarada</strong>.
+            </p>
+            <div data-edit="true" class="mt-4 font-mono text-sm text-slate-500" data-id="node-15" contenteditable="true">Pernik (2018)</div>
+          </div>
+
+          <div>
+            <div class="font-mono text-3xl text-rose-400 font-bold mb-4" data-edit="true" data-id="node-16" contenteditable="true">03</div>
+            <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 font-light leading-relaxed" data-id="node-18" contenteditable="true">
+              <strong class="text-white font-semibold">A campanha coordenada</strong> visa induzir hesitação, aumentar a latência decisória e desestruturar a tomada de decisão política e militar do Estado-alvo.
+            </p>
+            <div data-edit="true" class="mt-4 font-mono text-sm text-slate-500" data-id="node-19" contenteditable="true">Rushing, Hersch &amp; Xu (2026)</div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 3: 01 / JUSTIFICATIVA E O DISARM RED TEAM FRAMEWORK
+         ===================================================== -->
+    <section class="slide" data-title="1.2 Justificativa" data-slide-id="slide-2b-justificativa">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 mb-3" data-edit="true" data-id="node-200" contenteditable="true">
+          01 / JUSTIFICATIVA
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-start mt-4">
+          
+          <!-- Esquerda: Explicação do DISARM Red Team Framework -->
+          <div class="lg:col-span-5">
+            <h2 data-edit="true" class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6" data-id="node-201" contenteditable="true">
+              DISARM Red Team Framework
+            </h2>
+            <p data-edit="true" class="text-xl sm:text-2xl text-slate-300 font-light leading-relaxed" data-id="node-202" contenteditable="true">
+              Matriz taxonômica aberta de referência internacional (*Disinformation Analysis and Risk Management*) projetada para mapear e padronizar as <strong class="text-white font-semibold">Táticas, Técnicas e Procedimentos (TTPs)</strong> empregadas por adversários em operações de influência e desinformação — atuando de maneira análoga ao padrão <span class="text-sky-400">MITRE ATT&amp;CK</span>, porém voltada à dimensão informacional.
+            </p>
+          </div>
+
+          <!-- Direita: Justificativa em Tópicos -->
+          <div class="lg:col-span-7 lg:pl-12 lg:border-l border-slate-800 space-y-7">
+            <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 mb-2" data-edit="true" data-id="node-203" contenteditable="true">
+              JUSTIFICATIVA DO PROJETO
+            </div>
+
+            <div class="flex items-baseline gap-6">
+              <span class="font-mono text-3xl font-bold text-sky-400 shrink-0">01</span>
+              <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 leading-relaxed" data-id="node-204" contenteditable="true">
+                <strong class="text-white">Automatizar a classificação de TTPs</strong> em incidentes que convergem ataques cibernéticos e operações de influência.
+              </p>
+            </div>
+
+            <div class="flex items-baseline gap-6 pt-5 border-t border-slate-800/60">
+              <span class="font-mono text-3xl font-bold text-emerald-400 shrink-0">02</span>
+              <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 leading-relaxed" data-id="node-205" contenteditable="true">
+                <strong class="text-white">Reduzir o esforço cognitivo do analista</strong>, substituindo a catalogação manual exaustiva por inferência automatizada.
+              </p>
+            </div>
+
+            <div class="flex items-baseline gap-6 pt-5 border-t border-slate-800/60">
+              <span class="font-mono text-3xl font-bold text-amber-400 shrink-0">03</span>
+              <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 leading-relaxed" data-id="node-206" contenteditable="true">
+                <strong class="text-white">Ampliar a consciência situacional do Estado-Maior</strong> por meio de uma visualização tática estruturada.
+              </p>
+            </div>
+
+            <div class="flex items-baseline gap-6 pt-5 border-t border-slate-800/60">
+              <span class="font-mono text-3xl font-bold text-rose-400 shrink-0">04</span>
+              <p data-edit="true" class="text-xl sm:text-2xl text-slate-200 leading-relaxed" data-id="node-207" contenteditable="true">
+                <strong class="text-white">Prover um ambiente prático de adestramento militar</strong> voltado à análise de ameaças informacionais.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 4: 02 / OBJETIVO E ESCOPO
+         ===================================================== -->
+    <section class="slide" data-title="2. Objetivo e Escopo" data-slide-id="slide-3">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-sky-400 mb-3" data-edit="true" data-id="node-21" contenteditable="true">
+          02 / OBJETIVO E ESCOPO
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-start mt-4">
+          
+          <div class="lg:col-span-5">
+            <h2 data-edit="true" class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-6" data-id="node-22" contenteditable="true">
+              Objetivo Geral
+            </h2>
+            <p data-edit="true" class="text-xl sm:text-2xl text-slate-300 font-light leading-relaxed mb-8" data-id="node-23" contenteditable="true">
+              Desenvolver e validar uma <strong class="text-white font-semibold">aplicação web de apoio à análise de ameaças informacionais</strong>, capaz de coletar, processar e mapear Táticas, Técnicas e Procedimentos (TTPs) de operações de <strong class="text-sky-400 font-semibold"><em>Hacking for Influence</em></strong> segundo a classificação oficial do <em>DISARM Red Team Framework</em>, a fim de apresentar ao operador uma visualização tática estruturada que subsidie a consciência situacional e a formulação de contraposições no âmbito da Guerra da Informação.
+            </p>
+
+            <div class="pt-6 border-t border-slate-800/90">
+              <div class="font-mono text-sm uppercase text-amber-400 tracking-wider mb-3" data-edit="true" data-id="node-24" contenteditable="true">DELIMITAÇÃO DE ESCOPO</div>
+              <ul class="space-y-2 text-base text-slate-300 leading-relaxed" data-edit="true" data-id="node-25" contenteditable="true">
+                <li>• Validação restrita à modelagem analítica por simulação do cenário hipotético <strong class="text-white">“Operação Netuno”</strong>;</li>
+                <li>• Sem execução de ações cibernéticas em redes ativas;</li>
+                <li>• Sem medição empírica de impactos comportamentais sobre públicos reais.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 lg:pl-10 lg:border-l border-slate-800 space-y-8">
+            
+            <div class="flex items-baseline gap-6">
+              <span class="font-mono text-4xl font-bold text-sky-400 shrink-0">01</span>
+              <div>
+                <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-26" contenteditable="true">Fundamentação Doutrinária</h3>
+                <p data-edit="true" class="text-lg sm:text-xl text-slate-300 leading-relaxed" data-id="node-27" contenteditable="true">
+                  Caracterizar a convergência entre ações cibernéticas ofensivas e operações de influência (<em>Hacking for Influence</em>).
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-baseline gap-6 pt-6 border-t border-slate-800/60">
+              <span class="font-mono text-4xl font-bold text-emerald-400 shrink-0">02</span>
+              <div>
+                <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-28" contenteditable="true">Plataforma Web e Motor Heurístico</h3>
+                <p data-edit="true" class="text-lg sm:text-xl text-slate-300 leading-relaxed" data-id="node-29" contenteditable="true">
+                  Projetar e implementar a aplicação interativa equipada com motor de Inteligência Artificial para extração automatizada de IOCs e TTPs baseadas no <em>DISARM Red Team Framework</em>.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-baseline gap-6 pt-6 border-t border-slate-800/60">
+              <span class="font-mono text-4xl font-bold text-amber-400 shrink-0">03</span>
+              <div>
+                <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-30" contenteditable="true">Aplicabilidade Operacional</h3>
+                <p data-edit="true" class="text-lg sm:text-xl text-slate-300 leading-relaxed" data-id="node-31" contenteditable="true">
+                  Demonstrar a eficácia da ferramenta por meio do mapeamento de casos e/ou cenários, estruturando o encadeamento tático nas 16 táticas do <em>DISARM Framework</em>.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 5: 03 / FUNDAMENTAÇÃO • O QUE É HACKING FOR INFLUENCE
+         ===================================================== -->
+    <section class="slide" data-title="3.1 O Que é Hacking for Influence" data-slide-id="slide-3b-hfi">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-sky-400 mb-4" data-edit="true" data-id="node-100" contenteditable="true">
+          03 / FUNDAMENTAÇÃO DOUTRINÁRIA
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight mb-12" data-id="node-101" contenteditable="true">
+          O Que é <span class="text-sky-400">Hacking for Influence</span>?
+        </h2>
+
+        <div class="border-l-4 border-sky-400 pl-8 sm:pl-10 py-4 my-6">
+          <p data-edit="true" class="text-2xl sm:text-4xl lg:text-[2.6rem] text-slate-200 font-light leading-snug mb-8" data-id="node-102" contenteditable="true">
+            “Emprego deliberado de <strong class="text-white font-semibold">capacidades cibernéticas intrusivas</strong> para comprometer a confidencialidade, integridade ou disponibilidade de redes e informações na camada lógica, <strong class="text-sky-400 font-semibold">não como um fim técnico em si mesmo</strong>, mas para afetar as dimensões informacional e cognitiva, <strong class="text-emerald-400 font-semibold">manipulando percepções, constrangendo alvos e degradando o processo decisório</strong> de líderes e populações em tempo de paz.”
+          </p>
+
+          <div data-edit="true" class="font-mono text-base sm:text-lg text-slate-400" data-id="node-112" contenteditable="true">
+            (PERNIK, Piret. <em>Hacking for Influence</em>, 2018)
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 6: 03 / FUNDAMENTAÇÃO • O ENCAMINHAMENTO PELAS CAMADAS DO CIBERESPAÇO
+         ===================================================== -->
+    <section class="slide" data-title="3.2 As Camadas do Ciberespaço" data-slide-id="slide-3c-camadas">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-sky-400 mb-2" data-edit="true" data-id="node-210" contenteditable="true">
+          03 / FUNDAMENTAÇÃO DOUTRINÁRIA
+        </div>
+
+        <h2 data-edit="true" class="text-3xl sm:text-5xl font-bold text-white leading-tight mb-3" data-id="node-211" contenteditable="true">
+          O Encaminhamento pelas <span class="text-sky-400">Camadas do Ciberespaço</span>
+        </h2>
+
+        <p data-edit="true" class="text-lg sm:text-xl text-slate-300 font-light max-w-[85vw] mb-6" data-id="node-212" contenteditable="true">
+          Diferentemente das operações de informação tradicionais, o <strong class="text-white font-semibold"><em>Hacking for Influence</em></strong> atua em cadeia atravessando as camadas do ciberespaço:
+        </p>
+
+        <!-- Ilustração Vetorial das 3 Camadas em Cadeia -->
+        <div class="w-full my-4">
+          <img src="Camadas_Ciberespaco_HFI.svg" alt="Encaminhamento pelas Camadas do Ciberespaço" class="w-full h-auto max-h-[30vh] object-contain mx-auto">
+        </div>
+
+        <!-- Textos Exatos das 3 Camadas alinhados com o Diagrama -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-14 border-t border-slate-800 pt-8 mt-4">
+          
+          <div>
+            <h3 data-edit="true" class="text-xl sm:text-2xl font-bold text-sky-400 mb-2" data-id="node-213" contenteditable="true">Camada Lógica / Sintática</h3>
+            <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-214" contenteditable="true">
+              O atacante aplica a capacidade cibernética para invadir o sistema, roubar dados ou alterar instruções de software.
+            </p>
+          </div>
+
+          <div>
+            <h3 data-edit="true" class="text-xl sm:text-2xl font-bold text-amber-400 mb-2" data-id="node-215" contenteditable="true">Camada Semântica</h3>
+            <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-216" contenteditable="true">
+              O material obtido (ou adulterado) é formatado em mensagens, vazamentos ou conteúdos para contaminar o ecossistema de informação.
+            </p>
+          </div>
+
+          <div>
+            <h3 data-edit="true" class="text-xl sm:text-2xl font-bold text-rose-400 mb-2" data-id="node-217" contenteditable="true">Camada Cognitiva / Tomada de Decisão</h3>
+            <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-218" contenteditable="true">
+              A informação manipulada atinge a mente do decisor ou da sociedade, gerando atrito cognitivo, hesitação, perda de confiança institucional e degradação da segurança nacional.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 7: 03 / FUNDAMENTAÇÃO • POR QUE O HACKING FOR INFLUENCE É ATRATIVO NA ZONA CINZENTA?
+         ===================================================== -->
+    <section class="slide" data-title="3.3 Atratividade na Zona Cinzenta" data-slide-id="slide-3d-greyzone">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-amber-400 mb-3" data-edit="true" data-id="node-220" contenteditable="true">
+          03 / FUNDAMENTAÇÃO DOUTRINÁRIA
+        </div>
+
+        <h2 data-edit="true" class="text-3xl sm:text-5xl font-bold text-white leading-tight mb-4" data-id="node-221" contenteditable="true">
+          Por que o <span class="text-amber-400">Hacking for Influence</span> é atrativo na Zona Cinzenta?
+        </h2>
+
+        <p data-edit="true" class="text-xl sm:text-2xl text-slate-300 font-light max-w-[85vw] mb-10" data-id="node-222" contenteditable="true">
+          <strong class="text-white font-semibold">Pernik (2018)</strong> destaca quatro razões estratégicas pelas quais os Estados autoritários empregam essa tática:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10 border-t border-slate-800 pt-10">
+          
+          <div class="flex items-baseline gap-6">
+            <span class="font-mono text-4xl font-bold text-sky-400 shrink-0">1.</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-223" contenteditable="true">Abaixo do limiar de conflito armado</h3>
+              <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-224" contenteditable="true">
+                As intrusões operam no espaço da Zona Cinzenta (<em>Grey Zone</em>), abaixo do patamar de “uso da força” ou “ataque armado” (afastando o Artigo 51 da Carta da ONU e o Manual de Tallinn 2.0), o que impede a vítima de retaliar militarmente.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-baseline gap-6">
+            <span class="font-mono text-4xl font-bold text-amber-400 shrink-0">2.</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-225" contenteditable="true">Negação Plausível</h3>
+              <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-226" contenteditable="true">
+                A complexidade da atribuição técnica permite ao Estado agressor utilizar <em>hacktivistas</em> ou grupos para esconder sua autoria.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-baseline gap-6 pt-8 border-t border-slate-800/70">
+            <span class="font-mono text-4xl font-bold text-emerald-400 shrink-0">3.</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-227" contenteditable="true">Assimetria e Baixo Custo</h3>
+              <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-228" contenteditable="true">
+                O investimento para invadir um sistema de e-mail e vazar documentos é drasticamente menor do que o custo de mobilizar forças convencionais, produzindo impactos desproporcionais na política interna do adversário.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-baseline gap-6 pt-8 border-t border-slate-800/70">
+            <span class="font-mono text-4xl font-bold text-rose-400 shrink-0">4.</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl font-bold text-white mb-2" data-id="node-229" contenteditable="true">Multiplicador de Força</h3>
+              <p data-edit="true" class="text-lg text-slate-300 leading-relaxed" data-id="node-230" contenteditable="true">
+                Serve para enfraquecer e desestabilizar as instituições e alianças sem a necessidade do emprego cinético.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 8: 03 / FUNDAMENTAÇÃO DE IA • QUADRO COMPARATIVO DOS PARADIGMAS DE IA
+         ===================================================== -->
+    <section class="slide" data-title="3.4 Paradigmas de Inteligência Artificial" data-slide-id="slide-3e-ai">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 mb-2" data-edit="true" data-id="node-113" contenteditable="true">
+          03 / FUNDAMENTAÇÃO TEÓRICA • PARADIGMAS DE INTELIGÊNCIA ARTIFICIAL
+        </div>
+
+        <h2 data-edit="true" class="text-3xl sm:text-5xl font-bold text-white leading-tight mb-8" data-id="node-114" contenteditable="true">
+          Quadro Comparativo: Como a IA <span class="text-sky-400">Processa</span> vs. Como <span class="text-amber-400">Responde</span>
+        </h2>
+
+        <div class="w-full overflow-x-auto">
+          <table class="w-full text-left border-collapse" data-edit="true" data-id="node-118" contenteditable="true">
+            <thead>
+              <tr class="border-b-2 border-slate-800 font-mono text-sm uppercase tracking-wider text-slate-400">
+                <th class="py-3.5 pr-6 w-[22%]">Eixo de Classificação</th>
+                <th class="py-3.5 px-6 w-[20%]">Paradigma</th>
+                <th class="py-3.5 px-6 w-[38%]">Princípio de Funcionamento</th>
+                <th class="py-3.5 pl-6 w-[20%]">Natureza e Explicabilidade</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/80 text-base sm:text-lg">
+              
+              <!-- Eixo 1: Como Processa -->
+              <tr>
+                <td class="py-5 pr-6 align-top" rowspan="2">
+                  <div class="font-mono text-xs uppercase text-sky-400 font-bold mb-1">1. COMO PROCESSA A INFORMAÇÃO</div>
+                  <div class="text-white font-semibold text-base">Arquitetura de Raciocínio</div>
+                  <div class="font-mono text-xs text-slate-500 mt-1">Russell &amp; Norvig (2021);<br>Newell &amp; Simon (1976)</div>
+                </td>
+                <td class="py-5 px-6 font-bold text-sky-400 align-top">
+                  IA Simbólica<br>
+                  <span class="text-xs font-mono font-normal text-slate-400">(Baseada em Regras)</span>
+                </td>
+                <td class="py-5 px-6 text-slate-200 align-top leading-relaxed">
+                  Manipula símbolos explícitos, ontologias e regras lógicas (<em>IF-THEN</em>) codificadas por especialistas.
+                </td>
+                <td class="py-5 pl-6 text-slate-300 align-top">
+                  <strong class="text-emerald-400">Determinística</strong><br>
+                  Caixa-Branca (auditável)
+                </td>
+              </tr>
+
+              <tr>
+                <td class="py-5 px-6 font-bold text-sky-300 align-top">
+                  IA Conexionista<br>
+                  <span class="text-xs font-mono font-normal text-slate-400">(Redes Neurais)</span>
+                </td>
+                <td class="py-5 px-6 text-slate-200 align-top leading-relaxed">
+                  Aprende padrões estatísticos ajustando pesos numéricos em redes neurais treinadas com grandes volumes de dados.
+                </td>
+                <td class="py-5 pl-6 text-slate-300 align-top">
+                  <strong class="text-amber-400">Probabilística</strong><br>
+                  Caixa-Preta (opaca)
+                </td>
+              </tr>
+
+              <!-- Eixo 2: Como Responde -->
+              <tr class="border-t-2 border-slate-700/80">
+                <td class="py-5 pr-6 align-top" rowspan="2">
+                  <div class="font-mono text-xs uppercase text-amber-400 font-bold mb-1">2. COMO RESPONDE (SAÍDA)</div>
+                  <div class="text-white font-semibold text-base">Objetivo da Resposta</div>
+                  <div class="font-mono text-xs text-slate-500 mt-1">Goodfellow et al. (2016);<br>Ng &amp; Jordan (2001)</div>
+                </td>
+                <td class="py-5 px-6 font-bold text-amber-400 align-top">
+                  IA Preditiva<br>
+                  <span class="text-xs font-mono font-normal text-slate-400">(Discriminativa)</span>
+                </td>
+                <td class="py-5 px-6 text-slate-200 align-top leading-relaxed">
+                  Analisa dados existentes para <strong>classificar em categorias fixas</strong> ou prever valores futuros — modela <em>P(Y | X)</em>.
+                </td>
+                <td class="py-5 pl-6 text-slate-300 align-top">
+                  <strong class="text-white">Espaço Fechado</strong><br>
+                  Retorna classe ou escore
+                </td>
+              </tr>
+
+              <tr>
+                <td class="py-5 px-6 font-bold text-purple-400 align-top">
+                  IA Generativa<br>
+                  <span class="text-xs font-mono font-normal text-slate-400">(Síntese de Dados)</span>
+                </td>
+                <td class="py-5 px-6 text-slate-200 align-top leading-relaxed">
+                  Aprende a distribuição dos dados para <strong>gerar conteúdos inéditos</strong> (textos, códigos, imagens) — modela <em>P(X)</em>.
+                </td>
+                <td class="py-5 pl-6 text-slate-300 align-top">
+                  <strong class="text-white">Espaço Aberto</strong><br>
+                  Sujeita a alucinações
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 9: 03 / DESENVOLVIMENTO E ARQUITETURA (LAYOUT LIMPO V1 + CLASSES DA PLATAFORMA)
+         ===================================================== -->
+    <section class="slide" data-title="3.5 Desenvolvimento e Arquitetura" data-slide-id="slide-4">
+      <div class="projector-container">
+        
+        <div class="mb-4">
+          <span class="font-mono text-sm uppercase tracking-widest text-sky-400" data-edit="true" data-id="node-32" contenteditable="true">03 / DESENVOLVIMENTO E ARQUITETURA</span>
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4" data-id="node-34" contenteditable="true">
+          Arquitetura Local com IA Simbólica Determinística
+        </h2>
+        <p data-edit="true" class="text-xl sm:text-2xl text-slate-300 font-light max-w-[85vw] mb-12" data-id="node-35" contenteditable="true">
+          Desenvolvida em <strong class="text-white">React 18, TypeScript e Tailwind CSS</strong>, toda a análise ocorre localmente na estação do operador, garantindo sigilo absoluto dos relatos e zero risco de alucinação.
+        </p>
+
+        <div class="relative grid grid-cols-1 md:grid-cols-4 gap-10 pt-8 border-t border-slate-800 mb-12">
+          
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-sm font-bold px-3 py-1 rounded bg-sky-500/15 text-sky-400">ETAPA 1</span>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-slate-600 hidden md:block ml-auto"></i>
+            </div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-36" contenteditable="true">Inserção do Caso</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-37" contenteditable="true">
+              Entrada do relato narrativo do incidente e lista bruta de artefatos (IPs, domínios, hashes SHA-256, URLs e hashtags).
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-sm font-bold px-3 py-1 rounded bg-emerald-500/15 text-emerald-400">ETAPA 2</span>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-slate-600 hidden md:block ml-auto"></i>
+            </div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-38" contenteditable="true">Motor Heurístico Local</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-39" contenteditable="true">
+              Aplica <strong class="text-white">Reconhecimento de Padrões (RegEx)</strong> no módulo <code class="text-sky-300">iocExtractor.ts</code> para segregar IOCs e <strong class="text-white">Sistema Especialista Baseado em Regras (<em>IF-THEN</em>)</strong> na classe <code class="text-emerald-300">HackingForInfluenceAnalyzerModal</code> para inferir TTPs.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-sm font-bold px-3 py-1 rounded bg-amber-500/15 text-amber-400">ETAPA 3</span>
+              <i data-lucide="arrow-right" class="w-5 h-5 text-slate-600 hidden md:block ml-auto"></i>
+            </div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-40" contenteditable="true">Matriz Oficial DISARM</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-41" contenteditable="true">
+              Classificação precisa nas <strong>16 Táticas</strong>, <strong>103 Técnicas principais</strong> e <strong>288 Subtécnicas</strong> (<strong>391 itens</strong>) oficiais (<code class="text-amber-300">officialDisarmData.ts</code>).
+            </p>
+          </div>
+
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="font-mono text-sm font-bold px-3 py-1 rounded bg-purple-500/15 text-purple-400">ETAPA 4</span>
+            </div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-42" contenteditable="true">Supervisão Humana</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-43" contenteditable="true">
+              Curadoria analítica (<strong class="text-white"><em>Human-in-the-Loop</em></strong>): auditoria das evidências no painel lateral (<code class="text-purple-300">TTPDetailDrawer</code>), confirmação das TTPs pelo analista nas 4 visões táticas e emissão de relatório PDF.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 text-base text-slate-400 pt-6 border-t border-slate-800/60">
+          <span class="font-mono text-sm uppercase text-slate-500">4 Visões Integradas da Interface:</span>
+          <span data-edit="true" class="text-slate-200 font-medium" data-id="node-44" contenteditable="true">1. Visão Geral e Métricas</span>
+          <span class="text-slate-700">•</span>
+          <span data-edit="true" class="text-slate-200 font-medium" data-id="node-45" contenteditable="true">2. Matriz do Caso Ativo</span>
+          <span class="text-slate-700">•</span>
+          <span data-edit="true" class="text-slate-200 font-medium" data-id="node-46" contenteditable="true">3. Tabela Operacional de TTPs</span>
+          <span class="text-slate-700">•</span>
+          <span data-edit="true" class="text-slate-200 font-medium" data-id="node-47" contenteditable="true">4. Navegador Oficial DISARM Navigator v4.8.2</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 10: 04 / CENÁRIO HIPOTÉTICO “OPERAÇÃO NETUNO” (LAYOUT LIMPO V1)
+         ===================================================== -->
+    <section class="slide" data-title="4.1 Cenário Operação Netuno" data-slide-id="slide-5">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-rose-400 mb-2" data-edit="true" data-id="node-48" contenteditable="true">
+          04 / APLICAÇÃO DO RESULTADO • CENÁRIO CONTROLADO
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4" data-id="node-49" contenteditable="true">
+          Cenário Hipotético “Operação Netuno”
+        </h2>
+
+        <p data-edit="true" class="text-lg sm:text-xl text-slate-300 leading-relaxed max-w-[90vw] mb-8" data-id="node-50" contenteditable="true">
+          Para impedir que o submarino nuclear <strong class="text-white">SN Vanguarda</strong> (do <strong class="text-sky-400">País AZUL</strong>, com propulsão nuclear 100% nacional pelo CPN e parceria não-nuclear de Sistema de Combate com o <strong class="text-slate-100">País BRANCO</strong>) anule sua superioridade marítima, a <strong class="text-rose-400">Unidade 404 (País VERMELHO)</strong> conduz uma campanha de <em>Hack-and-Leak</em> (invasão e vazamento) na Zona Cinzenta visando o orçamento e o capital humano do programa:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 border-t border-b border-slate-800 py-7 mb-7">
+          
+          <div>
+            <div class="font-mono text-sm text-sky-400 font-bold mb-1" data-edit="true" data-id="node-51" contenteditable="true">FASE 1 • TA15 / T0011</div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-52" contenteditable="true">Acesso e Exfiltração</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-53" contenteditable="true">
+              <em>Spear-phishing</em> (pesca direcionada: <code class="text-sky-300">bit.ly/3xNetunoAuth</code>) e domínio <em>look-a-like</em> (domínio sósia: <code class="text-sky-300">portal-naval-auth[.]com</code>) contra engenheiros da DGSN/CPN; roubo de atas e cronogramas reais.
+            </p>
+          </div>
+
+          <div>
+            <div class="font-mono text-sm text-amber-400 font-bold mb-1" data-edit="true" data-id="node-54" contenteditable="true">FASE 2 • TA06 / T0085</div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-55" contenteditable="true">Tainted Leaks</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-56" contenteditable="true">
+              <em>Tainted Leaks</em> (vazamentos contaminados): 90% de arquivos autênticos misturados ao laudo falso de falha radiológica (<code class="text-amber-300">laudo_reator_cpn_v4.pdf</code>) e planilha forjada de <em>backdoors</em> (acessos ocultos).
+            </p>
+          </div>
+
+          <div>
+            <div class="font-mono text-sm text-purple-400 font-bold mb-1" data-edit="true" data-id="node-57" contenteditable="true">FASE 3 • TA08 / T0087</div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-58" contenteditable="true">Clones e Deepfake</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-59" contenteditable="true">
+              Vazamento no Telegram (<code class="text-purple-300">t.me/VerdadeOcultaNetuno</code>), 15 clones de imprensa (<code class="text-purple-300">defesanacional-azul[.]org</code>) e vídeo <em>deepfake</em> (mídia sintética por IA) via <em>malvertising</em> (anúncio malicioso).
+            </p>
+          </div>
+
+          <div>
+            <div class="font-mono text-sm text-rose-400 font-bold mb-1" data-edit="true" data-id="node-60" contenteditable="true">FASE 4 • TA09 / T0048</div>
+            <h3 data-edit="true" class="text-xl font-bold text-white mb-2" data-id="node-61" contenteditable="true">Bots e Coerção</h3>
+            <p data-edit="true" class="text-base text-slate-300 leading-relaxed" data-id="node-62" contenteditable="true">
+              Amplificação por <em>bots</em> (perfis automatizados: <code class="text-rose-300">#ChernobylNoMar</code>) combinada a <em>doxing</em> (exposição de dados pessoais), assédio jurídico a familiares e falsas propostas de emprego aos engenheiros.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="flex items-start gap-4 border-l-4 border-rose-400 pl-6 py-2">
+          <p data-edit="true" class="text-base sm:text-lg text-slate-200 leading-relaxed" data-id="node-63" contenteditable="true">
+            <strong class="text-rose-400">Degradação do Ciclo OODA (<em>Observe-Orient-Decide-Act</em> — Observar, Orientar, Decidir e Agir):</strong> A campanha gera paralisia decisória (dilema entre manter o sigilo do reator nacional ou desmentir tecnicamente a fraude), suspensão parlamentar dos testes, atrito diplomático com o País BRANCO, contingenciamento orçamentário e demissão de especialistas do programa.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 11: 04 / MAPA TÁTICO OPERAÇÃO NETUNO (100% TELA CHEIA PROJETOR!)
+         ===================================================== -->
+    <section class="slide" data-title="4.2 Mapa Operação Netuno (Tela Cheia)" data-slide-id="slide-netuno-map">
+      <!-- Mapa pré-carregado ocupando 96% da tela -->
+    </section>
+
+    <!-- =====================================================
+         SLIDE 12: 05 / VALIDAÇÃO E RESULTADOS
+         ===================================================== -->
+    <section class="slide" data-title="5. Validação e Resultados" data-slide-id="slide-6">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 mb-3" data-edit="true" data-id="node-65" contenteditable="true">
+          05 / VALIDAÇÃO E RESULTADOS
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-10" data-id="node-66" contenteditable="true">
+          Verificação do Cumprimento dos Objetivos
+        </h2>
+
+        <div class="w-full overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b-2 border-slate-800 font-mono text-sm uppercase tracking-wider text-slate-400">
+                <th class="py-4 pr-6 w-1/3">Objetivo ou Verificação</th>
+                <th class="py-4 px-6 w-1/4">Critério</th>
+                <th class="py-4 px-6">Evidência e Resultado</th>
+                <th class="py-4 pl-6 text-right">Situação</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/70 text-lg">
+              
+              <tr>
+                <td data-edit="true" class="py-6 pr-6 font-semibold text-white align-top" data-id="node-67" contenteditable="true">
+                  1. Caracterizar a convergência entre ações cibernéticas ofensivas e operações de influência (<em>Hacking for Influence</em>).
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-300 text-base align-top" data-id="node-68" contenteditable="true">
+                  Análise documental e cotejo bibliográfico das referências centrais.
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-200 text-base align-top leading-relaxed" data-id="node-69" contenteditable="true">
+                  Cotejo teórico consolidado, correlacionando a intrusão na camada lógica e a adulteração semântica à degradação decisória na Zona Cinzenta.
+                </td>
+                <td class="py-6 pl-6 text-right align-top">
+                  <span class="inline-flex items-center gap-1.5 font-mono text-sm font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3.5 py-1 rounded-full">
+                    Atende
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td data-edit="true" class="py-6 pr-6 font-semibold text-white align-top" data-id="node-70" contenteditable="true">
+                  2. Projetar e implementar a plataforma interativa DISARM.AI equipada com motor de IA para extração de IOCs e TTPs.
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-300 text-base align-top" data-id="node-71" contenteditable="true">
+                  Testes funcionais e de arquitetura em ambiente isolado com casos históricos.
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-200 text-base align-top leading-relaxed" data-id="node-72" contenteditable="true">
+                  Protótipo funcional operacional, realizando extração de IOCs por RegEx, mapeamento determinístico de TTPs e geração de relatórios PDF.
+                </td>
+                <td class="py-6 pl-6 text-right align-top">
+                  <span class="inline-flex items-center gap-1.5 font-mono text-sm font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3.5 py-1 rounded-full">
+                    Atende
+                  </span>
+                </td>
+              </tr>
+
+              <tr>
+                <td data-edit="true" class="py-6 pr-6 font-semibold text-white align-top" data-id="node-73" contenteditable="true">
+                  3. Demonstrar a aplicabilidade operacional nas 16 táticas do DISARM Framework.
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-300 text-base align-top" data-id="node-74" contenteditable="true">
+                  Submissão do relato e artefatos do cenário controlado “Operação Netuno”.
+                </td>
+                <td data-edit="true" class="py-6 px-6 text-slate-200 text-base align-top leading-relaxed" data-id="node-75" contenteditable="true">
+                  Catalogação automatizada das 4 fases da Operação Netuno na matriz DISARM e redução comprovada do esforço cognitivo do analista.
+                </td>
+                <td class="py-6 pl-6 text-right align-top">
+                  <span class="inline-flex items-center gap-1.5 font-mono text-sm font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 px-3.5 py-1 rounded-full">
+                    Atende
+                  </span>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 13: 06 / CONCLUSÃO (TÓPICOS DIRETOS + LIMITAÇÕES — LAYOUT EDITORIAL LIMPO)
+         ===================================================== -->
+    <section class="slide" data-title="6. Conclusão e Limitações" data-slide-id="slide-7">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-sky-400 mb-3" data-edit="true" data-id="node-76" contenteditable="true">
+          06 / CONCLUSÃO
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-12" data-id="node-77" contenteditable="true">
+          Síntese dos Resultados e Limitações do Estudo
+        </h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 border-t border-slate-800 pt-10">
+          
+          <!-- Coluna 1: Objetivos Cumpridos -->
+          <div>
+            <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 font-bold mb-6" data-edit="true" data-id="node-160" contenteditable="true">
+              OBJETIVOS CUMPRIDOS E ENTREGAS
+            </div>
+            <ul class="space-y-6 text-xl text-slate-300 font-light leading-relaxed" data-edit="true" data-id="node-78" contenteditable="true">
+              <li>
+                <strong class="text-white font-semibold">• Plataforma DISARM.AI:</strong> Entrega de aplicação web <em>client-side</em> equipada com motor local de IA Simbólica determinística.
+              </li>
+              <li>
+                <strong class="text-white font-semibold">• Automação Tática:</strong> Extração automática de IOCs e mapeamento estruturado nas 16 táticas, 103 técnicas e 288 subtécnicas do <em>DISARM Red Team Framework</em>.
+              </li>
+              <li>
+                <strong class="text-white font-semibold">• Confiabilidade Militar:</strong> Execução em redes militares isoladas, sigilo absoluto dos relatos e zero risco de alucinação.
+              </li>
+            </ul>
+          </div>
+
+          <!-- Coluna 2: Limitações -->
+          <div class="lg:pl-12 lg:border-l border-slate-800">
+            <div class="font-mono text-sm uppercase tracking-widest text-amber-400 font-bold mb-6" data-edit="true" data-id="node-161" contenteditable="true">
+              LIMITAÇÕES DO PROJETO
+            </div>
+            <ul class="space-y-6 text-xl text-slate-300 font-light leading-relaxed" data-edit="true" data-id="node-162" contenteditable="true">
+              <li>
+                <strong class="text-white font-semibold">• Ambiente Controlado:</strong> Sistema validado exclusivamente por meio de casos históricos e simulação analítica (<em>Operação Netuno</em>), sem testes em redes ativas.
+              </li>
+              <li>
+                <strong class="text-white font-semibold">• Sem Atribuição Automática de APT:</strong> A ferramenta estrutura as TTPs da campanha, mas não atribui automaticamente a autoria a grupos APT (<em>Advanced Persistent Threat</em>).
+              </li>
+              <li>
+                <strong class="text-white font-semibold">• Supervisão Humana Indispensável:</strong> A validação crítica das evidências permanece sob responsabilidade do analista (<em>Human-in-the-Loop</em>).
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         SLIDE 14: 07 / RECOMENDAÇÕES PARA TRABALHOS FUTUROS (LAYOUT EDITORIAL LIMPO)
+         ===================================================== -->
+    <section class="slide" data-title="7. Recomendações para Trabalhos Futuros" data-slide-id="slide-8-futuros">
+      <div class="projector-container">
+        
+        <div class="font-mono text-sm uppercase tracking-widest text-emerald-400 mb-3" data-edit="true" data-id="node-79" contenteditable="true">
+          07 / RECOMENDAÇÕES PARA TRABALHOS FUTUROS
+        </div>
+
+        <h2 data-edit="true" class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-14" data-id="node-170" contenteditable="true">
+          Evolução da Plataforma e Integração Doutrinária
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 border-t border-slate-800 pt-12">
+          
+          <div class="flex items-baseline gap-6">
+            <span class="font-mono text-5xl font-bold text-sky-400 shrink-0">01</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl sm:text-3xl font-bold text-white mb-4" data-id="node-80" contenteditable="true">
+                Integração a Bases de CTI (MITRE ATT&amp;CK e MISP)
+              </h3>
+              <p data-edit="true" class="text-xl text-slate-300 font-light leading-relaxed" data-id="node-81" contenteditable="true">
+                Para correlacionar TTPs de intrusão cibernética (ATT&amp;CK) às TTPs de influência (DISARM), apoiando a identificação do <em>modus operandi</em> e a atribuição de grupos APT (<em>Advanced Persistent Threat</em>).
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-baseline gap-6 md:pl-12 md:border-l border-slate-800">
+            <span class="font-mono text-5xl font-bold text-emerald-400 shrink-0">02</span>
+            <div>
+              <h3 data-edit="true" class="text-2xl sm:text-3xl font-bold text-white mb-4" data-id="node-82" contenteditable="true">
+                Incorporação do DISARM Blue Team Framework
+              </h3>
+              <p data-edit="true" class="text-xl text-slate-300 font-light leading-relaxed" data-id="node-83" contenteditable="true">
+                Para recomendação automatizada de contramedidas defensivas e proteção ativa do Ciclo OODA (<em>Observe-Orient-Decide-Act</em>).
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================
+       MODAL 1: ESCOLHER MODELO DE PONTILHADO FORMATADO (+ TEXTO)
+       ===================================================== -->
+  <dialog id="text-preset-modal" closedby="any" aria-labelledby="text-modal-title" class="bg-slate-900 border border-slate-700/80 text-slate-100 rounded-2xl shadow-2xl p-0 w-full max-w-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+      <div class="flex items-center gap-2.5">
+        <i data-lucide="type" class="w-5 h-5 text-sky-400"></i>
+        <h3 id="text-modal-title" class="font-bold text-base text-white">Adicionar Bloco Pontilhado Formatado (Sem Fundo!)</h3>
+      </div>
+      <button onclick="document.getElementById('text-preset-modal').close()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-3 max-h-[80vh] overflow-y-auto">
+      <p class="text-xs text-slate-400 mb-3">
+        Escolha qualquer modelo abaixo. Ele entra <strong class="text-sky-300">com fundo transparente e pontilhadinho</strong> para você arrastar onde quiser, escolher a largura/tamanho pelas bolinhas e ocultar o pontilhado ao salvar:
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button onclick="addFormattedTextBlock('tag')" class="text-left p-4 rounded-xl bg-slate-950/80 border border-dashed border-sky-500/40 hover:border-sky-400 hover:bg-sky-950/20 transition">
+          <div class="font-mono text-xs uppercase tracking-widest text-sky-400 mb-1">01 / SEÇÃO OU TÓPICO</div>
+          <div class="text-[11px] text-slate-500">Etiqueta superior em fonte técnica (JetBrains Mono)</div>
+        </button>
+
+        <button onclick="addFormattedTextBlock('h2')" class="text-left p-4 rounded-xl bg-slate-950/80 border border-dashed border-sky-500/40 hover:border-sky-400 hover:bg-sky-950/20 transition">
+          <div class="text-xl font-bold text-white leading-tight mb-1">Título Principal do Slide</div>
+          <div class="text-[11px] text-slate-500">Fonte grande em destaque (Plus Jakarta Sans Bold)</div>
+        </button>
+
+        <button onclick="addFormattedTextBlock('body')" class="text-left p-4 rounded-xl bg-slate-950/80 border border-dashed border-sky-500/40 hover:border-sky-400 hover:bg-sky-950/20 transition">
+          <div class="text-sm text-slate-300 leading-relaxed mb-1">Texto explicativo limpo com a mesma tipografia e cor dos slides originais...</div>
+          <div class="text-[11px] text-slate-500">Parágrafo padrão transparente</div>
+        </button>
+
+        <button onclick="addFormattedTextBlock('phase')" class="text-left p-4 rounded-xl bg-slate-950/80 border border-dashed border-sky-500/40 hover:border-sky-400 hover:bg-sky-950/20 transition">
+          <div class="font-mono text-xs text-sky-400 font-bold">01. TÓPICO / FASE</div>
+          <div class="text-base font-bold text-white">Subtítulo em Negrito</div>
+          <div class="text-xs text-slate-400">Descrição detalhada da fase ou ponto técnico.</div>
+        </button>
+
+        <button onclick="addFormattedTextBlock('callout')" class="text-left p-4 rounded-xl bg-slate-950/80 border border-dashed border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-950/20 transition sm:col-span-2">
+          <div class="border-l-4 border-emerald-400 pl-3 py-1">
+            <span class="text-emerald-400 font-bold text-sm">Destaque / Síntese:</span>
+            <span class="text-slate-200 text-sm"> Conclusão importante em destaque lateral.</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =====================================================
+       MODAL 2: ADICIONAR IMAGEM OU VÍDEO (<dialog closedby="any">)
+       ===================================================== -->
+  <dialog id="media-modal" closedby="any" aria-labelledby="media-modal-title" class="bg-slate-900 border border-slate-700/80 text-slate-100 rounded-2xl shadow-2xl p-0 w-full max-w-2xl overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-950/60">
+      <div class="flex items-center gap-2.5">
+        <i data-lucide="image-plus" class="w-5 h-5 text-sky-400"></i>
+        <h3 id="media-modal-title" class="font-bold text-base text-white">Adicionar Imagem ou Vídeo (Livre para Esticar e Mover!)</h3>
+      </div>
+      <button onclick="document.getElementById('media-modal').close()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Fechar (Esc)">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <div class="p-6 space-y-6 max-h-[82vh] overflow-y-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div onclick="triggerFileUpload()" class="border-2 border-dashed border-slate-700 hover:border-sky-400 bg-slate-950/50 hover:bg-sky-950/20 rounded-xl p-5 text-center cursor-pointer transition group">
+          <i data-lucide="image-plus" class="w-9 h-9 text-slate-400 group-hover:text-sky-400 mx-auto mb-2 transition"></i>
+          <p class="text-sm font-semibold text-white mb-1">Escolher Imagem / Print do PC</p>
+          <p class="text-xs text-slate-400">Ou aperte <kbd class="px-1.5 py-0.5 bg-slate-800 rounded">Ctrl+V</kbd> direto no slide</p>
+        </div>
+
+        <div onclick="triggerVideoUpload()" class="border-2 border-dashed border-slate-700 hover:border-purple-400 bg-slate-950/50 hover:bg-purple-950/20 rounded-xl p-5 text-center cursor-pointer transition group">
+          <i data-lucide="video" class="w-9 h-9 text-slate-400 group-hover:text-purple-400 mx-auto mb-2 transition"></i>
+          <p class="text-sm font-semibold text-white mb-1">Escolher Vídeo (.mp4 / .webm)</p>
+          <p class="text-xs text-slate-400">Ideal para vídeo de demonstração da plataforma!</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="text-xs font-mono uppercase tracking-wider text-emerald-400 mb-2">Diagramas e Mapas do Projeto (1 Clique — Já abre Grande!)</div>
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <button onclick="insertCanvasImage('Camadas_Ciberespaco_HFI.svg', true)" class="group text-left bg-slate-950/80 border border-slate-800 hover:border-sky-500/60 rounded-xl p-2.5 transition flex flex-col gap-2">
+            <div class="aspect-video w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
+              <img src="Camadas_Ciberespaco_HFI.svg" alt="Camadas do Ciberespaço" class="w-full h-full object-contain group-hover:scale-105 transition">
+            </div>
+            <div class="text-xs font-semibold text-slate-200 group-hover:text-sky-300 truncate">3 Camadas Ciberespaço</div>
+          </button>
+
+          <button onclick="insertCanvasImage('Cenario_Netuno_Slide_Com_Fases.jpg', true)" class="group text-left bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 rounded-xl p-2.5 transition flex flex-col gap-2">
+            <div class="aspect-video w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
+              <img src="Cenario_Netuno_Slide_Com_Fases.jpg" alt="Netuno com Fases" class="w-full h-full object-cover group-hover:scale-105 transition">
+            </div>
+            <div class="text-xs font-semibold text-slate-200 group-hover:text-emerald-300 truncate">Mapa Netuno (Com Fases)</div>
+          </button>
+
+          <button onclick="insertCanvasImage('Cenario_Netuno_Slide_Sem_Fases.jpg', true)" class="group text-left bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 rounded-xl p-2.5 transition flex flex-col gap-2">
+            <div class="aspect-video w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
+              <img src="Cenario_Netuno_Slide_Sem_Fases.jpg" alt="Netuno sem Fases" class="w-full h-full object-cover group-hover:scale-105 transition">
+            </div>
+            <div class="text-xs font-semibold text-slate-200 group-hover:text-emerald-300 truncate">Mapa Netuno (Sem Fases)</div>
+          </button>
+
+          <button onclick="insertCanvasImage('Cenario_Operacao_Netuno_Slide.jpg', true)" class="group text-left bg-slate-950/80 border border-slate-800 hover:border-emerald-500/60 rounded-xl p-2.5 transition flex flex-col gap-2">
+            <div class="aspect-video w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800">
+              <img src="Cenario_Operacao_Netuno_Slide.jpg" alt="Operação Netuno" class="w-full h-full object-cover group-hover:scale-105 transition">
+            </div>
+            <div class="text-xs font-semibold text-slate-200 group-hover:text-emerald-300 truncate">Diagrama Operação Netuno</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Zona discreta no canto inferior direito para voltar do Modo Apresentação -->
+  <div id="present-hover-zone">
+    <button onclick="setPresentationMode(false)" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/95 border border-sky-500/50 text-sky-300 text-xs font-mono shadow-2xl">
+      <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+      Voltar (Esc)
+    </button>
+  </div>
+
+  <!-- =====================================================
+       BARRA FLUTUANTE DE CONTROLE INFERIOR
+       ===================================================== -->
+  <nav id="floating-dock" class="fixed bottom-4 right-5 z-40 flex items-center gap-1.5 bg-slate-900/95 backdrop-blur-md border border-slate-700/80 px-3 py-1.5 rounded-full shadow-2xl transition-all duration-300">
+    
+    <button id="dock-drag-handle" class="drag-handle p-1 text-slate-500 hover:text-slate-300 rounded focus:outline-none" aria-label="Mover barra de ferramentas" title="Arraste para mover esta barra">
+      <i data-lucide="grip-vertical" class="w-3.5 h-3.5 pointer-events-none"></i>
+    </button>
+
+    <button onclick="prevSlide()" id="btn-prev" class="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition disabled:opacity-30" title="Slide Anterior (⬅)">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>
+    </button>
+    
+    <span id="slide-indicator" class="font-mono text-xs font-semibold text-slate-200 px-1.5">1 / 14</span>
+    
+    <button onclick="nextSlide()" id="btn-next" class="p-1.5 rounded-full text-slate-300 hover:text-white hover:bg-slate-800 transition disabled:opacity-30" title="Próximo Slide (➡)">
+      <i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
+
+    <div class="h-4 w-px bg-slate-800 mx-0.5"></div>
+
+    <!-- BOTÃO SALVAR / OCULTAR PONTILHADO -->
+    <button onclick="toggleEditingMode()" id="btn-toggle-edit" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30 transition" title="Clique para salvar e sumir com o pontilhadinho">
+      <i id="icon-toggle-edit" data-lucide="check-circle-2" class="w-3.5 h-3.5 text-sky-400"></i>
+      <span id="label-toggle-edit">Salvar (Sumir Pontilhado)</span>
+    </button>
+
+    <!-- BOTÃO APRESENTAR -->
+    <button onclick="startPresentation()" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition shadow" title="Oculta todos os botões flutuantes e abre em Tela Cheia para o projetor (Use Esc para voltar)">
+      <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+      <span>Apresentar</span>
+    </button>
+
+    <div class="edit-only h-4 w-px bg-slate-800 mx-0.5"></div>
+
+    <!-- ADD FORMATTED DOTTED TEXT BLOCK -->
+    <button onclick="openTextPresetModal()" class="edit-only flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-sky-500/15 text-sky-300 hover:bg-sky-500/25 border border-sky-500/30 transition" title="Criar novo pontilhadinho já formatado (sem fundo!)">
+      <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-sky-400"></i>
+      <span>+ Pontilhado</span>
+    </button>
+
+    <!-- ADD IMAGE / VIDEO BUTTON -->
+    <button onclick="openMediaModal()" class="edit-only flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/30 transition" title="Adicionar imagem ou vídeo (ou aperte Ctrl+V / arraste arquivo)">
+      <i data-lucide="image-plus" class="w-3.5 h-3.5 text-emerald-400"></i>
+      <span>+ Imagem / Vídeo</span>
+    </button>
+
+    <!-- ADD BLANK SLIDE -->
+    <button onclick="createBlankSlide()" class="edit-only flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-purple-500/15 text-purple-300 hover:bg-purple-500/25 border border-purple-500/30 transition" title="Criar novo slide 100% em branco">
+      <i data-lucide="file-plus" class="w-3.5 h-3.5 text-purple-400"></i>
+      <span>+ Slide</span>
+    </button>
+
+    <!-- DELETE CURRENT SLIDE -->
+    <button onclick="deleteCurrentSlide()" class="edit-only p-1.5 rounded-full text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition" title="Excluir este slide">
+      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+    </button>
+
+    <div class="h-4 w-px bg-slate-800 mx-0.5"></div>
+
+    <!-- SAVE STANDALONE HTML -->
+    <button onclick="exportStandaloneHTML()" class="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 transition" title="Baixar arquivo HTML único com tudo salvo">
+      <i data-lucide="download" class="w-3.5 h-3.5 text-amber-400"></i>
+      <span class="hidden md:inline">Baixar HTML</span>
+    </button>
+
+    <!-- Reset -->
+    <button onclick="resetEdits()" class="p-1.5 rounded-full text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition" title="Restaurar apresentação v3 original">
+      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+    </button>
+  </nav>
+
+  <!-- Subtle Toast Feedback -->
+  <div id="toast" class="fixed bottom-16 right-6 z-50 bg-slate-900/95 border border-sky-500/50 text-slate-100 px-4 py-2 rounded-full text-xs font-mono shadow-2xl pointer-events-none transition-opacity duration-300 opacity-0">
+    Apresentação v3 carregada!
+  </div>
+
+  <script>
+    const DB_NAME = 'DisarmFreeCanvasDB_v3_Clean';
+    const STORE_NAME = 'deck_state';
+    const STATE_KEY = 'active_deck_v3_clean';
+
+    let current = 0;
+    let editing = true;
+    let slides = [];
+    let selectedCanvasItemId = null;
+    let selectedDomNode = null;
+
+    const TEXT_PRESETS = {
+      tag: {
+        w: 45, h: 6,
+        html: `<div class="font-mono text-sm uppercase tracking-widest text-sky-400">01 / SEÇÃO OU TÓPICO</div>`
+      },
+      h1: {
+        w: 75, h: 18,
+        html: `<div class="text-6xl sm:text-7xl font-extrabold tracking-tight text-white leading-none">TÍTULO EM DESTAQUE</div>`
+      },
+      h2: {
+        w: 80, h: 14,
+        html: `<div class="text-4xl sm:text-5xl font-bold text-white leading-tight">Título Principal do Slide</div>`
+      },
+      h3: {
+        w: 45, h: 10,
+        html: `<div class="text-2xl font-bold text-white">Subtítulo em Negrito</div>`
+      },
+      body: {
+        w: 65, h: 16,
+        html: `<div class="text-lg sm:text-xl text-slate-300 font-light leading-relaxed">Digite seu texto aqui. O fundo é 100% transparente e este pontilhado some ao clicar em Salvar.</div>`
+      },
+      phase: {
+        w: 28, h: 26,
+        html: `<div><div class="font-mono text-sm text-sky-400 font-bold mb-1">FASE 1 • CÓDIGO</div><div class="text-xl font-bold text-white mb-2">Título da Etapa</div><div class="text-base text-slate-300 leading-relaxed">Descrição técnica desta fase ou vetor operacional no slide.</div></div>`
+      },
+      callout: {
+        w: 85, h: 12,
+        html: `<div class="flex items-center gap-4 text-emerald-300 bg-emerald-950/25 border-l-4 border-emerald-400 pl-5 py-3"><div class="text-lg text-slate-200"><strong class="text-emerald-400">Destaque:</strong> Digite aqui a conclusão ou síntese em destaque.</div></div>`
+      }
+    };
+
+    let canvasState = {
+      'slide-netuno-map': [
+        {
+          id: 'item-netuno-default',
+          type: 'image',
+          src: 'Cenario_Netuno_Slide_Com_Fases.jpg',
+          x: 2,
+          y: 3,
+          w: 96,
+          h: 94,
+          stretch: false,
+          zIndex: 20
+        }
+      ]
+    };
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME);
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveToDB(payload) {
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).put(payload, STATE_KEY);
+      } catch (e) {}
+    }
+
+    async function loadFromDB() {
+      try {
+        const db = await openDB();
+        return new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const req = tx.objectStore(STORE_NAME).get(STATE_KEY);
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function clearDB() {
+      try {
+        const db = await openDB();
+        const tx = db.transaction(STORE_NAME, 'readwrite');
+        tx.objectStore(STORE_NAME).delete(STATE_KEY);
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (window.__EMBEDDED_DECK_STATE__) {
+        await applySavedState(window.__EMBEDDED_DECK_STATE__);
+      } else {
+        const saved = await loadFromDB();
+        if (saved) {
+          await applySavedState(saved);
+        }
+      }
+
+      refreshSlideList();
+      renderAllCanvasItems();
+      renderSlide();
+      initDragDock();
+      initGlobalEvents();
+      lucide.createIcons();
+    });
+
+    function refreshSlideList() {
+      slides = Array.from(document.querySelectorAll('.slide'));
+      slides.forEach((s, i) => {
+        if (!s.getAttribute('data-slide-id')) {
+          s.setAttribute('data-slide-id', 'slide-' + (i + 1));
+        }
+      });
+      document.querySelectorAll('[data-edit="true"]').forEach((el, idx) => {
+        if (!el.getAttribute('data-id')) {
+          el.setAttribute('data-id', 'node-' + idx);
+        }
+        el.oninput = () => persistDeckState();
+        el.onclick = (e) => {
+          if (!editing) return;
+          e.stopPropagation();
+          selectStaticDomNode(el);
+        };
+      });
+    }
+
+    function getActiveSlideId() {
+      return slides[current]?.getAttribute('data-slide-id') || 'slide-1';
+    }
+
+    function renderAllCanvasItems() {
+      slides.forEach(s => renderSlideCanvas(s.getAttribute('data-slide-id')));
+      lucide.createIcons();
+    }
+
+    function renderSlideCanvas(slideId) {
+      const slide = document.querySelector(`.slide[data-slide-id="${slideId}"]`);
+      if (!slide) return;
+
+      slide.querySelectorAll('.canvas-item').forEach(el => el.remove());
+
+      const items = canvasState[slideId] || [];
+      items.forEach((item) => {
+        const el = document.createElement('div');
+        el.className = `canvas-item ${selectedCanvasItemId === item.id ? 'selected' : ''}`;
+        el.setAttribute('data-item-id', item.id);
+        el.style.left = `${item.x}%`;
+        el.style.top = `${item.y}%`;
+        el.style.width = `${item.w}%`;
+        el.style.height = `${item.h}%`;
+        el.style.zIndex = item.zIndex || 25;
+
+        const gripHTML = `
+          <div class="move-grip" title="Segure aqui para arrastar este pontilhado para onde quiser">
+            <i data-lucide="move" class="w-3 h-3 pointer-events-none"></i> Arrastar
+          </div>
+        `;
+
+        const handlesHTML = `
+          <div class="resize-handle nw" data-dir="nw"></div>
+          <div class="resize-handle n"  data-dir="n"></div>
+          <div class="resize-handle ne" data-dir="ne"></div>
+          <div class="resize-handle e"  data-dir="e"></div>
+          <div class="resize-handle se" data-dir="se"></div>
+          <div class="resize-handle s"  data-dir="s"></div>
+          <div class="resize-handle sw" data-dir="sw"></div>
+          <div class="resize-handle w"  data-dir="w"></div>
+        `;
+
+        if (item.type === 'image') {
+          el.innerHTML = `
+            ${gripHTML}
+            ${handlesHTML}
+            <img
+              src="${item.src}"
+              alt="Imagem do Slide"
+              draggable="false"
+              class="w-full h-full rounded pointer-events-none select-none ${item.stretch ? 'object-fill' : 'object-contain'}"
+            >
+          `;
+        } else if (item.type === 'video') {
+          el.innerHTML = `
+            ${gripHTML}
+            ${handlesHTML}
+            <video
+              src="${item.src}"
+              controls
+              class="w-full h-full rounded-xl bg-black ${item.stretch ? 'object-fill' : 'object-contain'}"
+            ></video>
+          `;
+        } else if (item.type === 'text') {
+          el.innerHTML = `
+            ${gripHTML}
+            ${handlesHTML}
+            <div
+              class="canvas-text-editable w-full h-full outline-none overflow-visible"
+              contenteditable="${editing ? 'true' : 'false'}"
+              style="${item.fontSize ? `font-size: ${item.fontSize}px;` : ''} ${item.color ? `color: ${item.color};` : ''}"
+            >${item.html}</div>
+          `;
+        }
+
+        slide.appendChild(el);
+        attachCanvasItemInteractions(el, slide, slideId, item);
+      });
+
+      lucide.createIcons();
+    }
+
+    function attachCanvasItemInteractions(el, slide, slideId, item) {
+      const grip = el.querySelector('.move-grip');
+      const textEditable = el.querySelector('.canvas-text-editable');
+
+      if (textEditable) {
+        textEditable.addEventListener('input', () => {
+          item.html = textEditable.innerHTML;
+          persistDeckState();
+        });
+        textEditable.addEventListener('pointerdown', (e) => {
+          if (!editing) return;
+          e.stopPropagation();
+          selectCanvasItem(slideId, item.id);
+        });
+      }
+
+      const startMove = (e) => {
+        if (!editing || e.button !== 0) return;
+        e.stopPropagation();
+        selectCanvasItem(slideId, item.id);
+
+        const slideRect = slide.getBoundingClientRect();
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const origX = item.x;
+        const origY = item.y;
+
+        const targetCapture = e.currentTarget;
+        targetCapture.setPointerCapture(e.pointerId);
+
+        const onMove = (moveEvent) => {
+          if (!targetCapture.hasPointerCapture(moveEvent.pointerId)) return;
+          const dxPct = ((moveEvent.clientX - startX) / slideRect.width) * 100;
+          const dyPct = ((moveEvent.clientY - startY) / slideRect.height) * 100;
+
+          item.x = Math.max(-5, Math.min(96, origX + dxPct));
+          item.y = Math.max(0, Math.min(96, origY + dyPct));
+
+          el.style.left = `${item.x}%`;
+          el.style.top = `${item.y}%`;
+        };
+
+        const onUp = () => {
+          targetCapture.removeEventListener('pointermove', onMove);
+          targetCapture.removeEventListener('lostpointercapture', onUp);
+          persistDeckState();
+        };
+
+        targetCapture.addEventListener('pointermove', onMove);
+        targetCapture.addEventListener('lostpointercapture', onUp);
+      };
+
+      if (grip) grip.addEventListener('pointerdown', startMove);
+
+      if (item.type === 'image') {
+        el.addEventListener('pointerdown', (e) => {
+          if (e.target.classList.contains('resize-handle')) return;
+          startMove(e);
+        });
+      }
+
+      el.querySelectorAll('.resize-handle').forEach(handle => {
+        handle.addEventListener('pointerdown', (e) => {
+          if (!editing) return;
+          e.stopPropagation();
+          selectCanvasItem(slideId, item.id);
+
+          const dir = handle.getAttribute('data-dir');
+          const slideRect = slide.getBoundingClientRect();
+          const startX = e.clientX;
+          const startY = e.clientY;
+          const orig = { x: item.x, y: item.y, w: item.w, h: item.h };
+
+          if (['n', 's', 'e', 'w'].includes(dir) && item.type === 'image' && !item.stretch) {
+            item.stretch = true;
+            const img = el.querySelector('img');
+            if (img) {
+              img.classList.remove('object-contain');
+              img.classList.add('object-fill');
+            }
+          }
+
+          handle.setPointerCapture(e.pointerId);
+
+          const onMove = (moveEvent) => {
+            if (!handle.hasPointerCapture(moveEvent.pointerId)) return;
+            const dxPct = ((moveEvent.clientX - startX) / slideRect.width) * 100;
+            const dyPct = ((moveEvent.clientY - startY) / slideRect.height) * 100;
+
+            let newX = orig.x;
+            let newY = orig.y;
+            let newW = orig.w;
+            let newH = orig.h;
+
+            if (dir.includes('e')) newW = Math.max(6, orig.w + dxPct);
+            if (dir.includes('s')) newH = Math.max(4, orig.h + dyPct);
+            if (dir.includes('w')) {
+              const possibleW = orig.w - dxPct;
+              if (possibleW >= 6) {
+                newW = possibleW;
+                newX = orig.x + dxPct;
+              }
+            }
+            if (dir.includes('n')) {
+              const possibleH = orig.h - dyPct;
+              if (possibleH >= 4) {
+                newH = possibleH;
+                newY = orig.y + dyPct;
+              }
+            }
+
+            item.x = newX;
+            item.y = newY;
+            item.w = newW;
+            item.h = newH;
+
+            el.style.left = `${item.x}%`;
+            el.style.top = `${item.y}%`;
+            el.style.width = `${item.w}%`;
+            el.style.height = `${item.h}%`;
+          };
+
+          const onUp = () => {
+            handle.removeEventListener('pointermove', onMove);
+            handle.removeEventListener('lostpointercapture', onUp);
+            persistDeckState();
+            updateInspectorUI();
+          };
+
+          handle.addEventListener('pointermove', onMove);
+          handle.addEventListener('lostpointercapture', onUp);
+        });
+      });
+    }
+
+    function selectCanvasItem(slideId, itemId) {
+      selectedCanvasItemId = itemId;
+      selectedDomNode = null;
+      document.querySelectorAll('.canvas-item').forEach(el => {
+        el.classList.toggle('selected', el.getAttribute('data-item-id') === itemId);
+      });
+      updateInspectorUI();
+    }
+
+    function selectStaticDomNode(domEl) {
+      selectedDomNode = domEl;
+      selectedCanvasItemId = null;
+      document.querySelectorAll('.canvas-item.selected').forEach(el => el.classList.remove('selected'));
+      updateInspectorUI();
+    }
+
+    function clearSelection() {
+      selectedCanvasItemId = null;
+      selectedDomNode = null;
+      document.querySelectorAll('.canvas-item.selected').forEach(el => el.classList.remove('selected'));
+      updateInspectorUI();
+    }
+
+    function updateInspectorUI() {
+      const inspector = document.getElementById('format-inspector');
+      const txtControls = document.getElementById('inspector-text-controls');
+      const boxControls = document.getElementById('inspector-box-controls');
+      const stretchBtn = document.getElementById('btn-stretch-toggle');
+
+      if (!editing || (!selectedCanvasItemId && !selectedDomNode)) {
+        inspector.classList.add('hidden');
+        inspector.classList.remove('flex');
+        return;
+      }
+
+      inspector.classList.remove('hidden');
+      inspector.classList.add('flex');
+
+      if (selectedDomNode) {
+        txtControls.classList.remove('hidden');
+        txtControls.classList.add('flex');
+        boxControls.classList.add('hidden');
+        boxControls.classList.remove('flex');
+      } else if (selectedCanvasItemId) {
+        const slideId = getActiveSlideId();
+        const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+        if (!item) return;
+
+        boxControls.classList.remove('hidden');
+        boxControls.classList.add('flex');
+
+        if (item.type === 'text') {
+          txtControls.classList.remove('hidden');
+          txtControls.classList.add('flex');
+          stretchBtn.classList.add('hidden');
+        } else {
+          txtControls.classList.add('hidden');
+          txtControls.classList.remove('flex');
+          stretchBtn.classList.remove('hidden');
+          stretchBtn.textContent = item.stretch ? '🔓 Esticado' : '🔒 Proporcional';
+        }
+      }
+    }
+
+    function getSelectedTargetElement() {
+      if (selectedDomNode) return selectedDomNode;
+      if (selectedCanvasItemId) {
+        return document.querySelector(`.canvas-item[data-item-id="${selectedCanvasItemId}"] .canvas-text-editable`);
+      }
+      return null;
+    }
+
+    function changeSelectedFontSize(delta) {
+      const target = getSelectedTargetElement();
+      if (!target) return;
+      const targetNode = target.firstElementChild || target;
+      const currentPx = parseFloat(window.getComputedStyle(targetNode).fontSize) || 20;
+      const nextPx = Math.max(10, Math.min(120, currentPx + delta));
+      targetNode.style.fontSize = `${nextPx}px`;
+      targetNode.style.lineHeight = '1.25';
+
+      if (selectedCanvasItemId) {
+        const slideId = getActiveSlideId();
+        const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+        if (item) item.html = target.innerHTML;
+      }
+      persistDeckState();
+    }
+
+    function changeSelectedColor(hex) {
+      const target = getSelectedTargetElement();
+      if (!target) return;
+      const targetNode = target.firstElementChild || target;
+      targetNode.style.color = hex;
+
+      if (selectedCanvasItemId) {
+        const slideId = getActiveSlideId();
+        const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+        if (item) item.html = target.innerHTML;
+      }
+      persistDeckState();
+    }
+
+    function applyPresetStyleToSelected(presetKey) {
+      if (!presetKey || !TEXT_PRESETS[presetKey]) return;
+      const target = getSelectedTargetElement();
+      if (!target) return;
+      const plainText = target.innerText.trim() || 'Texto Formatado';
+
+      const temp = document.createElement('div');
+      temp.innerHTML = TEXT_PRESETS[presetKey].html;
+      if (presetKey !== 'phase' && presetKey !== 'callout') {
+        temp.firstElementChild.innerText = plainText;
+      }
+
+      if (selectedDomNode) {
+        selectedDomNode.innerHTML = temp.innerHTML;
+      } else if (selectedCanvasItemId) {
+        const slideId = getActiveSlideId();
+        const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+        if (item) {
+          item.html = temp.innerHTML;
+          renderSlideCanvas(slideId);
+        }
+      }
+      persistDeckState();
+      notify('Formatação do modelo aplicada ao pontilhado!');
+    }
+
+    function presetSelectedBox(mode) {
+      if (!selectedCanvasItemId) return;
+      const slideId = getActiveSlideId();
+      const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+      if (!item) return;
+
+      if (mode === 'full') {
+        item.x = 1.5; item.y = 2; item.w = 97; item.h = 95;
+      } else if (mode === 'left') {
+        item.x = 3; item.y = 8; item.w = 45; item.h = 84;
+      } else if (mode === 'right') {
+        item.x = 52; item.y = 8; item.w = 45; item.h = 84;
+      }
+      renderSlideCanvas(slideId);
+      persistDeckState();
+    }
+
+    function toggleSelectedStretch() {
+      if (!selectedCanvasItemId) return;
+      const slideId = getActiveSlideId();
+      const item = (canvasState[slideId] || []).find(i => i.id === selectedCanvasItemId);
+      if (!item) return;
+      item.stretch = !item.stretch;
+      renderSlideCanvas(slideId);
+      updateInspectorUI();
+      persistDeckState();
+    }
+
+    function duplicateSelectedElement() {
+      const slideId = getActiveSlideId();
+      if (!canvasState[slideId]) canvasState[slideId] = [];
+
+      if (selectedCanvasItemId) {
+        const orig = canvasState[slideId].find(i => i.id === selectedCanvasItemId);
+        if (!orig) return;
+        const copy = JSON.parse(JSON.stringify(orig));
+        copy.id = 'item-' + Date.now();
+        copy.x = Math.min(85, orig.x + 4);
+        copy.y = Math.min(85, orig.y + 4);
+        canvasState[slideId].push(copy);
+        selectedCanvasItemId = copy.id;
+        renderSlideCanvas(slideId);
+        persistDeckState();
+        notify('Pontilhado duplicado! Arraste pela alça "Arrastar" para onde quiser.');
+      } else if (selectedDomNode) {
+        const slideRect = slides[current].getBoundingClientRect();
+        const nodeRect = selectedDomNode.getBoundingClientRect();
+        const wPct = Math.max(20, Math.round((nodeRect.width / slideRect.width) * 100));
+        const hPct = Math.max(8, Math.round((nodeRect.height / slideRect.height) * 100));
+
+        const cloneNode = selectedDomNode.cloneNode(true);
+        cloneNode.removeAttribute('data-id');
+        cloneNode.removeAttribute('data-edit');
+        cloneNode.removeAttribute('contenteditable');
+
+        const newItem = {
+          id: 'txt-' + Date.now(),
+          type: 'text',
+          html: cloneNode.outerHTML,
+          x: Math.min(80, Math.round(((nodeRect.left - slideRect.left) / slideRect.width) * 100) + 3),
+          y: Math.min(80, Math.round(((nodeRect.top - slideRect.top) / slideRect.height) * 100) + 4),
+          w: wPct,
+          h: hPct,
+          zIndex: 30
+        };
+        canvasState[slideId].push(newItem);
+        selectCanvasItem(slideId, newItem.id);
+        renderSlideCanvas(slideId);
+        persistDeckState();
+        notify('Cópia livre criada! Agora você pode arrastá-la e esticá-la para onde quiser.');
+      }
+    }
+
+    function deleteSelectedElement() {
+      const slideId = getActiveSlideId();
+      if (selectedCanvasItemId) {
+        canvasState[slideId] = (canvasState[slideId] || []).filter(i => i.id !== selectedCanvasItemId);
+        clearSelection();
+        renderSlideCanvas(slideId);
+        persistDeckState();
+        notify('Pontilhado removido.');
+      } else if (selectedDomNode) {
+        selectedDomNode.innerHTML = '';
+        selectedDomNode.style.display = 'none';
+        clearSelection();
+        persistDeckState();
+        notify('Bloco ocultado.');
+      }
+    }
+
+    function openTextPresetModal() {
+      document.getElementById('text-preset-modal').showModal();
+    }
+
+    async function addFormattedTextBlock(presetKey = 'body') {
+      const modal = document.getElementById('text-preset-modal');
+      if (modal.open) modal.close();
+
+      if (!editing) toggleEditingMode();
+
+      const slideId = getActiveSlideId();
+      if (!canvasState[slideId]) canvasState[slideId] = [];
+
+      const preset = TEXT_PRESETS[presetKey] || TEXT_PRESETS.body;
+      const offset = (canvasState[slideId].length % 5) * 3;
+
+      const newItem = {
+        id: 'txt-' + Date.now(),
+        type: 'text',
+        html: preset.html,
+        x: 10 + offset,
+        y: 18 + offset,
+        w: preset.w,
+        h: preset.h,
+        zIndex: 30
+      };
+
+      canvasState[slideId].push(newItem);
+      renderSlideCanvas(slideId);
+      selectCanvasItem(slideId, newItem.id);
+      await persistDeckState();
+      notify('Pontilhado criado (sem fundo)! Arraste pela alça "Arrastar" e puxe pelas bolinhas.');
+    }
+
+    function openMediaModal() {
+      document.getElementById('media-modal').showModal();
+    }
+
+    function triggerFileUpload() {
+      document.getElementById('image-file-input').click();
+    }
+
+    function triggerVideoUpload() {
+      document.getElementById('video-file-input').click();
+    }
+
+    document.getElementById('image-file-input').addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+
+      const modal = document.getElementById('media-modal');
+      if (modal.open) modal.close();
+
+      const isBlank = slides[current]?.getAttribute('data-blank-slide') === 'true';
+      for (const file of files) {
+        if (!file.type.startsWith('image/')) continue;
+        const dataUrl = await readFileAsHighResDataURL(file);
+        await insertCanvasImage(dataUrl, isBlank);
+      }
+      e.target.value = '';
+    });
+
+    document.getElementById('video-file-input').addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const modal = document.getElementById('media-modal');
+      if (modal.open) modal.close();
+
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        if (!editing) toggleEditingMode();
+        const slideId = getActiveSlideId();
+        if (!canvasState[slideId]) canvasState[slideId] = [];
+
+        const newItem = {
+          id: 'vid-' + Date.now(),
+          type: 'video',
+          src: ev.target.result,
+          x: 6,
+          y: 18,
+          w: 88,
+          h: 75,
+          stretch: false,
+          zIndex: 28
+        };
+
+        canvasState[slideId].push(newItem);
+        renderSlideCanvas(slideId);
+        selectCanvasItem(slideId, newItem.id);
+        await persistDeckState();
+        notify('Vídeo inserido! Puxe pelas bolinhas azuis para ajustar o tamanho.');
+      };
+      reader.readAsDataURL(file);
+      e.target.value = '';
+    });
+
+    async function insertCanvasImage(src, makeFullscreen = false) {
+      if (!editing) toggleEditingMode();
+      const slideId = getActiveSlideId();
+      if (!canvasState[slideId]) canvasState[slideId] = [];
+
+      const newItem = {
+        id: 'img-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+        type: 'image',
+        src: src,
+        x: makeFullscreen ? 4 : 20,
+        y: makeFullscreen ? 14 : 10,
+        w: makeFullscreen ? 92 : 70,
+        h: makeFullscreen ? 80 : 78,
+        stretch: false,
+        zIndex: 22
+      };
+
+      canvasState[slideId].push(newItem);
+      renderSlideCanvas(slideId);
+      selectCanvasItem(slideId, newItem.id);
+      await persistDeckState();
+
+      const modal = document.getElementById('media-modal');
+      if (modal.open) modal.close();
+
+      notify('Imagem inserida! Puxe pelas bolinhas azuis para esticar ou clique em "Salvar (Sumir Pontilhado)".');
+    }
+
+    function readFileAsHighResDataURL(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const MAX_W = 2400;
+            const MAX_H = 1600;
+            let { width, height } = img;
+            if (width <= MAX_W && height <= MAX_H && file.size < 2000000) {
+              resolve(e.target.result);
+              return;
+            }
+            const ratio = Math.min(MAX_W / width, MAX_H / height, 1);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', 0.92));
+          };
+          img.onerror = () => resolve(e.target.result);
+          img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function toggleEditingMode() {
+      editing = !editing;
+      document.body.classList.toggle('editing', editing);
+      clearSelection();
+
+      document.querySelectorAll('[data-edit="true"]').forEach(el => {
+        el.setAttribute('contenteditable', editing ? 'true' : 'false');
+      });
+
+      renderAllCanvasItems();
+      await persistDeckState();
+
+      const btn = document.getElementById('btn-toggle-edit');
+      const label = document.getElementById('label-toggle-edit');
+
+      if (editing) {
+        label.textContent = 'Salvar (Sumir Pontilhado)';
+        btn.className = 'flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-sky-500/20 text-sky-300 border border-sky-500/40 hover:bg-sky-500/30 transition';
+        notify('Modo Edição: os pontilhados voltaram para você editar, mover ou esticar.');
+      } else {
+        label.textContent = 'Editar (Mostrar Pontilhado)';
+        btn.className = 'flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition';
+        notify('Salvo! Todos os pontilhados sumiram e o slide está 100% limpo.');
+      }
+    }
+
+    function startPresentation() {
+      setPresentationMode(true);
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+    }
+
+    function setPresentationMode(present) {
+      if (present) {
+        editing = false;
+        document.body.classList.remove('editing');
+        document.body.classList.add('presenting');
+        clearSelection();
+      } else {
+        document.body.classList.remove('presenting');
+        const label = document.getElementById('label-toggle-edit');
+        if (label) label.textContent = 'Editar (Mostrar Pontilhado)';
+      }
+
+      document.querySelectorAll('[data-edit="true"]').forEach(el => {
+        el.setAttribute('contenteditable', editing ? 'true' : 'false');
+      });
+      renderAllCanvasItems();
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && document.body.classList.contains('presenting')) {
+        setPresentationMode(false);
+      }
+    });
+
+    async function createBlankSlide() {
+      const newSlideId = 'slide-blank-' + Date.now();
+      const currentSlide = slides[current];
+      const newSection = document.createElement('section');
+      newSection.className = 'slide';
+      newSection.setAttribute('data-title', 'Slide Livre');
+      newSection.setAttribute('data-slide-id', newSlideId);
+      newSection.setAttribute('data-custom-slide', 'true');
+      newSection.setAttribute('data-blank-slide', 'true');
+
+      newSection.innerHTML = `
+        <div class="edit-only pointer-events-none m-auto text-center opacity-30 select-none">
+          <p class="font-mono text-xs text-sky-400 uppercase tracking-widest mb-1">SLIDE LIVRE — USE "+ PONTILHADO" OU "+ IMAGEM / VÍDEO"</p>
+        </div>
+      `;
+
+      currentSlide.insertAdjacentElement('afterend', newSection);
+      refreshSlideList();
+      current = slides.indexOf(newSection);
+      renderSlide();
+      await persistDeckState();
+      notify('Slide limpo criado! Clique em "+ Pontilhado" ou "+ Imagem / Vídeo".');
+    }
+
+    async function deleteCurrentSlide() {
+      if (slides.length <= 1) return;
+      const slide = slides[current];
+      const slideId = slide.getAttribute('data-slide-id');
+      delete canvasState[slideId];
+      slide.remove();
+      refreshSlideList();
+      if (current >= slides.length) current = slides.length - 1;
+      renderSlide();
+      await persistDeckState();
+      notify('Slide removido.');
+    }
+
+    function initGlobalEvents() {
+      document.addEventListener('pointerdown', (e) => {
+        if (!e.target.closest('.canvas-item') &&
+            !e.target.closest('[data-edit="true"]') &&
+            !e.target.closest('#floating-dock') &&
+            !e.target.closest('#format-inspector') &&
+            !e.target.closest('dialog')) {
+          clearSelection();
+        }
+      });
+
+      window.addEventListener('paste', async (e) => {
+        const items = Array.from(e.clipboardData?.items || []);
+        const imageFiles = items
+          .filter(item => item.type.startsWith('image/'))
+          .map(item => item.getAsFile())
+          .filter(Boolean);
+
+        if (imageFiles.length > 0) {
+          e.preventDefault();
+          const isBlank = slides[current]?.getAttribute('data-blank-slide') === 'true';
+          for (const file of imageFiles) {
+            const dataUrl = await readFileAsHighResDataURL(file);
+            await insertCanvasImage(dataUrl, isBlank);
+          }
+        }
+      });
+
+      window.addEventListener('dragover', (e) => {
+        if (e.dataTransfer?.types?.includes('Files')) {
+          e.preventDefault();
+          slides[current]?.classList.add('drag-over');
+        }
+      });
+
+      window.addEventListener('dragleave', (e) => {
+        if (e.relatedTarget === null || !document.body.contains(e.relatedTarget)) {
+          slides.forEach(s => s.classList.remove('drag-over'));
+        }
+      });
+
+      window.addEventListener('drop', async (e) => {
+        slides.forEach(s => s.classList.remove('drag-over'));
+        const files = Array.from(e.dataTransfer?.files || []);
+        const imgFiles = files.filter(f => f.type.startsWith('image/'));
+        const vidFiles = files.filter(f => f.type.startsWith('video/'));
+
+        if (imgFiles.length > 0) {
+          e.preventDefault();
+          const isBlank = slides[current]?.getAttribute('data-blank-slide') === 'true';
+          for (const file of imgFiles) {
+            const dataUrl = await readFileAsHighResDataURL(file);
+            await insertCanvasImage(dataUrl, isBlank);
+          }
+        }
+        if (vidFiles.length > 0) {
+          e.preventDefault();
+          const dt = new DataTransfer();
+          dt.items.add(vidFiles[0]);
+          const vInput = document.getElementById('video-file-input');
+          vInput.files = dt.files;
+          vInput.dispatchEvent(new Event('change'));
+        }
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+          e.preventDefault();
+          if (editing) toggleEditingMode();
+          return;
+        }
+
+        if (e.key === 'Escape') {
+          if (document.body.classList.contains('presenting')) {
+            setPresentationMode(false);
+            return;
+          }
+          if (selectedCanvasItemId || selectedDomNode) {
+            clearSelection();
+            return;
+          }
+        }
+
+        const isTyping = document.activeElement?.getAttribute('contenteditable') === 'true' ||
+                         ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
+        if (isTyping) return;
+        if (document.getElementById('media-modal')?.open || document.getElementById('text-preset-modal')?.open) return;
+
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedCanvasItemId && editing) {
+          e.preventDefault();
+          deleteSelectedElement();
+          return;
+        }
+
+        if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        }
+      });
+    }
+
+    function initDragDock() {
+      const draggable = document.getElementById('floating-dock');
+      const handle = document.getElementById('dock-drag-handle');
+      if (!draggable || !handle) return;
+
+      let offsetX = 0;
+      let offsetY = 0;
+
+      handle.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        const rect = draggable.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        draggable.style.margin = '0';
+        handle.setPointerCapture(event.pointerId);
+      });
+
+      handle.addEventListener('pointermove', (event) => {
+        if (!handle.hasPointerCapture(event.pointerId)) return;
+        handle.classList.add('dragging');
+        const maxLeft = Math.max(0, window.innerWidth - draggable.offsetWidth);
+        const maxTop = Math.max(0, window.innerHeight - draggable.offsetHeight);
+        draggable.style.left = `${Math.max(0, Math.min(event.clientX - offsetX, maxLeft))}px`;
+        draggable.style.top = `${Math.max(0, Math.min(event.clientY - offsetY, maxTop))}px`;
+        draggable.style.right = 'auto';
+        draggable.style.bottom = 'auto';
+      });
+
+      handle.addEventListener('lostpointercapture', () => {
+        handle.classList.remove('dragging');
+      });
+    }
+
+    function renderSlide() {
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === current);
+      });
+      document.getElementById('slide-indicator').textContent = `${current + 1} / ${slides.length}`;
+      document.getElementById('progress-fill').style.width = `${((current + 1) / slides.length) * 100}%`;
+      document.getElementById('btn-prev').disabled = current === 0;
+      document.getElementById('btn-next').disabled = current === slides.length - 1;
+      clearSelection();
+    }
+
+    function nextSlide() {
+      if (current < slides.length - 1) {
+        current++;
+        renderSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (current > 0) {
+        current--;
+        renderSlide();
+      }
+    }
+
+    async function persistDeckState() {
+      const textData = {};
+      const styleData = {};
+      document.querySelectorAll('[data-edit="true"]').forEach(el => {
+        const id = el.getAttribute('data-id');
+        if (id) {
+          textData[id] = el.innerHTML;
+          styleData[id] = el.getAttribute('style') || '';
+        }
+      });
+
+      const slideOrder = slides.map(s => ({
+        slideId: s.getAttribute('data-slide-id'),
+        title: s.getAttribute('data-title') || 'Slide',
+        isCustom: s.getAttribute('data-custom-slide') === 'true',
+        isBlank: s.getAttribute('data-blank-slide') === 'true'
+      }));
+
+      await saveToDB({
+        textData,
+        styleData,
+        canvasState,
+        slideOrder
+      });
+    }
+
+    async function applySavedState(saved) {
+      if (!saved) return;
+
+      if (Array.isArray(saved.slideOrder)) {
+        const main = document.getElementById('slides-main');
+        saved.slideOrder.forEach((so, idx) => {
+          if (so.isCustom && !document.querySelector(`.slide[data-slide-id="${so.slideId}"]`)) {
+            const sec = document.createElement('section');
+            sec.className = 'slide';
+            sec.setAttribute('data-title', so.title);
+            sec.setAttribute('data-slide-id', so.slideId);
+            sec.setAttribute('data-custom-slide', 'true');
+            sec.setAttribute('data-blank-slide', 'true');
+            sec.innerHTML = `
+              <div class="edit-only pointer-events-none m-auto text-center opacity-30 select-none">
+                <p class="font-mono text-xs text-sky-400 uppercase tracking-widest mb-1">SLIDE LIVRE — USE "+ PONTILHADO" OU "+ IMAGEM / VÍDEO"</p>
+              </div>
+            `;
+            const ref = main.children[idx];
+            if (ref) main.insertBefore(sec, ref);
+            else main.appendChild(sec);
+          }
+        });
+      }
+
+      refreshSlideList();
+
+      if (saved.textData) {
+        Object.keys(saved.textData).forEach(id => {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el) el.innerHTML = saved.textData[id];
+        });
+      }
+
+      if (saved.styleData) {
+        Object.keys(saved.styleData).forEach(id => {
+          const el = document.querySelector(`[data-id="${id}"]`);
+          if (el && saved.styleData[id]) el.setAttribute('style', saved.styleData[id]);
+        });
+      }
+
+      if (saved.canvasState) {
+        canvasState = saved.canvasState;
+      }
+    }
+
+    async function resetEdits() {
+      if (!confirm('Restaurar a apresentação v3 padrão?')) return;
+      await clearDB();
+      location.reload();
+    }
+
+    async function exportStandaloneHTML() {
+      notify('Salvando arquivo HTML v3 único...');
+
+      for (const slideId of Object.keys(canvasState)) {
+        const items = canvasState[slideId] || [];
+        for (const item of items) {
+          if (item.type === 'image' && item.src && !item.src.startsWith('data:')) {
+            try {
+              const resp = await fetch(item.src);
+              const blob = await resp.blob();
+              item.src = await new Promise((res) => {
+                const r = new FileReader();
+                r.onload = () => res(r.result);
+                r.readAsDataURL(blob);
+              });
+            } catch (e) {}
+          }
+        }
+      }
+
+      clearSelection();
+      await persistDeckState();
+      const state = await loadFromDB();
+
+      const clone = document.documentElement.cloneNode(true);
+      const oldScript = clone.querySelector('#embedded-deck-state-script');
+      if (oldScript) oldScript.remove();
+
+      const embedScript = document.createElement('script');
+      embedScript.id = 'embedded-deck-state-script';
+      embedScript.textContent = `window.__EMBEDDED_DECK_STATE__ = ${JSON.stringify(state)};`;
+      clone.querySelector('head').appendChild(embedScript);
+
+      const htmlString = '<!DOCTYPE html>\n' + clone.outerHTML;
+      const blob = new Blob([htmlString], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Apresentacao_Executiva_DISARM_AI_v3_Pronta.html';
+      a.click();
+      URL.revokeObjectURL(url);
+      notify('HTML v3 único baixado com sucesso!');
+    }
+
+    function notify(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.remove('opacity-0');
+      t.classList.add('opacity-100');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        t.classList.remove('opacity-100');
+        t.classList.add('opacity-0');
+      }, 3600);
+    }
+  </script>
+
+</body>
+</html>
