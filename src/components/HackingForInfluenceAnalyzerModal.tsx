@@ -27,7 +27,7 @@ import {
 } from '../data/officialDisarmData';
 import { DisarmCampaign, DisarmTechnique, ThreatSeverity, ProcedureEvidence } from '../types/disarm';
 import { buildTacticsList } from '../utils/disarmParser';
-import { extractIocsFromText } from '../utils/iocExtractor';
+import { extractIocsFromText, extractIncidentMetadata } from '../utils/iocExtractor';
 
 interface HackingForInfluenceAnalyzerModalProps {
   isOpen: boolean;
@@ -59,8 +59,8 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
   // Form input state
   const [caseTitle, setCaseTitle] = useState('');
   const [threatActor, setThreatActor] = useState('');
-  const [targetRegions, setTargetRegions] = useState('Brasil, América Latina');
-  const [targetSectors, setTargetSectors] = useState('Governamental, Defesa, Mídia');
+  const [targetRegions, setTargetRegions] = useState('');
+  const [targetSectors, setTargetSectors] = useState('');
   const [incidentText, setIncidentText] = useState('');
   const [rawIocs, setRawIocs] = useState('');
 
@@ -74,8 +74,8 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
   const handleResetForm = () => {
     setCaseTitle('');
     setThreatActor('');
-    setTargetRegions('Brasil, América Latina');
-    setTargetSectors('Governamental, Defesa, Mídia');
+    setTargetRegions('');
+    setTargetSectors('');
     setIncidentText('');
     setRawIocs('');
     setProposedTtps([]);
@@ -120,7 +120,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
 
   // Automated heuristic pattern analysis engine across the DISARM Framework
   const handleAnalyze = () => {
-    // Se o analista não preencheu o campo de IOCs, extrair automaticamente da narrativa
+    // 1. Consolidação de IOCs (extrair da narrativa se o analista não tiver preenchido manualmente)
     let effectiveIocsText = rawIocs.trim();
     if (!effectiveIocsText && incidentText.trim()) {
       const autoExtracted = extractIocsFromText(incidentText);
@@ -135,51 +135,103 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
       .map((s) => s.trim())
       .filter((s) => s.length > 0);
 
-    const text = `${incidentText} ${effectiveIocsText}`.toLowerCase();
+    const fullAnalysisCorpus = `${incidentText} ${effectiveIocsText}`;
+
+    // 2. Extração inteligente de Metadados da Investigação (Ator, Regiões, Setores)
+    // Se o operador ainda não digitou manualmente, preenche com o inferido do relato
+    const detectedMeta = extractIncidentMetadata(fullAnalysisCorpus);
+    if (!threatActor.trim() && detectedMeta.threatActor) {
+      setThreatActor(detectedMeta.threatActor);
+    }
+    if (!targetRegions.trim() && detectedMeta.targetRegions) {
+      setTargetRegions(detectedMeta.targetRegions);
+    }
+    if (!targetSectors.trim() && detectedMeta.targetSectors) {
+      setTargetSectors(detectedMeta.targetSectors);
+    }
+
+    // 3. Motor Heurístico Simbólico DISARM de Alta Precisão (24 Técnicas Canônicas)
     const proposals: ProposedTtp[] = [];
 
-    const checkAndAdd = (
+    const evaluateRule = (
       techId: string,
-      keywords: string[],
+      pattern: RegExp,
       rationale: string,
       defaultTitle: string,
       severity: ThreatSeverity,
-      confidence: 'confirmed' | 'probable'
+      confidence: 'confirmed' | 'probable',
+      extraArtifactFilter?: (ioc: string) => boolean
     ) => {
-      const matchFound = keywords.some((kw) => text.includes(kw.toLowerCase()));
-      if (matchFound) {
+      const textMatches = pattern.test(fullAnalysisCorpus);
+
+      const relatedArtifacts = parsedIocs.filter((ioc) => {
+        if (extraArtifactFilter) {
+          return extraArtifactFilter(ioc);
+        }
+        const lower = ioc.toLowerCase();
+
+        // 1. Arquivos vazados ou adulterados e hashes (.pdf, .xlsx, .docx, SHA256)
+        // Pertencem estritamente a T0089 (Obtain Private Documents) e T0089.003 (Alter Authentic Documents)
+        if (techId === 'T0089' || techId === 'T0089.003') {
+          return /\.(pdf|xlsx?|docx?|zip|rar|csv)$/i.test(lower) || lower.includes('sha256') || lower.includes('hash');
+        }
+
+        // 2. Portais e domínios clonados/falsos (ex: lemonde.ltd, site-auth.com)
+        // Pertencem estritamente a T0098.001 (Create Inauthentic News Sites) ou T0143.003 (Impersonated Persona)
+        if (techId === 'T0098.001' || techId === 'T0143.003') {
+          return (
+            !lower.includes('bit.ly') &&
+            !lower.includes('t.me') &&
+            !lower.startsWith('#') &&
+            !/\.(pdf|xlsx?|docx?)$/i.test(lower) &&
+            /\.(ltd|news|site|com|org|net|auth|online)\b/i.test(lower)
+          );
+        }
+
+        // 3. Canais de Mensageria Criptografada / Telegram (t.me/...)
+        // Pertencem estritamente a T0155.007 (Encrypted Communication Channel)
+        if (techId === 'T0155.007') {
+          return lower.includes('t.me') || lower.includes('telegram');
+        }
+
+        // 4. Links encurtados de phishing / redirecionamento (bit.ly/...)
+        // Pertencem estritamente a T0153.003 (Shortened Link Asset) e T0123 (Offensive Cyberspace Operations)
+        if (techId === 'T0153.003' || techId === 'T0123') {
+          return lower.includes('bit.ly') || lower.includes('tinyurl') || lower.includes('auth');
+        }
+
+        // 5. Hashtags de campanha (#Campanha)
+        // Pertencem estritamente a T0015 (Create Hashtags) e T0049.002 (Flood Existing Hashtag)
+        if (techId === 'T0015' || techId === 'T0049.002') {
+          return lower.startsWith('#');
+        }
+
+        // 6. Endereços IPv4 de infraestrutura / botnets
+        // Pertencem estritamente a T0093.002 (Acquire Botnets)
+        if (techId === 'T0093.002') {
+          return /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(lower);
+        }
+
+        // Técnicas estratégicas, de análise de audiência e conceituais (T0074, T0002, T0003, T0059, T0080, T0072, T0042, etc.)
+        // NÃO possuem IOCs técnicos de rede/arquivo associados.
+        return false;
+      });
+
+      const hasCorroboratingArtifacts = relatedArtifacts.length > 0;
+
+      // Dispara se o padrão textual for confirmado OU houver IOCs inequívocos
+      if (textMatches || (hasCorroboratingArtifacts && (techId === 'T0153.003' || techId === 'T0155.007' || techId === 'T0015'))) {
         const official = OFFICIAL_DISARM_TECHNIQUES.find((t) => t.id === techId);
         if (official && !proposals.some((p) => p.technique.id === techId)) {
-          // Filtrar artefatos relacionados especificamente a esta técnica
-          const relatedArtifacts = parsedIocs.filter((ioc) => {
-            const lower = ioc.toLowerCase();
-            if (techId.startsWith('T0089') || techId === 'T0088' || techId === 'T0042') {
-              return lower.includes('.pdf') || lower.includes('.xlsx') || lower.includes('.docx') || lower.includes('sha256') || lower.includes('hash');
-            }
-            if (techId.startsWith('T0098') || techId === 'T0143.003' || techId === 'T0020') {
-              return lower.includes('.') || lower.includes('http') || lower.includes('bit.ly') || lower.includes('auth');
-            }
-            if (techId === 'T0094' || techId === 'T0155.007') {
-              return lower.includes('t.me') || lower.includes('telegram');
-            }
-            if (techId.includes('0015') || techId.includes('0049')) {
-              return lower.startsWith('#');
-            }
-            if (techId === 'T0093.002' || techId === 'T0072.004') {
-              return lower.includes('185.') || lower.includes('194.') || lower.includes('.');
-            }
-            return false;
-          });
-
           proposals.push({
             id: `PROP-${techId}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
             technique: official,
             severity,
-            confidence,
+            confidence: hasCorroboratingArtifacts || confidence === 'confirmed' ? 'confirmed' : 'probable',
             rationale,
             extractedProcedureTitle: defaultTitle,
             extractedNote: `Observado no incidente analisado: ${rationale}. Procedimento correlato à tática ${official.tacticName}.`,
-            extractedArtifacts: relatedArtifacts.length > 0 ? relatedArtifacts : parsedIocs.slice(0, 2),
+            extractedArtifacts: relatedArtifacts,
             selected: true,
           });
         }
@@ -187,27 +239,18 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
     };
 
     // --- 1. TA01: Plan Strategy ---
-    checkAndAdd(
+    evaluateRule(
       'T0074',
-      ['estratégia', 'estratégic', 'objetivo estratégico', 'sabotagem', 'neutralizar', 'impedir consolidação', 'impacto assimétrico', 'plano estratégico'],
+      /\b(objetivos? estrat[eé]gicos?|sabotagem (estrat[eé]gica|informacional|cognitiva)|impacto assim[eé]trico|neutralizar (o programa|a coopera[çc][aã]o|alian[çc]a)|impedir consolida[çc][aã]o|plano estrat[eé]gico de influ[eê]ncia)\b/i,
       'Definição de objetivos finais e direcionamento de impacto estratégico da operação de influência',
       'Definição de Objetivos Estratégicos da Operação',
       'critical',
       'confirmed'
     );
 
-    checkAndAdd(
-      'T0002',
-      ['propaganda', 'estatal', 'pró-estado', 'narrativa do país', 'desacreditar estado', 'potência militar'],
-      'Amplificação de mensagens estatais alinhadas aos interesses geopolíticos do adversário',
-      'Alinhamento com Narrativas Estratégicas e Propaganda Estatal',
-      'high',
-      'probable'
-    );
-
-    checkAndAdd(
+    evaluateRule(
       'T0059',
-      ['longo prazo', 'long game', 'preparação prolongada', 'anos de tensão', 'operação continuada'],
+      /\b(longo prazo|long game|prepara[çc][aã]o prolongada|opera[çc][aã]o continuada por meses|fase preparat[oó]ria prolongada|desgaste prolongado)\b/i,
       'Estratégia de influência com desenvolvimento lento e metódico no ambiente de informação',
       'Operação de Longo Prazo e Preparação de Terreno',
       'medium',
@@ -215,19 +258,28 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
     );
 
     // --- 2. TA02: Plan Objectives ---
-    checkAndAdd(
+    evaluateRule(
+      'T0002',
+      /\b(propaganda estatal|m[ií]dia estatal|ve[ií]culos? oficiais? de propaganda|ag[eê]ncia estatal de not[ií]cias|alinhamento com propaganda de estado|canais estatais)\b/i,
+      'Amplificação de mensagens e narrativas através de veículos de propaganda estatal do adversário',
+      'Alinhamento com Narrativas Estratégicas e Propaganda Estatal',
+      'high',
+      'probable'
+    );
+
+    evaluateRule(
       'T0003',
-      ['narrativa existente', 'narrativas existentes', 'tensão prévia', 'atrito histórico', 'derrota militar', 'ressentimento', 'anexação'],
-      'Aproveitamento e instrumentalização de atritos históricos ou narrativas preexistentes',
+      /\b(narrativas? (existentes?|preexistentes?)|atritos? hist[oó]ricos?|ressentimentos? hist[oó]ricos?|tens[oõ]es? pr[eé]vias?|fraturas? sociais? preexistentes?)\b/i,
+      'Aproveitamento e instrumentalização de atritos históricos ou narrativas pré-existentes',
       'Instrumentalização de Narrativas e Ressentimentos Pré-Existentes',
       'high',
       'confirmed'
     );
 
     // --- 3. TA13: Target Audience Analysis ---
-    checkAndAdd(
+    evaluateRule(
       'T0080',
-      ['mapear público', 'mapeamento de alvos', 'mapearam', 'engenheiros-chefes', 'especialistas recém-retornados', 'parlamentares', 'diretoria-geral', 'dgsn', 'osint'],
+      /\b(mapeamento de p[uú]blico|perfilamento de alvos|reconhecimento de alvos|perfilamento de (engenheiros|oficiais|tomadores|especialistas)|osint contra funcion[aá]rios|an[aá]lise de vulnerabilidades de pessoal)\b/i,
       'Mapeamento detalhado e perfilamento de engenheiros, tomadores de decisão e alvos-chave',
       'Mapeamento e Perfilamento de Público-Alvo e Especialistas-Chave',
       'high',
@@ -235,27 +287,27 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
     );
 
     // --- 4. TA06: Develop Content ---
-    checkAndAdd(
-      'T0089.003',
-      ['adulterado', 'alterado', 'modificado', 'falsificado', 'cláusulas falsas', 'forjad', 'laudo adulterado', 'planilha falsificada', 'documentos falsificados', 'backdoor', 'risco radiológico'],
-      'Adulteração cirúrgica de documentos autênticos exfiltrados para inserir alegações forjadas',
-      'Adulteração de Documentos Oficiais Autênticos (Hack-and-Leak)',
-      'critical',
-      'confirmed'
-    );
-
-    checkAndAdd(
+    evaluateRule(
       'T0089',
-      ['hack and leak', 'hack-and-leak', 'vazamento', 'exfiltração', 'caixas de e-mail', 'atas de gestão', 'relatórios de integração', 'roubo de credenciais', 'arquivos originais'],
-      'Desenvolvimento de pacote de dados vazados combinando documentos reais e adulterados',
+      /\b(hack-and-leak|hack and leak|exfiltra[çc][aã]o de (dados|documentos|e-mails|arquivos)|vazamento de documentos|arquivos confidenciais vazados|caixas de e-mail invadidas|atas de gest[aã]o exfiltradas)\b/i,
+      'Exfiltração cibernética e preparação de pacote de dados vazados para alimentar a operação',
       'Desenvolvimento de Pacote de Dados Vazados (Hack-and-Leak)',
       'critical',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
+      'T0089.003',
+      /\b(laudo(s)? adulterado(s)?|documento(s)? adulterado(s)?|planilha(s)? falsificada(s)?|inser[çc][aã]o de cl[aá]usulas falsas|adultera[çc][aã]o de relat[oó]rio|documentos? forjados?|modifica[çc][aã]o maliciosa de arquivo)\b/i,
+      'Adulteração cirúrgica de documentos autênticos exfiltrados para inserir alegações forjadas',
+      'Adulteração de Documentos Oficiais Autênticos',
+      'critical',
+      'confirmed'
+    );
+
+    evaluateRule(
       'T0087',
-      ['deepfake', 'sintétic', 'vídeo deepfake', 'áudio sintético', 'clonagem de voz', 'inteligência artificial', 'ia generativa', 'vídeo forjado'],
+      /\b(deepfake[s]?|v[ií]deo(s)? deepfake|áudio(s)? sint[eé]tico(s)?|clonagem de voz|m[ií]dia sint[eé]tica|v[ií]deo forjado com ia)\b/i,
       'Produção de conteúdo multimídia sintético (deepfake) simulando declarações de autoridade',
       'Criação de Mídia Sintética e Vídeos Deepfake',
       'critical',
@@ -263,132 +315,151 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
     );
 
     // --- 5. TA15: Establish Assets ---
-    checkAndAdd(
+    evaluateRule(
       'T0098.001',
-      ['clon', 'typosquat', 'portal falso', 'impersonat', 'domínio falso', 'domínios falsos', 'cópia de site', 'le monde', 'der spiegel', 'portal-naval-auth', 'lemonde.ltd', 'defesanacional'],
+      /\b(typosquat(ting)?|portal clonado|portais clonados|site(s)? clonado(s)?|dom[ií]nio(s)? lookalike|c[oó]pia de portal de not[ií]cias|portal falso de not[ií]cias|portais falsos)\b/i,
       'Registro e configuração de domínios typosquatted ou clones de portais legítimos de imprensa e portais corporativos',
       'Criação de Portais Clonados e Domínios Typosquatted',
       'critical',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0097',
-      ['avatar', 'stylegan', 'foto gerada', 'persona', 'foto de perfil', 'foto de inteligência artificial', 'rosto sintético'],
+      /\b(avatar(es)? sint[eé]tico(s)?|rostos? gerados? por ia|stylegan|fotos? de perfil falsa(s)? gerada(s)?|persona(s)? sint[eé]tica(s)?|rosto sint[eé]tico)\b/i,
       'Criação de avatares sintéticos com rostos gerados por redes neurais (IA) para perfis inautênticos',
       'Criação de Personas com Avatares Sintéticos Gerados por IA',
       'high',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0093.002',
-      ['bot', 'automatizad', 'fazenda de contas', 'enxame', 'sincronizad', 'perfis falsos', 'botnet', 'contas automatizadas', 'disparos de bots'],
+      /\b(botnet[s]?|enxame de bots|fazenda(s)? de contas|contas automatizadas|disparos? coordenados? de bots|rede de bots|disparos sincronizados de bots)\b/i,
       'Estruturação de rede coordenada de contas automatizadas (bots) para amplificação em redes sociais',
       'Disparo Coordenado via Rede de Contas Automatizadas (Bots)',
       'high',
       'confirmed'
     );
 
-    checkAndAdd(
-      'T0094',
-      ['telegram', 't.me', 'canal anônimo', 'grupo anônimo', 'canal de vazamento', 'canal no telegram'],
-      'Estabelecimento de canais de mensageria anônimos para publicação inicial e distribuição do vazamento',
+    // --- 6. TA08: Select Channels and Affordances ---
+    evaluateRule(
+      'T0155.007',
+      /\b(telegram|t\.me|canal an[oô]nimo de vazamento|grupo de vazamento no telegram|aplicativo de mensageria criptografada|signal)\b/i,
+      'Estabelecimento de canais de mensageria anônimos e criptografados para distribuição do vazamento',
       'Estabelecimento de Canais Anônimos de Vazamento (Telegram)',
       'high',
       'confirmed'
     );
 
-    // --- 6. TA16: Establish Legitimacy ---
-    checkAndAdd(
+    evaluateRule(
+      'T0153.003',
+      /\b(link(s)? encurtado(s)?|bit\.ly|tinyurl|url(s)? encurtada(s)?)\b/i,
+      'Emprego de plataformas de link shortening para camuflar links maliciosos e monitorar cliques',
+      'Uso de Links Encurtados para Camuflagem de Destino',
+      'medium',
+      'confirmed'
+    );
+
+    // --- 7. TA16: Establish Legitimacy ---
+    evaluateRule(
       'T0101',
-      ['selo azul', 'selos azuis', 'verificação comprada', 'conta com selo', 'badge de verificação'],
+      /\b(selo[s]? azul|selo[s]? de verifica[çc][aã]o (comprado|pago)|badge[s]? de verifica[çc][aã]o|verifica[çc][aã]o comercial)\b/i,
       'Aquisição de selos de verificação em redes sociais para conferir falsa autoridade aos perfis da operação',
       'Aquisição Comercial de Selos de Verificação de Perfil',
       'medium',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0045',
-      ['falso especialista', 'pseudo-especialista', 'especialista forjado', 'parecer de especialista', 'perito forjado'],
+      /\b(falso(s)? especialista(s)?|pseudo-especialista[s]?|perito(s)? forjado(s)?|parecer t[eé]cnico forjado|especialista independente forjado)\b/i,
       'Mobilização de pseudo-especialistas para conferir falso endosso técnico às alegações do vazamento',
       'Mobilização de Falsos Especialistas Técnicos',
       'high',
       'probable'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0143.003',
-      ['impersonar', 'se passar por', 'clonar imprensa', 'clonavam veículos de imprensa', 'identidade forjada'],
+      /\b(impersona[çc][aã]o|se passar por (jornalistas?|ve[ií]culos?|portais?)|usurpa[çc][aã]o de identidade de imprensa|clonagem visual de ve[ií]culo)\b/i,
       'Uso indevido da identidade visual e reputação de veículos legítimos de imprensa e portais de defesa',
       'Impersonificação de Órgãos de Imprensa e Instituições',
       'critical',
       'confirmed'
     );
 
-    // --- 7. TA05: Microtarget ---
-    checkAndAdd(
+    // --- 8. TA05: Microtarget ---
+    evaluateRule(
       'T0072.004',
-      ['cloaking', 'ad cloaking', 'anúncio', 'anúncios patrocinados', 'malvertising', 'meta ads', 'facebook', 'burlar moderação'],
+      /\b(ad cloaking|cloaking|malvertising|burlar modera[çc][aã]o de an[uú]ncios|an[uú]ncios patrocinados maliciosos)\b/i,
       'Uso de scripts de evasão (ad cloaking) em anúncios patrocinados segmentados para tomadores de decisão',
       'Segmentação Psicográfica e Evasão via Ad Cloaking',
       'high',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0072',
-      ['segmentação', 'segmentado', 'público específico', 'direcionado ao parlamento', 'direcionado a engenheiros', 'parlamento'],
-      'Microsegmentação e direcionamento da desinformação para alvos parlamentares e formadores de opinião',
+      /\b(microtargeting|segmenta[çc][aã]o psicogr[aá]fica|microsegmenta[çc][aã]o de p[uú]blico|direcionamento cir[uú]rgico de an[uú]ncios|perfilamento de audi[eê]ncia)\b/i,
+      'Microsegmentação e direcionamento da desinformação para públicos específicos e formadores de opinião',
       'Segmentação de Audiência e Microtargeting Político',
       'high',
       'confirmed'
     );
 
-    // --- 8. TA07: Deliver Content ---
-    checkAndAdd(
-      'T0020',
-      ['spear-phishing', 'phishing', 'links encurtados', 'bit.ly', 'credenciais', 'roubo de credenciais', 'e-mail de spear-phishing'],
-      'Disparo de campanhas direcionadas de spear-phishing com links encurtados para roubo de credenciais de acesso',
-      'Campanha de Spear-Phishing para Roubo de Credenciais',
+    // --- 9. TA07: Deliver Content ---
+    evaluateRule(
+      'T0123',
+      /\b(spear-phishing|phishing direcionado|opera[çc][aã]o cibern[eé]tica ofensiva|intrus[aã]o de rede|captura de credenciais|roubo de credenciais via e-mail|e-mail de phishing)\b/i,
+      'Emprego de operações cibernéticas ofensivas (spear-phishing, intrusão) para subsidiar a operação de influência',
+      'Operações Cibernéticas Ofensivas e Spear-Phishing',
       'critical',
       'confirmed'
     );
 
-    // --- 9. TA09 / TA17: Maximise Exposure & Amplify ---
-    checkAndAdd(
+    evaluateRule(
+      'T0117',
+      /\b(atrair a imprensa|atrair jornalistas|pauta para a grande m[ií]dia|cobertura da imprensa tradicional|entregar furo jornal[ií]stico)\b/i,
+      'Mobilização de jornalistas tradicionais para lavagem de informação e ampliação de audiência',
+      'Seduzir e Atrair Cobertura da Mídia Tradicional',
+      'medium',
+      'probable'
+    );
+
+    // --- 10. TA09 / TA17: Maximise Exposure & Amplify ---
+    evaluateRule(
       'T0015',
-      ['hashtag', '#', 'tag', 'palavra-chave', '#chernobylnomar', '#farsanetuno', '#verdadeoculta'],
+      /\b(hashtags? coordenadas?|sequestro de hashtags?|cria[çc][aã]o de hashtags?|induzir trending topics?|#[a-zA-Z0-9_]+)\b/i,
       'Criação e indução de hashtags coordenadas para agrupar e disseminar mensagens de impacto na opinião pública',
       'Criação e Propagação de Hashtags de Campanha',
       'medium',
       'confirmed'
     );
 
-    checkAndAdd(
+    evaluateRule(
       'T0049.002',
-      ['inundar', 'sequestro de hashtag', 'poluição de busca', 'responderam sincronizadamente', 'inundação'],
+      /\b(inunda[çc][aã]o de coment[aá]rios|comment flooding|brigading|inundar (se[çc][oõ]es de )?coment[aá]rios|respostas sincronizadas em perfis oficiais)\b/i,
       'Inundação de seções de comentários e sequestro de fluxos de busca de postagens oficiais',
-      'Inundação de Comentários e Sequestro de Hashtags',
+      'Inundação de Comentários e Sequestro de Fluxos Oficiais',
       'high',
       'confirmed'
     );
 
-    // --- 10. TA18: Drive Online Harms / Coerce ---
-    checkAndAdd(
+    // --- 11. TA18: Drive Online Harms / Coerce ---
+    evaluateRule(
       'T0048.004',
-      ['doxing', 'doxxing', 'dados pessoais vazados', 'coação psicológica', 'assédio', 'intimidar engenheiros', 'ameaça'],
+      /\b(dox(x)?ing|vazamento de dados pessoais|exposi[çc][aã]o de telefones e endere[çc]os|coa[çc][aã]o psicol[oó]gica|ass[eé]dio a engenheiros|intimida[çc][aã]o de funcion[aá]rios)\b/i,
       'Vazamento malicioso de dados pessoais (doxing) e coação psicológica contra engenheiros e oficiais do projeto',
       'Doxing e Assédio Psicológico a Profissionais do Projeto',
       'critical',
       'confirmed'
     );
 
-    // --- 11. TA11: Persist in the Information Environment ---
-    checkAndAdd(
+    // --- 12. TA11: Persist in the Information Environment ---
+    evaluateRule(
       'T0042',
-      ['90%', 'intactos', 'parcialmente autêntico', 'mistura de verdade', 'meia-verdade', 'documentos reais misturados'],
+      /\b(meia[s]?-verdade[s]?|mistura de (documentos|dados) reais e falsos|documentos? parcialmente aut[eê]nticos?|combinar fatos ver[ií]dicos com (alega[çc][oõ]es forjadas|mentiras)|camuflar falsifica[çc][aã]o em documentos reais)\b/i,
       'Mistura cirúrgica de documentos verídicos com arquivos forjados para dificultar a desmentida rápida',
       'Apresentação de Meias-Verdades e Documentos Misto-Falsificados',
       'high',
@@ -409,7 +480,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
             rationale: 'TTP fundamental identificado a partir do escopo de Hacking for Influence',
             extractedProcedureTitle: off.name,
             extractedNote: off.description,
-            extractedArtifacts: parsedIocs.slice(0, 2),
+            extractedArtifacts: [],
             selected: true,
           });
         }
@@ -479,8 +550,12 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
       description: incidentText.trim() || 'Investigação de operação de influência gerada via módulo de análise.',
       dateCreated: new Date().toISOString(),
       lastUpdated: new Date().toISOString(),
-      targetRegions: targetRegions.split(',').map((r) => r.trim()).filter((r) => r.length > 0),
-      targetSectors: targetSectors.split(',').map((s) => s.trim()).filter((s) => s.length > 0),
+      targetRegions: targetRegions.trim()
+        ? targetRegions.split(',').map((r) => r.trim()).filter((r) => r.length > 0)
+        : ['Área de Operações'],
+      targetSectors: targetSectors.trim()
+        ? targetSectors.split(',').map((s) => s.trim()).filter((s) => s.length > 0)
+        : ['Governamental, Defesa'],
       techniques,
       tactics,
       rawSourceType: 'custom-threat-report',
@@ -601,14 +676,6 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
                     </div>
                   )}
                 </div>
-
-                {/* Scope & Framework Coverage Card */}
-                <div className="p-3 rounded-xl bg-[#0e1628] border border-white/[0.06] flex items-center gap-2.5 flex-shrink-0">
-                  <Brain className="w-4 h-4 text-sky-400 flex-shrink-0" />
-                  <p className="text-xs text-slate-300 font-sans leading-snug">
-                    Correlação automática contra o catálogo oficial das <strong>16 Táticas DISARM</strong>.
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -631,7 +698,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
                     type="text"
                     value={threatActor}
                     onChange={(e) => setThreatActor(e.target.value)}
-                    placeholder="Ex: Unidade 404 / País VERMELHO"
+                    placeholder="Unidade 404 / País VERMELHO"
                     className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
@@ -645,6 +712,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
                     type="text"
                     value={targetRegions}
                     onChange={(e) => setTargetRegions(e.target.value)}
+                    placeholder="País AZUL, Região sob Investigação..."
                     className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>
@@ -658,6 +726,7 @@ export const HackingForInfluenceAnalyzerModal: React.FC<HackingForInfluenceAnaly
                     type="text"
                     value={targetSectors}
                     onChange={(e) => setTargetSectors(e.target.value)}
+                    placeholder="Defesa, Governamental, Mídia..."
                     className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-[#070b12] border border-white/[0.08] text-white focus:outline-none focus:border-sky-500"
                   />
                 </div>

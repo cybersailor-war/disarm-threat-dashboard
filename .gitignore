@@ -30,3 +30,13 @@ yarn-error.log*
 scripts/generate_tcc_odt.cjs
 Cenario_Operacao_Netuno_Slide.jpg
 Cenario_Netuno_Slide_*.jpg
+
+# Large media files (videos)
+*.mp4
+
+# Temporary scratch and debug scripts
+scratch/
+audit_editable.cjs
+diag_input.cjs
+diag_trace_save.cjs
+save_server.cjs

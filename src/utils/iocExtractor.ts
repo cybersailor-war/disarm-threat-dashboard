@@ -123,3 +123,114 @@ export function extractIocsFromText(rawText: string): ExtractedIocsResult {
     hashtags,
   };
 }
+
+export interface ExtractedIncidentMetadata {
+  threatActor?: string;
+  targetRegions?: string;
+  targetSectors?: string;
+}
+
+/**
+ * Extrator Contextual de Metadados da Operação / Incidente
+ * Infere a partir da narrativa textual:
+ * - Ator de Ameaça (ex: Unidade 404, País VERMELHO, APTs, grupos estatais)
+ * - Regiões-Alvo (ex: País AZUL, países específicos, regiões geográficas)
+ * - Setores / Instituições Alvo (ex: Defesa / Naval, Energia Nuclear, Parlamento, Mídia)
+ */
+export function extractIncidentMetadata(text: string): ExtractedIncidentMetadata {
+  if (!text || !text.trim()) {
+    return {};
+  }
+
+  // 1. Detecção do Ator de Ameaça (Threat Actor)
+  let threatActor = '';
+  const actorMatches: string[] = [];
+  if (/\bunidade\s*404\b/i.test(text)) actorMatches.push('Unidade 404');
+  if (/pa[ií]s\s*vermelho/i.test(text)) actorMatches.push('País VERMELHO');
+  if (/homeland\s*justice/i.test(text)) actorMatches.push('HomeLand Justice');
+  if (/guccifer/i.test(text)) actorMatches.push('Guccifer 2.0');
+  if (/sandworm/i.test(text)) actorMatches.push('Sandworm');
+  if (/fancy\s*bear/i.test(text)) actorMatches.push('Fancy Bear (APT28)');
+  if (/cozy\s*bear/i.test(text)) actorMatches.push('Cozy Bear (APT29)');
+  if (/lazarus/i.test(text)) actorMatches.push('Lazarus Group');
+  if (/\bapt[- ]?28\b/i.test(text) && !actorMatches.some((a) => a.includes('APT28'))) actorMatches.push('APT28');
+  if (/\bapt[- ]?29\b/i.test(text) && !actorMatches.some((a) => a.includes('APT29'))) actorMatches.push('APT29');
+  if (/\bapt[- ]?41\b/i.test(text)) actorMatches.push('APT41');
+  const stormMatch = text.match(/\b(storm-\d{4})\b/i);
+  if (stormMatch) actorMatches.push(stormMatch[1].toUpperCase());
+
+  if (actorMatches.length > 0) {
+    threatActor = Array.from(new Set(actorMatches)).join(' / ');
+  } else {
+    const explicitActor = text.match(/(?:ator(?: de ameaça)?|advers[áa]rio|grupo|amea[çc]a)\s*:\s*([^\n,.]+)/i);
+    if (explicitActor && explicitActor[1]) {
+      threatActor = explicitActor[1].trim();
+    }
+  }
+
+  // 2. Detecção de Regiões-Alvo (Target Regions)
+  const regionMatches: string[] = [];
+  // Países fictícios de cenários de defesa / jogos de guerra
+  if (/pa[ií]s\s*azul/i.test(text)) regionMatches.push('País AZUL');
+  if (/pa[ií]s\s*branco/i.test(text) && !/alvo.*pa[ií]s\s*branco/i.test(text)) {
+    if (!/pa[ií]s\s*azul/i.test(text)) {
+      regionMatches.push('País BRANCO');
+    }
+  }
+  if (/pa[ií]s\s*amarelo/i.test(text)) regionMatches.push('País AMARELO');
+  if (/pa[ií]s\s*verde/i.test(text)) regionMatches.push('País VERDE');
+
+  // Países e regiões reais
+  if (/\bbrasil\b/i.test(text)) regionMatches.push('Brasil');
+  if (/\bam[eé]rica latina\b/i.test(text)) regionMatches.push('América Latina');
+  if (/\bam[eé]rica do sul\b/i.test(text)) regionMatches.push('América do Sul');
+  if (/\balb[aâ]nia\b/i.test(text)) regionMatches.push('Albânia');
+  if (/\bucr[aâ]nia\b/i.test(text)) regionMatches.push('Ucrânia');
+  if (/\br[uú]ssia\b/i.test(text) && !actorMatches.includes('Rússia')) regionMatches.push('Rússia');
+  if (/\bestados unidos\b|\beua\b/i.test(text)) regionMatches.push('Estados Unidos');
+  if (/\btaiwan\b/i.test(text)) regionMatches.push('Taiwan');
+  if (/\buni[aã]o europ[eé]ia\b|\beuropa\b/i.test(text)) regionMatches.push('Europa');
+  if (/\boriente m[eé]dio\b/i.test(text)) regionMatches.push('Oriente Médio');
+
+  const targetRegions = Array.from(new Set(regionMatches)).join(', ');
+
+  // 3. Detecção de Setores / Instituições Alvo (Target Sectors)
+  const sectors: string[] = [];
+  if (/\b(estaleiro|naval|submarino|marinha|navio|dgsn)\b/i.test(text)) {
+    sectors.push('Defesa / Setor Naval');
+  } else if (/\b(defesa|militar|for[çc]as armadas|ex[eé]rcito|aeron[aá]utica)\b/i.test(text)) {
+    sectors.push('Defesa & Forças Armadas');
+  }
+
+  if (/\b(nuclear|propuls[aã]o nuclear|radiol[oó]g\w*|reator)\b/i.test(text)) {
+    sectors.push('Energia / Propulsão Nuclear');
+  } else if (/\b(energia|el[eé]tric\w*|petr[oó]leo|pr[eé]-sal|plataforma|offshore)\b/i.test(text)) {
+    sectors.push('Energia & Infraestrutura');
+  }
+
+  if (/\b(parlamento|deputad\w*|senad\w*|congress\w*)\b/i.test(text)) {
+    sectors.push('Governamental / Parlamento');
+  } else if (/\b(governo|minist[eé]rio|presid[eê]ncia|executivo|servi[çc]os p[uú]blicos)\b/i.test(text)) {
+    sectors.push('Governamental / Serviços Públicos');
+  }
+
+  if (/\b(imprensa|jornalis\w*|m[ií]dia|redaa?[çc][aã]o|ve[ií]culo de not[ií]cia)\b/i.test(text)) {
+    sectors.push('Mídia & Imprensa');
+  }
+
+  if (/\b(cabos? submarinos?|telecom\w*|comunica[çc][oõ]es globais|infraestrutura de rede)\b/i.test(text)) {
+    sectors.push('Comunicações & Infraestrutura Crítica');
+  }
+
+  if (/\b(elei[çc][oõ]es|eleitoral|eleitores|vota[çc][aã]o)\b/i.test(text)) {
+    sectors.push('Processo Eleitoral');
+  }
+
+  const targetSectors = Array.from(new Set(sectors)).join(', ');
+
+  return {
+    threatActor: threatActor || undefined,
+    targetRegions: targetRegions || undefined,
+    targetSectors: targetSectors || undefined,
+  };
+}

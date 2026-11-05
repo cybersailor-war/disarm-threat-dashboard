@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1486" height="644" viewBox="0 0 1486 644" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="mainBgGrad" x1="0" y1="0" x2="0.2" y2="1">
+      <stop offset="0%" stop-color="#060911"/>
+      <stop offset="50%" stop-color="#0a0f1d"/>
+      <stop offset="100%" stop-color="#070b14"/>
+    </linearGradient>
+
+    <!-- Column Card Background -->
+    <linearGradient id="colBgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#111827" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#0d131f" stop-opacity="0.96"/>
+    </linearGradient>
+
+    <!-- Subtle Blueprint Grid Pattern -->
+    <pattern id="tacticalGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.02)" stroke-width="1"/>
+      <circle cx="40" cy="40" r="0.8" fill="rgba(56, 189, 248, 0.1)"/>
+    </pattern>
+
+    <!-- Cyber Hexagon Motif Pattern for Background Depth -->
+    <radialGradient id="cyberGlow1" cx="20%" cy="10%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cyberGlow2" cx="80%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Canvas Background -->
+  <rect width="100%" height="100%" fill="url(#mainBgGrad)"/>
+  <rect width="100%" height="100%" fill="url(#tacticalGrid)"/>
+  <rect width="100%" height="100%" fill="url(#cyberGlow1)"/>
+  <rect width="100%" height="100%" fill="url(#cyberGlow2)"/>
+
+  
+  
+    <!-- Column: TA01 - Plan Strategy -->
+    <g class="tactic-column">
+      <!-- Column Container Background -->
+      <rect x="36" y="28" width="270" height="580" rx="14" 
+            fill="url(#colBgGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      
+      <!-- Top Colored Accent Bar -->
+      <path d="M 50 28 L 292 28 Q 306 28 306 42 L 306 31 L 36 31 L 36 42 Q 36 28 50 28 Z" fill="#38bdf8"/>
+      <rect x="36" y="28" width="270" height="3.5" fill="#38bdf8" rx="1"/>
+
+      <!-- Glow below accent line -->
+      <rect x="36" y="31.5" width="270" height="1" fill="#38bdf8" opacity="0.4"/>
+
+      <!-- Tactic ID & Tactic Number Pill -->
+      <text x="50" y="52" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0.5">TA01</text>
+      
+      <rect x="234" y="40" width="58" height="18" rx="4" fill="rgba(0, 0, 0, 0.5)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="0.8"/>
+      <text x="263" y="52.5" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" text-anchor="middle">Tática 1</text>
+
+      <!-- Tactic Name -->
+      <text x="50" y="76" fill="#ffffff" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">
+        Plan Strategy
+      </text>
+
+      <!-- Subtitle line: X ativa(s) | Mapeado -->
+      <line x1="50" y1="92" x2="292" y2="92" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <text x="50" y="107" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5">1 ativa(s)</text>
+      <text x="292" y="107" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="end">Mapeado</text>
+
+      <!-- Technique Cards Inside Column -->
+      
+      <!-- Technique Card T0074 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="44" y="128" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="44" y="128" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="54" y="150" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0074</text>
+        
+        <!-- Severity Badge -->
+        <rect x="226" y="138" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="257" y="150.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="54" y="171" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Determine Strategic Ends
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="54" y1="201" x2="288" y2="201" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(54, 207) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="71" y="217" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(276, 207) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+    <!-- Column: TA13 - Target Audience Analysis -->
+    <g class="tactic-column">
+      <!-- Column Container Background -->
+      <rect x="322" y="28" width="270" height="580" rx="14" 
+            fill="url(#colBgGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      
+      <!-- Top Colored Accent Bar -->
+      <path d="M 336 28 L 578 28 Q 592 28 592 42 L 592 31 L 322 31 L 322 42 Q 322 28 336 28 Z" fill="#0284c7"/>
+      <rect x="322" y="28" width="270" height="3.5" fill="#0284c7" rx="1"/>
+
+      <!-- Glow below accent line -->
+      <rect x="322" y="31.5" width="270" height="1" fill="#0284c7" opacity="0.4"/>
+
+      <!-- Tactic ID & Tactic Number Pill -->
+      <text x="336" y="52" fill="#0284c7" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0.5">TA13</text>
+      
+      <rect x="520" y="40" width="58" height="18" rx="4" fill="rgba(0, 0, 0, 0.5)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="0.8"/>
+      <text x="549" y="52.5" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" text-anchor="middle">Tática 3</text>
+
+      <!-- Tactic Name -->
+      <text x="336" y="76" fill="#ffffff" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">
+        Target Audience Analysis
+      </text>
+
+      <!-- Subtitle line: X ativa(s) | Mapeado -->
+      <line x1="336" y1="92" x2="578" y2="92" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <text x="336" y="107" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5">1 ativa(s)</text>
+      <text x="578" y="107" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="end">Mapeado</text>
+
+      <!-- Technique Cards Inside Column -->
+      
+      <!-- Technique Card T0072.004 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="330" y="128" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="330" y="128" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="340" y="150" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0072.004</text>
+        
+        <!-- Severity Badge -->
+        <rect x="512" y="138" width="62" height="18" rx="4" 
+              fill="rgba(245, 158, 11, 0.15)" stroke="rgba(245, 158, 11, 0.4)" stroke-width="0.8"/>
+        <text x="543" y="150.5" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">HIGH</text>
+
+        <!-- Tech Title -->
+        <text x="340" y="171" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Psychographic Segmentation
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="340" y1="201" x2="574" y2="201" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(340, 207) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="357" y="217" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(562, 207) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+    <!-- Column: TA06 - Develop Content -->
+    <g class="tactic-column">
+      <!-- Column Container Background -->
+      <rect x="608" y="28" width="270" height="580" rx="14" 
+            fill="url(#colBgGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      
+      <!-- Top Colored Accent Bar -->
+      <path d="M 622 28 L 864 28 Q 878 28 878 42 L 878 31 L 608 31 L 608 42 Q 608 28 622 28 Z" fill="#a855f7"/>
+      <rect x="608" y="28" width="270" height="3.5" fill="#a855f7" rx="1"/>
+
+      <!-- Glow below accent line -->
+      <rect x="608" y="31.5" width="270" height="1" fill="#a855f7" opacity="0.4"/>
+
+      <!-- Tactic ID & Tactic Number Pill -->
+      <text x="622" y="52" fill="#a855f7" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0.5">TA06</text>
+      
+      <rect x="806" y="40" width="58" height="18" rx="4" fill="rgba(0, 0, 0, 0.5)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="0.8"/>
+      <text x="835" y="52.5" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" text-anchor="middle">Tática 5</text>
+
+      <!-- Tactic Name -->
+      <text x="622" y="76" fill="#ffffff" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">
+        Develop Content
+      </text>
+
+      <!-- Subtitle line: X ativa(s) | Mapeado -->
+      <line x1="622" y1="92" x2="864" y2="92" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <text x="622" y="107" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5">4 ativa(s)</text>
+      <text x="864" y="107" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="end">Mapeado</text>
+
+      <!-- Technique Cards Inside Column -->
+      
+      <!-- Technique Card T0089 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="616" y="128" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="616" y="128" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="626" y="150" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0089</text>
+        
+        <!-- Severity Badge -->
+        <rect x="798" y="138" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="829" y="150.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="626" y="171" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Obtain Private Documents
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="626" y1="201" x2="860" y2="201" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(626, 207) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="643" y="217" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(848, 207) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <!-- Technique Card T0089.003 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="616" y="236" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="616" y="236" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="626" y="258" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0089.003</text>
+        
+        <!-- Severity Badge -->
+        <rect x="798" y="246" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="829" y="258.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="626" y="279" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Alter Authentic Documents
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="626" y1="309" x2="860" y2="309" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(626, 315) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="643" y="325" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(848, 315) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <!-- Technique Card T0087 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="616" y="344" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="616" y="344" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="626" y="366" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0087</text>
+        
+        <!-- Severity Badge -->
+        <rect x="798" y="354" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="829" y="366.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="626" y="387" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Develop Video-Based Content
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="626" y1="417" x2="860" y2="417" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(626, 423) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="643" y="433" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(848, 423) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <!-- Technique Card T0015 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="616" y="452" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="616" y="452" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="626" y="474" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0015</text>
+        
+        <!-- Severity Badge -->
+        <rect x="798" y="462" width="62" height="18" rx="4" 
+              fill="rgba(56, 189, 248, 0.15)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="0.8"/>
+        <text x="829" y="474.5" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MEDIUM</text>
+
+        <!-- Tech Title -->
+        <text x="626" y="495" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Create Hashtags and Search
+        </text>
+        <text x="626" y="510" fill="#e2e8f0" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11" font-weight="500">Artefacts</text>
+
+        <!-- Divider line inside card -->
+        <line x1="626" y1="525" x2="860" y2="525" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(626, 531) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="643" y="541" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(848, 531) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+    <!-- Column: TA07 - Select Channels and Affordances -->
+    <g class="tactic-column">
+      <!-- Column Container Background -->
+      <rect x="894" y="28" width="270" height="580" rx="14" 
+            fill="url(#colBgGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      
+      <!-- Top Colored Accent Bar -->
+      <path d="M 908 28 L 1150 28 Q 1164 28 1164 42 L 1164 31 L 894 31 L 894 42 Q 894 28 908 28 Z" fill="#fb7185"/>
+      <rect x="894" y="28" width="270" height="3.5" fill="#fb7185" rx="1"/>
+
+      <!-- Glow below accent line -->
+      <rect x="894" y="31.5" width="270" height="1" fill="#fb7185" opacity="0.4"/>
+
+      <!-- Tactic ID & Tactic Number Pill -->
+      <text x="908" y="52" fill="#fb7185" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0.5">TA07</text>
+      
+      <rect x="1092" y="40" width="58" height="18" rx="4" fill="rgba(0, 0, 0, 0.5)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="0.8"/>
+      <text x="1121" y="52.5" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" text-anchor="middle">Tática 9</text>
+
+      <!-- Tactic Name -->
+      <text x="908" y="76" fill="#ffffff" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">
+        Select Channels and Aff...
+      </text>
+
+      <!-- Subtitle line: X ativa(s) | Mapeado -->
+      <line x1="908" y1="92" x2="1150" y2="92" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <text x="908" y="107" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5">2 ativa(s)</text>
+      <text x="1150" y="107" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="end">Mapeado</text>
+
+      <!-- Technique Cards Inside Column -->
+      
+      <!-- Technique Card T0155.007 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="902" y="128" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="902" y="128" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="912" y="150" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0155.007</text>
+        
+        <!-- Severity Badge -->
+        <rect x="1084" y="138" width="62" height="18" rx="4" 
+              fill="rgba(245, 158, 11, 0.15)" stroke="rgba(245, 158, 11, 0.4)" stroke-width="0.8"/>
+        <text x="1115" y="150.5" fill="#fbbf24" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">HIGH</text>
+
+        <!-- Tech Title -->
+        <text x="912" y="171" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Encrypted Communication
+        </text>
+        <text x="912" y="186" fill="#e2e8f0" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11" font-weight="500">Channel</text>
+
+        <!-- Divider line inside card -->
+        <line x1="912" y1="201" x2="1146" y2="201" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(912, 207) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="929" y="217" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(1134, 207) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <!-- Technique Card T0153.003 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="902" y="236" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="902" y="236" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="912" y="258" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0153.003</text>
+        
+        <!-- Severity Badge -->
+        <rect x="1084" y="246" width="62" height="18" rx="4" 
+              fill="rgba(56, 189, 248, 0.15)" stroke="rgba(56, 189, 248, 0.4)" stroke-width="0.8"/>
+        <text x="1115" y="258.5" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MEDIUM</text>
+
+        <!-- Tech Title -->
+        <text x="912" y="279" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Shortened Link Asset
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="912" y1="309" x2="1146" y2="309" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(912, 315) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="929" y="325" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(1134, 315) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+    <!-- Column: TA18 - Drive Online Harms -->
+    <g class="tactic-column">
+      <!-- Column Container Background -->
+      <rect x="1180" y="28" width="270" height="580" rx="14" 
+            fill="url(#colBgGrad)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+      
+      <!-- Top Colored Accent Bar -->
+      <path d="M 1194 28 L 1436 28 Q 1450 28 1450 42 L 1450 31 L 1180 31 L 1180 42 Q 1180 28 1194 28 Z" fill="#ef4444"/>
+      <rect x="1180" y="28" width="270" height="3.5" fill="#ef4444" rx="1"/>
+
+      <!-- Glow below accent line -->
+      <rect x="1180" y="31.5" width="270" height="1" fill="#ef4444" opacity="0.4"/>
+
+      <!-- Tactic ID & Tactic Number Pill -->
+      <text x="1194" y="52" fill="#ef4444" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="800" letter-spacing="0.5">TA18</text>
+      
+      <rect x="1378" y="40" width="58" height="18" rx="4" fill="rgba(0, 0, 0, 0.5)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="0.8"/>
+      <text x="1407" y="52.5" fill="#94a3b8" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" text-anchor="middle">Tática 13</text>
+
+      <!-- Tactic Name -->
+      <text x="1194" y="76" fill="#ffffff" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="13" font-weight="700">
+        Drive Online Harms
+      </text>
+
+      <!-- Subtitle line: X ativa(s) | Mapeado -->
+      <line x1="1194" y1="92" x2="1436" y2="92" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+      <text x="1194" y="107" fill="#64748b" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5">2 ativa(s)</text>
+      <text x="1436" y="107" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="end">Mapeado</text>
+
+      <!-- Technique Cards Inside Column -->
+      
+      <!-- Technique Card T0123 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="1188" y="128" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="1188" y="128" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="1198" y="150" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0123</text>
+        
+        <!-- Severity Badge -->
+        <rect x="1370" y="138" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="1401" y="150.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="1198" y="171" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Control Information
+        </text>
+        <text x="1198" y="186" fill="#e2e8f0" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11" font-weight="500">Environment through Offensive ...</text>
+
+        <!-- Divider line inside card -->
+        <line x1="1198" y1="201" x2="1432" y2="201" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(1198, 207) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="1215" y="217" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(1420, 207) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+      <!-- Technique Card T0048.004 -->
+      <g class="tech-card">
+        <!-- Card Background -->
+        <rect x="1188" y="236" width="254" height="98" rx="10" 
+              fill="#090d16" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+        
+        <!-- Hover / Glow Border Highlight -->
+        <rect x="1188" y="236" width="254" height="98" rx="10" 
+              fill="none" stroke="rgba(56, 189, 248, 0.2)" stroke-width="1"/>
+
+        <!-- Tech ID -->
+        <text x="1198" y="258" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="12" font-weight="700" letter-spacing="0.5">T0048.004</text>
+        
+        <!-- Severity Badge -->
+        <rect x="1370" y="246" width="62" height="18" rx="4" 
+              fill="rgba(239, 68, 68, 0.15)" stroke="rgba(239, 68, 68, 0.4)" stroke-width="0.8"/>
+        <text x="1401" y="258.5" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+        <!-- Tech Title -->
+        <text x="1198" y="279" fill="#f1f5f9" font-family="'Inter', system-ui, -apple-system, sans-serif" font-size="11.5" font-weight="600">
+          Dox
+        </text>
+        
+
+        <!-- Divider line inside card -->
+        <line x1="1198" y1="309" x2="1432" y2="309" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+
+        <!-- Evidência block -->
+        <g transform="translate(1198, 315) scale(0.65)">
+          <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.6"/>
+  <line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.6" stroke-linecap="round"/>
+        </g>
+        <text x="1215" y="325" fill="#34d399" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="600">Evidência</text>
+
+        <!-- Chevron right icon -->
+        <g transform="translate(1420, 315) scale(0.65)">
+          <polyline points="9 18 15 12 9 6" fill="none" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+</svg>

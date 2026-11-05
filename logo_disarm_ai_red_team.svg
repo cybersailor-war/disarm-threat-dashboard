@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 365 68" width="730" height="136" fill="none">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&amp;display=swap');
+      .brand-title {
+        font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+        font-weight: 800;
+        font-size: 25px;
+        letter-spacing: 1.5px;
+      }
+      .badge-text {
+        font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 1.5px;
+      }
+    </style>
+
+    <!-- Gradiente do Card do Radar -->
+    <linearGradient id="radarBgGrad" x1="10" y1="10" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B2239" />
+      <stop offset="50%" stop-color="#081627" />
+      <stop offset="100%" stop-color="#060D18" />
+    </linearGradient>
+
+    <linearGradient id="radarBorderGrad" x1="10" y1="10" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.22" />
+    </linearGradient>
+
+    <!-- Halo Vermelho Pulsante (Ponto de Alerta) -->
+    <radialGradient id="redDotGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#EF4444" stop-opacity="0.85" />
+      <stop offset="45%" stop-color="#EF4444" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#EF4444" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Sombra Ciano do Card do Radar -->
+    <filter id="cyanBoxGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#38BDF8" flood-opacity="0.22" />
+    </filter>
+
+    <!-- Sombra Vermelha da Badge RED TEAM -->
+    <filter id="redBadgeGlow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#EF4444" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <!-- 1. Ícone Tático do Radar (48x48) -->
+  <g transform="translate(10, 10)">
+    <rect
+      x="0"
+      y="0"
+      width="48"
+      height="48"
+      rx="12"
+      fill="url(#radarBgGrad)"
+      stroke="url(#radarBorderGrad)"
+      stroke-width="1.2"
+      filter="url(#cyanBoxGlow)"
+    />
+
+    <!-- Ícone Lucide Radar (24x24 centralizado em 12,12) -->
+    <g transform="translate(12, 12)" stroke="#38BDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34" />
+      <path d="M4 6h.01" />
+      <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35" />
+      <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67" />
+      <path d="M12 18h.01" />
+      <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67" />
+      <circle cx="12" cy="12" r="2" />
+      <path d="m13.41 10.59 5.66-5.66" />
+    </g>
+
+    <!-- Ponto Vermelho Superior Direito com Brilho -->
+    <circle cx="45" cy="3" r="12" fill="url(#redDotGlow)" />
+    <circle cx="45" cy="3" r="5.5" fill="#EF4444" />
+  </g>
+
+  <!-- 2. Texto Principal: DISARM.AI -->
+  <text x="74" y="43" class="brand-title">
+    <tspan fill="#FFFFFF">DISARM</tspan><tspan fill="#38BDF8">.AI</tspan>
+  </text>
+
+  <!-- 3. Badge: RED TEAM -->
+  <g transform="translate(234, 21)" filter="url(#redBadgeGlow)">
+    <rect
+      x="0"
+      y="0"
+      width="98"
+      height="26"
+      rx="6"
+      fill="#EF4444"
+      fill-opacity="0.18"
+      stroke="#EF4444"
+      stroke-opacity="0.38"
+      stroke-width="1.1"
+    />
+    <text x="49" y="17.2" text-anchor="middle" fill="#F87171" class="badge-text">RED TEAM</text>
+  </g>
+</svg>

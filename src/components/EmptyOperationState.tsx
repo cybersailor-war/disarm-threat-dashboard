@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   FolderOpen,
-  BookOpen,
   ArrowRight,
   ShieldAlert,
   Clock,
@@ -13,13 +12,12 @@ import { DisarmCampaign } from '../types/disarm';
 interface EmptyOperationStateProps {
   allCampaigns: DisarmCampaign[];
   onSelectCampaign: (campaign: DisarmCampaign) => void;
-  onExploreFramework: () => void;
+  onExploreFramework?: () => void;
 }
 
 export const EmptyOperationState: React.FC<EmptyOperationStateProps> = ({
   allCampaigns,
   onSelectCampaign,
-  onExploreFramework,
 }) => {
   return (
     <div className="space-y-6 animate-in fade-in duration-200 max-w-6xl mx-auto">
@@ -59,18 +57,6 @@ export const EmptyOperationState: React.FC<EmptyOperationStateProps> = ({
                 {allCampaigns.length} {allCampaigns.length === 1 ? 'caso disponível' : 'casos disponíveis na estação'}
               </p>
             </div>
-          </div>
-
-          {/* Secondary Quick Action: DISARM Red Framework */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={onExploreFramework}
-              className="flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs font-mono text-slate-300 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-all cursor-pointer"
-              title="Consultar catálogo canônico de 16 Táticas e 391 Técnicas"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-              <span>DISARM Red Framework</span>
-            </button>
           </div>
         </div>
 

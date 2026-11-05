@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2276" height="916" viewBox="0 0 2276 916" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark Backdrop with subtle grid -->
+  <defs>
+    <linearGradient id="canvasBg" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#060911"/>
+      <stop offset="50%" stop-color="#0a0f1d"/>
+      <stop offset="100%" stop-color="#070a14"/>
+    </linearGradient>
+    <pattern id="canvasGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.02)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#canvasBg)"/>
+  <rect width="100%" height="100%" fill="url(#canvasGrid)"/>
+  
+  <!-- Drawer Panel: T0089 - Obtain Private Documents -->
+  <g class="drawer-panel" id="panel-T0089">
+    <!-- Drawer Outer Container -->
+    <rect x="28" y="28" width="540" height="860" rx="16" fill="#111827" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.2"/>
+
+    <!-- Drawer Top Header Background -->
+    <path d="M 44 28 L 552 28 Q 568 28 568 44 L 568 134 L 28 134 L 28 44 Q 28 28 44 28 Z" fill="#0d131f"/>
+    <line x1="28" y1="134" x2="568" y2="134" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Header Row 1: Badges & Buttons -->
+    <rect x="48" y="46" width="54" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+    <text x="75" y="61" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" text-anchor="middle">T0089</text>
+
+    <rect x="108" y="46" width="68" height="22" rx="4" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="1"/>
+    <text x="142" y="61" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+    <!-- Header Right Buttons: Editar TTP | Remover | X -->
+    <rect x="374" y="45" width="78" height="24" rx="6" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.3)" stroke-width="0.8"/>
+    <text x="413" y="61" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Editar TTP</text>
+
+    <rect x="460" y="45" width="68" height="24" rx="6" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="0.8"/>
+    <text x="494" y="61" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Remover</text>
+
+    <g transform="translate(538, 48) scale(0.8)">
+      <line x1="18" y1="6" x2="6" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Header Row 2: Technique Name -->
+    <text x="48" y="96" fill="#ffffff" font-family="'Inter', system-ui, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.3">
+      Obtain Private Documents
+    </text>
+
+    <!-- Header Row 3: Tática DISARM -->
+    <text x="48" y="118" font-family="'JetBrains Mono', monospace" font-size="11">
+      <tspan fill="#94a3b8">Tática DISARM: </tspan>
+      <tspan fill="#38bdf8" font-weight="600">TA06 - Develop Content</tspan>
+    </text>
+
+    <!-- SECTION 1: DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN) -->
+    <g transform="translate(48, 144) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#38bdf8" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#38bdf8" stroke-width="1.8"/><polyline points="10 9 9 9 8 9" stroke="#38bdf8" stroke-width="1.8"/>
+      </g>
+    </g>
+    <text x="70" y="158" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN)
+    </text>
+
+    <!-- Definição Box -->
+    <rect x="48" y="166" width="500" height="141.5" rx="10" fill="#090A0F" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+    <text x="64" y="184" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Procuring documents that are not publicly available, by whatever</text><text x="64" y="200.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">means -- whether legal or illegal, highly-resourced or less so.</text><text x="64" y="217" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">These documents can include authentic non-public documents,</text><text x="64" y="233.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">authentic non-public documents have been altered, or inauthentic</text><text x="64" y="250" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">documents intended to appear as if they are authentic non-public</text><text x="64" y="266.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">documents. All of these types of documents can be &quot;leaked&quot; during</text><text x="64" y="283" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">later stages in the operation.</text>
+
+    <!-- SECTION 2: PROCEDIMENTO MAPEADO NA OPERAÇÃO -->
+    <g transform="translate(48, 315.5) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="70" y="329.5" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      PROCEDIMENTO MAPEADO NA OPERAÇÃO
+    </text>
+
+    <!-- Confiança Badge -->
+    <rect x="422" y="314.5" width="126" height="20" rx="10" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="0.8"/>
+    <text x="485" y="328.5" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">CONFIANÇA: CONFIRMED</text>
+
+    <!-- Procedimento Outer Box -->
+    <rect x="48" y="345.5" width="500" height="373" rx="12" fill="#090A0F" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Subsection: Procedimento Operacional Observado -->
+    <g transform="translate(62, 356.5) scale(0.7)">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#34d399" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#34d399" stroke-width="1.8"/>
+    </g>
+    <text x="78" y="367.5" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      PROCEDIMENTO OPERACIONAL OBSERVADO:
+    </text>
+
+    <!-- Procedimento Title (Corrigido: espaço garantido) -->
+    <text x="62" y="389.5" fill="#ffffff" font-family="'Inter', sans-serif" font-size="13.5" font-weight="700">
+      Desenvolvimento de Pacote de Dados Vazados (Hack-and-Leak)
+    </text>
+
+    <!-- Operational Note Box (Corrigido: inicia estritamente abaixo do título, sem sobreposição) -->
+    <rect x="62" y="403.5" width="472" height="73" rx="8" fill="#070b13" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <text x="76" y="421.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Observado no incidente analisado: Exfiltração cibernética e</text><text x="76" y="438.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">preparação de pacote de dados vazados para alimentar a operação.</text><text x="76" y="455.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Procedimento correlato à tática Develop Content.</text>
+
+    <!-- Subsection: Artefatos & IOCs -->
+    <line x1="62" y1="492.5" x2="534" y2="492.5" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(62, 500.5) scale(0.65)">
+      <ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+    </g>
+    <text x="78" y="510.5" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ARTEFATOS DIGITAIS &amp; INDICADORES DE COMPROMETIMENTO (IOCS):
+    </text>
+    
+    <g transform="translate(68, 530.5)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">laudo_reator_cpn_v4_confidencial.pdf</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+    <g transform="translate(68, 552.5)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">auditoria_obsolescencia_combate.xlsx</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+
+    <!-- Subsection: Alvos Visados -->
+    <line x1="62" y1="584.5" x2="534" y2="584.5" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(62, 592.5) scale(0.65)">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+    </g>
+    <text x="78" y="602.5" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ALVOS &amp; ENTIDADES VISADAS:
+    </text>
+    
+      <g transform="translate(66, 618.5)">
+        <rect x="0" y="0" width="162" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Defesa / Setor Naval</text>
+      </g>
+      <g transform="translate(236, 618.5)">
+        <rect x="0" y="0" width="209.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Energia / Propulsão Nuclear</text>
+      </g>
+      <g transform="translate(66, 648.5)">
+        <rect x="0" y="0" width="202.79999999999998" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Governamental / Parlamento</text>
+      </g>
+      <g transform="translate(276.79999999999995, 648.5)">
+        <rect x="0" y="0" width="134.8" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Mídia &amp; Imprensa</text>
+      </g>
+      <g transform="translate(66, 678.5)">
+        <rect x="0" y="0" width="277.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Comunicações &amp; Infraestrutura Crítica</text>
+      </g>
+
+    <!-- Bottom Footer Bar -->
+    <line x1="28" y1="812" x2="568" y2="812" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <path d="M 28 812 L 568 812 L 568 844 Q 568 860 552 860 L 44 860 Q 28 860 28 844 Z" fill="#0d131f"/>
+
+    <g transform="translate(48, 828) scale(0.7)">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" fill="none" stroke="#94a3b8" stroke-width="1.8"/><polyline points="15 3 21 3 21 9" fill="none" stroke="#94a3b8" stroke-width="1.8"/><line x1="10" y1="14" x2="21" y2="3" stroke="#94a3b8" stroke-width="1.8"/>
+    </g>
+    <text x="64" y="838" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">DISARM Foundation Framework</text>
+
+    <!-- Fechar Painel Button -->
+    <rect x="450" y="822" width="98" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <text x="499" y="838" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="500" text-anchor="middle">Fechar Painel</text>
+  </g>
+  <!-- Drawer Panel: T0089.003 - Alter Authentic Documents -->
+  <g class="drawer-panel" id="panel-T0089.003">
+    <!-- Drawer Outer Container -->
+    <rect x="588" y="28" width="540" height="860" rx="16" fill="#111827" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.2"/>
+
+    <!-- Drawer Top Header Background -->
+    <path d="M 604 28 L 1112 28 Q 1128 28 1128 44 L 1128 134 L 588 134 L 588 44 Q 588 28 604 28 Z" fill="#0d131f"/>
+    <line x1="588" y1="134" x2="1128" y2="134" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Header Row 1: Badges & Buttons -->
+    <rect x="608" y="46" width="54" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+    <text x="635" y="61" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" text-anchor="middle">T0089.003</text>
+
+    <rect x="668" y="46" width="68" height="22" rx="4" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="1"/>
+    <text x="702" y="61" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+    <!-- Header Right Buttons: Editar TTP | Remover | X -->
+    <rect x="934" y="45" width="78" height="24" rx="6" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.3)" stroke-width="0.8"/>
+    <text x="973" y="61" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Editar TTP</text>
+
+    <rect x="1020" y="45" width="68" height="24" rx="6" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="0.8"/>
+    <text x="1054" y="61" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Remover</text>
+
+    <g transform="translate(1098, 48) scale(0.8)">
+      <line x1="18" y1="6" x2="6" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Header Row 2: Technique Name -->
+    <text x="608" y="96" fill="#ffffff" font-family="'Inter', system-ui, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.3">
+      Alter Authentic Documents
+    </text>
+
+    <!-- Header Row 3: Tática DISARM -->
+    <text x="608" y="118" font-family="'JetBrains Mono', monospace" font-size="11">
+      <tspan fill="#94a3b8">Tática DISARM: </tspan>
+      <tspan fill="#38bdf8" font-weight="600">TA06 - Develop Content</tspan>
+    </text>
+
+    <!-- SECTION 1: DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN) -->
+    <g transform="translate(608, 144) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#38bdf8" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#38bdf8" stroke-width="1.8"/><polyline points="10 9 9 9 8 9" stroke="#38bdf8" stroke-width="1.8"/>
+      </g>
+    </g>
+    <text x="630" y="158" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN)
+    </text>
+
+    <!-- Definição Box -->
+    <rect x="608" y="166" width="500" height="90" rx="10" fill="#090A0F" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+    <text x="624" y="184" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Alter authentic documents (public or non-public) to achieve campaign</text><text x="624" y="200.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">goals. The altered documents are intended to appear as if they are</text><text x="624" y="217" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">authentic and can be &quot;leaked&quot; during later stages in the operation.</text>
+
+    <!-- SECTION 2: PROCEDIMENTO MAPEADO NA OPERAÇÃO -->
+    <g transform="translate(608, 264) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="630" y="278" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      PROCEDIMENTO MAPEADO NA OPERAÇÃO
+    </text>
+
+    <!-- Confiança Badge -->
+    <rect x="982" y="263" width="126" height="20" rx="10" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="0.8"/>
+    <text x="1045" y="277" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">CONFIANÇA: CONFIRMED</text>
+
+    <!-- Procedimento Outer Box -->
+    <rect x="608" y="294" width="500" height="390" rx="12" fill="#090A0F" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Subsection: Procedimento Operacional Observado -->
+    <g transform="translate(622, 305) scale(0.7)">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#34d399" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#34d399" stroke-width="1.8"/>
+    </g>
+    <text x="638" y="316" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      PROCEDIMENTO OPERACIONAL OBSERVADO:
+    </text>
+
+    <!-- Procedimento Title (Corrigido: espaço garantido) -->
+    <text x="622" y="338" fill="#ffffff" font-family="'Inter', sans-serif" font-size="13.5" font-weight="700">
+      Adulteração Cirúrgica de Documentos Oficiais Autênticos (Tainted Leaks)
+    </text>
+
+    <!-- Operational Note Box (Corrigido: inicia estritamente abaixo do título, sem sobreposição) -->
+    <rect x="622" y="352" width="472" height="90" rx="8" fill="#070b13" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <text x="636" y="370" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Observado no incidente analisado: Adulteração cirúrgica de</text><text x="636" y="387" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">documentos autênticos exfiltrados para inserir alegações forjadas</text><text x="636" y="404" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">de risco radiológico e backdoors. Procedimento correlato à tática</text><text x="636" y="421" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Develop Content.</text>
+
+    <!-- Subsection: Artefatos & IOCs -->
+    <line x1="622" y1="458" x2="1094" y2="458" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(622, 466) scale(0.65)">
+      <ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+    </g>
+    <text x="638" y="476" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ARTEFATOS DIGITAIS &amp; INDICADORES DE COMPROMETIMENTO (IOCS):
+    </text>
+    
+    <g transform="translate(628, 496)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">laudo_reator_cpn_v4_adulterado.pdf</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+    <g transform="translate(628, 518)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">planilha_integracao_scada_forjada.xlsx</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+
+    <!-- Subsection: Alvos Visados -->
+    <line x1="622" y1="550" x2="1094" y2="550" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(622, 558) scale(0.65)">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+    </g>
+    <text x="638" y="568" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ALVOS &amp; ENTIDADES VISADAS:
+    </text>
+    
+      <g transform="translate(626, 584)">
+        <rect x="0" y="0" width="162" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Defesa / Setor Naval</text>
+      </g>
+      <g transform="translate(796, 584)">
+        <rect x="0" y="0" width="202.79999999999998" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Governamental / Parlamento</text>
+      </g>
+      <g transform="translate(626, 614)">
+        <rect x="0" y="0" width="270.79999999999995" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Comissão Nacional de Energia Nuclear</text>
+      </g>
+      <g transform="translate(626, 644)">
+        <rect x="0" y="0" width="277.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Comunidade Internacional / Diplomacia</text>
+      </g>
+
+    <!-- Bottom Footer Bar -->
+    <line x1="588" y1="812" x2="1128" y2="812" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <path d="M 588 812 L 1128 812 L 1128 844 Q 1128 860 1112 860 L 604 860 Q 588 860 588 844 Z" fill="#0d131f"/>
+
+    <g transform="translate(608, 828) scale(0.7)">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" fill="none" stroke="#94a3b8" stroke-width="1.8"/><polyline points="15 3 21 3 21 9" fill="none" stroke="#94a3b8" stroke-width="1.8"/><line x1="10" y1="14" x2="21" y2="3" stroke="#94a3b8" stroke-width="1.8"/>
+    </g>
+    <text x="624" y="838" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">DISARM Foundation Framework</text>
+
+    <!-- Fechar Painel Button -->
+    <rect x="1010" y="822" width="98" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <text x="1059" y="838" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="500" text-anchor="middle">Fechar Painel</text>
+  </g>
+  <!-- Drawer Panel: T0087 - Develop Video-Based Content -->
+  <g class="drawer-panel" id="panel-T0087">
+    <!-- Drawer Outer Container -->
+    <rect x="1148" y="28" width="540" height="860" rx="16" fill="#111827" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.2"/>
+
+    <!-- Drawer Top Header Background -->
+    <path d="M 1164 28 L 1672 28 Q 1688 28 1688 44 L 1688 134 L 1148 134 L 1148 44 Q 1148 28 1164 28 Z" fill="#0d131f"/>
+    <line x1="1148" y1="134" x2="1688" y2="134" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Header Row 1: Badges & Buttons -->
+    <rect x="1168" y="46" width="54" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+    <text x="1195" y="61" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" text-anchor="middle">T0087</text>
+
+    <rect x="1228" y="46" width="68" height="22" rx="4" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="1"/>
+    <text x="1262" y="61" fill="#f87171" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">CRITICAL</text>
+
+    <!-- Header Right Buttons: Editar TTP | Remover | X -->
+    <rect x="1494" y="45" width="78" height="24" rx="6" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.3)" stroke-width="0.8"/>
+    <text x="1533" y="61" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Editar TTP</text>
+
+    <rect x="1580" y="45" width="68" height="24" rx="6" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="0.8"/>
+    <text x="1614" y="61" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Remover</text>
+
+    <g transform="translate(1658, 48) scale(0.8)">
+      <line x1="18" y1="6" x2="6" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Header Row 2: Technique Name -->
+    <text x="1168" y="96" fill="#ffffff" font-family="'Inter', system-ui, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.3">
+      Develop Video-Based Content
+    </text>
+
+    <!-- Header Row 3: Tática DISARM -->
+    <text x="1168" y="118" font-family="'JetBrains Mono', monospace" font-size="11">
+      <tspan fill="#94a3b8">Tática DISARM: </tspan>
+      <tspan fill="#38bdf8" font-weight="600">TA06 - Develop Content</tspan>
+    </text>
+
+    <!-- SECTION 1: DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN) -->
+    <g transform="translate(1168, 144) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#38bdf8" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#38bdf8" stroke-width="1.8"/><polyline points="10 9 9 9 8 9" stroke="#38bdf8" stroke-width="1.8"/>
+      </g>
+    </g>
+    <text x="1190" y="158" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN)
+    </text>
+
+    <!-- Definição Box -->
+    <rect x="1168" y="166" width="500" height="125" rx="10" fill="#090A0F" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+    <text x="1184" y="184" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Creating and editing false or misleading video artefacts, often</text><text x="1184" y="200.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">aligned with one or more specific narratives, for use in a</text><text x="1184" y="217" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">disinformation campaign. This may include staging videos of</text><text x="1184" y="233.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">purportedly real situations, repurposing existing video artefacts,</text><text x="1184" y="250" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">or using AI-generated video creation and editing technologies</text><text x="1184" y="266.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">(including deepfakes).</text>
+
+    <!-- SECTION 2: PROCEDIMENTO MAPEADO NA OPERAÇÃO -->
+    <g transform="translate(1168, 299) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="1190" y="313" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      PROCEDIMENTO MAPEADO NA OPERAÇÃO
+    </text>
+
+    <!-- Confiança Badge -->
+    <rect x="1542" y="298" width="126" height="20" rx="10" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="0.8"/>
+    <text x="1605" y="312" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">CONFIANÇA: CONFIRMED</text>
+
+    <!-- Procedimento Outer Box -->
+    <rect x="1168" y="329" width="500" height="373" rx="12" fill="#090A0F" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Subsection: Procedimento Operacional Observado -->
+    <g transform="translate(1182, 340) scale(0.7)">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#34d399" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#34d399" stroke-width="1.8"/>
+    </g>
+    <text x="1198" y="351" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      PROCEDIMENTO OPERACIONAL OBSERVADO:
+    </text>
+
+    <!-- Procedimento Title (Corrigido: espaço garantido) -->
+    <text x="1182" y="373" fill="#ffffff" font-family="'Inter', sans-serif" font-size="13.5" font-weight="700">
+      Criação de Mídia Sintética e Vídeos Deepfake por IA
+    </text>
+
+    <!-- Operational Note Box (Corrigido: inicia estritamente abaixo do título, sem sobreposição) -->
+    <rect x="1182" y="387" width="472" height="73" rx="8" fill="#070b13" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <text x="1196" y="405" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Observado no incidente analisado: Produção de conteúdo multimídia</text><text x="1196" y="422" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">sintético (deepfake) simulando declarações do Ministro da Defesa e</text><text x="1196" y="439" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">porta-voz. Procedimento correlato à tática Develop Content.</text>
+
+    <!-- Subsection: Artefatos & IOCs -->
+    <line x1="1182" y1="476" x2="1654" y2="476" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(1182, 484) scale(0.65)">
+      <ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+    </g>
+    <text x="1198" y="494" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ARTEFATOS DIGITAIS &amp; INDICADORES DE COMPROMETIMENTO (IOCS):
+    </text>
+    
+    <g transform="translate(1188, 514)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">declaracao_ministro_falha_reator_deepfake.mp4</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+    <g transform="translate(1188, 536)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">audio_sintetico_alerta_vazamento.wav</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+
+    <!-- Subsection: Alvos Visados -->
+    <line x1="1182" y1="568" x2="1654" y2="568" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(1182, 576) scale(0.65)">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+    </g>
+    <text x="1198" y="586" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ALVOS &amp; ENTIDADES VISADAS:
+    </text>
+    
+      <g transform="translate(1186, 602)">
+        <rect x="0" y="0" width="182.4" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Grande Mídia &amp; Imprensa</text>
+      </g>
+      <g transform="translate(1376.4, 602)">
+        <rect x="0" y="0" width="114.39999999999999" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Redes Sociais</text>
+      </g>
+      <g transform="translate(1186, 632)">
+        <rect x="0" y="0" width="182.4" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Opinião Pública Digital</text>
+      </g>
+      <g transform="translate(1376.4, 632)">
+        <rect x="0" y="0" width="175.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Comunidade Diplomática</text>
+      </g>
+      <g transform="translate(1186, 662)">
+        <rect x="0" y="0" width="250.4" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Lideranças Políticas &amp; Parlamento</text>
+      </g>
+
+    <!-- Bottom Footer Bar -->
+    <line x1="1148" y1="812" x2="1688" y2="812" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <path d="M 1148 812 L 1688 812 L 1688 844 Q 1688 860 1672 860 L 1164 860 Q 1148 860 1148 844 Z" fill="#0d131f"/>
+
+    <g transform="translate(1168, 828) scale(0.7)">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" fill="none" stroke="#94a3b8" stroke-width="1.8"/><polyline points="15 3 21 3 21 9" fill="none" stroke="#94a3b8" stroke-width="1.8"/><line x1="10" y1="14" x2="21" y2="3" stroke="#94a3b8" stroke-width="1.8"/>
+    </g>
+    <text x="1184" y="838" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">DISARM Foundation Framework</text>
+
+    <!-- Fechar Painel Button -->
+    <rect x="1570" y="822" width="98" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <text x="1619" y="838" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="500" text-anchor="middle">Fechar Painel</text>
+  </g>
+  <!-- Drawer Panel: T0015 - Create Hashtags and Search Artefacts -->
+  <g class="drawer-panel" id="panel-T0015">
+    <!-- Drawer Outer Container -->
+    <rect x="1708" y="28" width="540" height="860" rx="16" fill="#111827" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.2"/>
+
+    <!-- Drawer Top Header Background -->
+    <path d="M 1724 28 L 2232 28 Q 2248 28 2248 44 L 2248 134 L 1708 134 L 1708 44 Q 1708 28 1724 28 Z" fill="#0d131f"/>
+    <line x1="1708" y1="134" x2="2248" y2="134" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Header Row 1: Badges & Buttons -->
+    <rect x="1728" y="46" width="54" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+    <text x="1755" y="61" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="11.5" font-weight="700" text-anchor="middle">T0015</text>
+
+    <rect x="1788" y="46" width="68" height="22" rx="4" fill="rgba(56, 189, 248, 0.1)" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1"/>
+    <text x="1822" y="61" fill="#38bdf8" font-family="'JetBrains Mono', Consolas, monospace" font-size="10.5" font-weight="700" text-anchor="middle" letter-spacing="0.5">MEDIUM</text>
+
+    <!-- Header Right Buttons: Editar TTP | Remover | X -->
+    <rect x="2054" y="45" width="78" height="24" rx="6" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.3)" stroke-width="0.8"/>
+    <text x="2093" y="61" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Editar TTP</text>
+
+    <rect x="2140" y="45" width="68" height="24" rx="6" fill="rgba(239, 68, 68, 0.1)" stroke="rgba(239, 68, 68, 0.3)" stroke-width="0.8"/>
+    <text x="2174" y="61" fill="#f87171" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">Remover</text>
+
+    <g transform="translate(2218, 48) scale(0.8)">
+      <line x1="18" y1="6" x2="6" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke="#94a3b8" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- Header Row 2: Technique Name -->
+    <text x="1728" y="96" fill="#ffffff" font-family="'Inter', system-ui, sans-serif" font-size="18" font-weight="800" letter-spacing="-0.3">
+      Create Hashtags and Search Artefacts
+    </text>
+
+    <!-- Header Row 3: Tática DISARM -->
+    <text x="1728" y="118" font-family="'JetBrains Mono', monospace" font-size="11">
+      <tspan fill="#94a3b8">Tática DISARM: </tspan>
+      <tspan fill="#38bdf8" font-weight="600">TA06 - Develop Content</tspan>
+    </text>
+
+    <!-- SECTION 1: DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN) -->
+    <g transform="translate(1728, 144) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(14, 165, 233, 0.1)" stroke="rgba(14, 165, 233, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#38bdf8" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#38bdf8" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#38bdf8" stroke-width="1.8"/><polyline points="10 9 9 9 8 9" stroke="#38bdf8" stroke-width="1.8"/>
+      </g>
+    </g>
+    <text x="1750" y="158" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      DEFINIÇÃO OFICIAL DISARM FRAMEWORK (EN)
+    </text>
+
+    <!-- Definição Box -->
+    <rect x="1728" y="166" width="500" height="125" rx="10" fill="#090A0F" stroke="rgba(255, 255, 255, 0.06)" stroke-width="1"/>
+    <text x="1744" y="184" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Create one or more hashtags and/or hashtag groups. Many</text><text x="1744" y="200.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">incident-based campaigns will create hashtags to promote their</text><text x="1744" y="217" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">fabricated event. Creating a hashtag for an incident can have two</text><text x="1744" y="233.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">important effects: 1. Create a perception of reality around an</text><text x="1744" y="250" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">event; and 2. Publicise the story more widely through trending lists</text><text x="1744" y="266.5" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">and search behaviour.</text>
+
+    <!-- SECTION 2: PROCEDIMENTO MAPEADO NA OPERAÇÃO -->
+    <g transform="translate(1728, 299) scale(0.75)">
+      <rect x="0" y="0" width="22" height="22" rx="4" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.2)" stroke-width="1"/>
+      <g transform="translate(3.5, 3.5) scale(0.65)">
+        <path d="M4 22h14a2 2 0 0 0 2-2V7.5L14.5 2H6a2 2 0 0 0-2 2v4" fill="none" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><circle cx="10" cy="15" r="3" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="12.2" y1="17.2" x2="15" y2="20" stroke="#34d399" stroke-width="1.8" stroke-linecap="round"/>
+      </g>
+    </g>
+    <text x="1750" y="313" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" letter-spacing="0.5">
+      PROCEDIMENTO MAPEADO NA OPERAÇÃO
+    </text>
+
+    <!-- Confiança Badge -->
+    <rect x="2102" y="298" width="126" height="20" rx="10" fill="rgba(16, 185, 129, 0.1)" stroke="rgba(16, 185, 129, 0.25)" stroke-width="0.8"/>
+    <text x="2165" y="312" fill="#34d399" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" text-anchor="middle" letter-spacing="0.5">CONFIANÇA: CONFIRMED</text>
+
+    <!-- Procedimento Outer Box -->
+    <rect x="1728" y="329" width="500" height="395" rx="12" fill="#090A0F" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+
+    <!-- Subsection: Procedimento Operacional Observado -->
+    <g transform="translate(1742, 340) scale(0.7)">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="none" stroke="#34d399" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" fill="none" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="#34d399" stroke-width="1.8"/><line x1="16" y1="17" x2="8" y2="17" stroke="#34d399" stroke-width="1.8"/>
+    </g>
+    <text x="1758" y="351" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      PROCEDIMENTO OPERACIONAL OBSERVADO:
+    </text>
+
+    <!-- Procedimento Title (Corrigido: espaço garantido) -->
+    <text x="1742" y="373" fill="#ffffff" font-family="'Inter', sans-serif" font-size="13.5" font-weight="700">
+      Criação e Propagação de Hashtags de Campanha
+    </text>
+
+    <!-- Operational Note Box (Corrigido: inicia estritamente abaixo do título, sem sobreposição) -->
+    <rect x="1742" y="387" width="472" height="73" rx="8" fill="#070b13" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <text x="1756" y="405" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">Observado no incidente analisado: Criação e indução de hashtags</text><text x="1756" y="422" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">coordenadas para agrupar e disseminar mensagens de impacto na</text><text x="1756" y="439" fill="#cbd5e1" font-family="'Inter', system-ui, sans-serif" font-size="11.5">opinião pública. Procedimento correlato à tática Develop Content.</text>
+
+    <!-- Subsection: Artefatos & IOCs -->
+    <line x1="1742" y1="476" x2="2214" y2="476" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(1742, 484) scale(0.65)">
+      <ellipse cx="12" cy="5" rx="9" ry="3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" fill="none" stroke="#38bdf8" stroke-width="1.8"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+    </g>
+    <text x="1758" y="494" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ARTEFATOS DIGITAIS &amp; INDICADORES DE COMPROMETIMENTO (IOCS):
+    </text>
+    
+    <g transform="translate(1748, 514)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">#ChernobylNoMar</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+    <g transform="translate(1748, 536)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">#FarsaNetuno</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+    <g transform="translate(1748, 558)">
+      <circle cx="4" cy="5" r="2.5" fill="#38bdf8"/>
+      <text x="14" y="9" fill="#e2e8f0" font-family="'JetBrains Mono', Consolas, monospace" font-size="11">#VerdadeOcultaNetuno</text>
+      <g transform="translate(450, -1) scale(0.65)">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" fill="none" stroke="#64748b" stroke-width="1.8"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" fill="none" stroke="#64748b" stroke-width="1.8"/>
+      </g>
+    </g>
+
+    <!-- Subsection: Alvos Visados -->
+    <line x1="1742" y1="590" x2="2214" y2="590" stroke="rgba(255, 255, 255, 0.05)" stroke-width="1"/>
+    <g transform="translate(1742, 598) scale(0.65)">
+      <circle cx="12" cy="12" r="10" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="6" fill="none" stroke="#fbbf24" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="none" stroke="#fbbf24" stroke-width="1.8"/>
+    </g>
+    <text x="1758" y="608" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" letter-spacing="0.5">
+      ALVOS &amp; ENTIDADES VISADAS:
+    </text>
+    
+      <g transform="translate(1746, 624)">
+        <rect x="0" y="0" width="223.2" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Algoritmos de Trending Topics</text>
+      </g>
+      <g transform="translate(1977.2, 624)">
+        <rect x="0" y="0" width="100.8" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Twitter / X</text>
+      </g>
+      <g transform="translate(1746, 654)">
+        <rect x="0" y="0" width="209.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Opinião Pública &amp; Eleitores</text>
+      </g>
+      <g transform="translate(1963.6, 654)">
+        <rect x="0" y="0" width="175.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Redações de Jornalismo</text>
+      </g>
+      <g transform="translate(1746, 684)">
+        <rect x="0" y="0" width="243.6" height="24" rx="6" fill="#070b13" stroke="rgba(245, 158, 11, 0.25)" stroke-width="0.8"/>
+        <circle cx="10" cy="12" r="2.5" fill="#fbbf24"/>
+        <text x="18" y="16" fill="#fde68a" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="500">Comunidades de Defesa &amp; Política</text>
+      </g>
+
+    <!-- Bottom Footer Bar -->
+    <line x1="1708" y1="812" x2="2248" y2="812" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <path d="M 1708 812 L 2248 812 L 2248 844 Q 2248 860 2232 860 L 1724 860 Q 1708 860 1708 844 Z" fill="#0d131f"/>
+
+    <g transform="translate(1728, 828) scale(0.7)">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" fill="none" stroke="#94a3b8" stroke-width="1.8"/><polyline points="15 3 21 3 21 9" fill="none" stroke="#94a3b8" stroke-width="1.8"/><line x1="10" y1="14" x2="21" y2="3" stroke="#94a3b8" stroke-width="1.8"/>
+    </g>
+    <text x="1744" y="838" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">DISARM Foundation Framework</text>
+
+    <!-- Fechar Painel Button -->
+    <rect x="2130" y="822" width="98" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1"/>
+    <text x="2179" y="838" fill="#e2e8f0" font-family="'JetBrains Mono', monospace" font-size="10.5" font-weight="500" text-anchor="middle">Fechar Painel</text>
+  </g>
+</svg>
