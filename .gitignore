@@ -39,4 +39,3 @@ scratch/
 audit_editable.cjs
 diag_input.cjs
 diag_trace_save.cjs
-save_server.cjs
